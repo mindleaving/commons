@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Commons
@@ -8,6 +10,12 @@ namespace Commons
     {
         public UnitValue(Unit unit, double value) : this()
         {
+            Unit = unit.ToCompoundUnit();
+            var conversionResult = value.ConvertToSI(unit);
+            Value = conversionResult.Value;
+        }
+        public UnitValue(CompoundUnit unit, double value) : this()
+        {
             Unit = unit;
             Value = value;
         }
@@ -15,14 +23,14 @@ namespace Commons
         [DataMember]
         public double Value { get; private set; }
         [DataMember]
-        public Unit Unit { get; private set; }
+        public CompoundUnit Unit { get; private set; }
 
         public static bool operator <(UnitValue value1, UnitValue value2)
         {
-            if (!value1.Unit.CanConvertTo(value2.Unit))
+            if (!value1.Unit.Equals(value2.Unit))
                 throw new InvalidOperationException($"Cannot compare unit values with incompatible units {value1.Unit} and {value2.Unit}");
 
-            return value1.Value < value2.ConvertTo(value1.Unit).Value;
+            return value1.Value < value2.Value;
         }
         public static bool operator >(UnitValue value1, UnitValue value2)
         {
@@ -30,10 +38,10 @@ namespace Commons
         }
         public static bool operator <=(UnitValue value1, UnitValue value2)
         {
-            if (!value1.Unit.CanConvertTo(value2.Unit))
+            if (!value1.Unit.Equals(value2.Unit))
                 throw new InvalidOperationException($"Cannot compare unit values with incompatible units {value1.Unit} and {value2.Unit}");
 
-            return value1.Value <= value2.ConvertTo(value1.Unit).Value;
+            return value1.Value <= value2.Value;
         }
         public static bool operator >=(UnitValue value1, UnitValue value2)
         {
@@ -41,7 +49,7 @@ namespace Commons
         }
         public static bool operator ==(UnitValue value1, UnitValue value2)
         {
-            if (!value1.Unit.CanConvertTo(value2.Unit))
+            if (!value1.Unit.Equals(value2.Unit))
                 throw new InvalidOperationException($"Cannot compare unit values with incompatible units {value1.Unit} and {value2.Unit}");
 
             return value1.Equals(value2);
@@ -56,19 +64,17 @@ namespace Commons
         }
         public static UnitValue operator +(UnitValue value1, UnitValue value2)
         {
-            if (!value1.Unit.CanConvertTo(value2.Unit))
+            if (!value1.Unit.Equals(value2.Unit))
                 throw new InvalidOperationException($"Cannot sum unit values with incompatible units {value1.Unit} and {value2.Unit}");
 
-            var value2InValue1Units = value2.ConvertTo(value1.Unit);
-            return new UnitValue(value1.Unit, value1.Value + value2InValue1Units.Value);
+            return (value1.Value + value2.Value).To(value1.Unit);
         }
         public static UnitValue operator -(UnitValue value1, UnitValue value2)
         {
-            if (!value1.Unit.CanConvertTo(value2.Unit))
+            if (!value1.Unit.Equals(value2.Unit))
                 throw new InvalidOperationException($"Cannot subtract unit values with incompatible units {value1.Unit} and {value2.Unit}");
 
-            var value2InValue1Units = value2.ConvertTo(value1.Unit);
-            return new UnitValue(value1.Unit, value1.Value - value2InValue1Units.Value);
+            return (value1.Value - value2.Value).To(value1.Unit);
         }
         public static UnitValue operator *(double scalar, UnitValue unitValue)
         {
@@ -88,58 +94,17 @@ namespace Commons
         }
         public static UnitValue operator *(UnitValue value1, UnitValue value2)
         {
-            var standardValue1 = value1.ConvertToSIStandard();
-            var standardValue2 = value2.ConvertToSIStandard();
-
-            switch(standardValue1.Unit)
-            {
-                case Unit.Meter:
-                    break;
-                case Unit.MetersPerSecond:
-                    if(standardValue2.Unit == Unit.Second)
-                        return new UnitValue(Unit.Meter, standardValue1.Value * standardValue2.Value);
-                    break;
-                case Unit.MetersPerSecondSquared:
-                    if (standardValue2.Unit == Unit.Second)
-                        return new UnitValue(Unit.MetersPerSecond, standardValue1.Value * standardValue2.Value);
-                    break;
-                case Unit.Second:
-                    if (standardValue2.Unit == Unit.MetersPerSecond)
-                        return new UnitValue(Unit.Meter, standardValue1.Value * standardValue2.Value);
-                    if (standardValue2.Unit == Unit.MetersPerSecondSquared)
-                        return new UnitValue(Unit.MetersPerSecond, standardValue1.Value * standardValue2.Value);
-                    break;
-            }
-            throw new NotSupportedException($"Multiplication of units {value1.Unit} and {value2.Unit} is not supported");
+            return (value1.Value*value2.Value).To(value1.Unit*value2.Unit);
         }
         public static UnitValue operator /(UnitValue value1, UnitValue value2)
         {
-            var standardValue1 = value1.ConvertToSIStandard();
-            var standardValue2 = value2.ConvertToSIStandard();
-
-            switch (standardValue1.Unit)
-            {
-                case Unit.Meter:
-                    if (standardValue2.Unit == Unit.Second)
-                        return new UnitValue(Unit.MetersPerSecond, standardValue1.Value / standardValue2.Value);
-                    if (standardValue2.Unit == Unit.MetersPerSecond)
-                        return new UnitValue(Unit.Second, standardValue1.Value / standardValue2.Value);
-                    break;
-                case Unit.MetersPerSecond:
-                    if (standardValue2.Unit == Unit.Second)
-                        return new UnitValue(Unit.MetersPerSecondSquared, standardValue1.Value / standardValue2.Value);
-                    break;
-                case Unit.MetersPerSecondSquared:
-                    break;
-                case Unit.Second:
-                    break;
-            }
-            throw new NotSupportedException($"Division of units {value1.Unit} and {value2.Unit} is not supported");
+            return (value1.Value / value2.Value).To(value1.Unit / value2.Unit);
         }
 
         public override bool Equals(object other)
         {
-            return Value == (other as UnitValue?)?.ConvertTo(Unit).Value;
+            var otherUnitValue = other as UnitValue?;
+            return Value == otherUnitValue?.Value;
         }
 
         public override int GetHashCode()
@@ -152,7 +117,7 @@ namespace Commons
             if (obj is UnitValue)
             {
                 var otherUnitValue = (UnitValue) obj;
-                return this.ConvertToSIStandard().Value.CompareTo(otherUnitValue.ConvertToSIStandard().Value);
+                return Value.CompareTo(otherUnitValue.Value);
             }
             return 0;
         }
@@ -164,7 +129,25 @@ namespace Commons
 
         public override string ToString()
         {
-            return Value + " " + Unit.StringRepresentation();
+            var unit = Unit.ToUnit();
+            var appropriateSIPrefix = SelectSIPrefix(Value);
+            var multiplier = appropriateSIPrefix.GetMultiplier();
+            var valueString = (Value/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
+                + " "
+                + appropriateSIPrefix.StringRepresentation();
+            if (unit == Commons.Unit.Compound)
+                return valueString + Unit;
+            return valueString + unit.StringRepresentation();
+        }
+
+        private static SIPrefix SelectSIPrefix(double value)
+        {
+            var allPrefixes = ((SIPrefix[]) Enum.GetValues(typeof(SIPrefix)))
+                .ToDictionary(x => x, UnitValueExtensions.GetMultiplier);
+            var multipliersSmallerThanValue = allPrefixes.Where(kvp => kvp.Value < value).ToList();
+            if (!multipliersSmallerThanValue.Any())
+                return allPrefixes.MinimumItem(kvp => kvp.Value).Key;
+            return multipliersSmallerThanValue.MaximumItem(kvp => kvp.Value).Key;
         }
     }
 }

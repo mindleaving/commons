@@ -7,11 +7,11 @@ namespace Commons
         public static UnitValue DistanceToLine(this GeoCoordinate point, GeoCoordinate linePoint1, GeoCoordinate linePoint2)
         {
             // Assume short distances, such that euclidean coordinate system is a good approximation
-            var distanceToLinePoint1 = UnitValueExtensions.In(point.GetDistanceTo(linePoint1), Unit.Meter);
-            var distanceToLinePoint2 = UnitValueExtensions.In(point.GetDistanceTo(linePoint2), Unit.Meter);
+            var distanceToLinePoint1 = point.GetDistanceTo(linePoint1).In(Unit.Meter);
+            var distanceToLinePoint2 = point.GetDistanceTo(linePoint2).In(Unit.Meter);
             if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
                 return 0.To(Unit.Meter);
-            var lineLength = UnitValueExtensions.In(linePoint1.GetDistanceTo(linePoint2), Unit.Meter);
+            var lineLength = linePoint1.GetDistanceTo(linePoint2).In(Unit.Meter);
             if (lineLength == 0)
                 return distanceToLinePoint1.To(Unit.Meter);
 
@@ -25,11 +25,11 @@ namespace Commons
         public static UnitValue DistanceToLineSegment(this GeoCoordinate point, GeoCoordinate linePoint1, GeoCoordinate linePoint2)
         {
             // Assume short distances, such that euclidean coordinate system is a good approximation
-            var distanceToLinePoint1 = UnitValueExtensions.In(point.GetDistanceTo(linePoint1), Unit.Meter);
-            var distanceToLinePoint2 = UnitValueExtensions.In(point.GetDistanceTo(linePoint2), Unit.Meter);
+            var distanceToLinePoint1 = point.GetDistanceTo(linePoint1).In(Unit.Meter);
+            var distanceToLinePoint2 = point.GetDistanceTo(linePoint2).In(Unit.Meter);
             if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
                 return 0.To(Unit.Meter);
-            var lineLength = UnitValueExtensions.In(linePoint1.GetDistanceTo(linePoint2), Unit.Meter);
+            var lineLength = linePoint1.GetDistanceTo(linePoint2).In(Unit.Meter);
             if (lineLength == 0)
                 return distanceToLinePoint1.To(Unit.Meter);
 
@@ -109,20 +109,20 @@ namespace Commons
 
         public static GeoCoordinate ExtendCenterLineBy(GeoCoordinate startCoordinate, GeoCoordinate endCoordinate, UnitValue extendDistance)
         {
-            var runwayHeading = HeadingTo(startCoordinate, endCoordinate);
+            var runwayHeading = startCoordinate.HeadingTo(endCoordinate);
             return extendDistance.Value < 0
-                ? MoveAlongRadial(startCoordinate, (runwayHeading + 180).Modulus(360), -extendDistance)
-                : MoveAlongRadial(endCoordinate, runwayHeading, extendDistance);
+                ? startCoordinate.MoveAlongRadial((runwayHeading + 180).Modulus(360), -extendDistance)
+                : endCoordinate.MoveAlongRadial(runwayHeading, extendDistance);
         }
 
         public static UnitValue DistanceToRadial(this GeoCoordinate position, GeoCoordinate navaidCoordinate, double radial)
         {
             var distanceToNavaid = position.GetDistanceTo(navaidCoordinate);
-            var headingToNavaid = HeadingTo(position, navaidCoordinate);
+            var headingToNavaid = position.HeadingTo(navaidCoordinate);
             var radialExtensionCoordinate = radial.CircularDifferene(headingToNavaid) < 90
-                ? MoveAlongRadial(navaidCoordinate, radial, -distanceToNavaid)
-                : MoveAlongRadial(navaidCoordinate, radial, distanceToNavaid);
-            var distanceFromRadial = DistanceToLine(position, navaidCoordinate, radialExtensionCoordinate);
+                ? navaidCoordinate.MoveAlongRadial(radial, -distanceToNavaid)
+                : navaidCoordinate.MoveAlongRadial(radial, distanceToNavaid);
+            var distanceFromRadial = position.DistanceToLine(navaidCoordinate, radialExtensionCoordinate);
             return distanceFromRadial;
         }
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Commons
 {
@@ -22,6 +24,11 @@ namespace Commons
         public static bool IsOdd(this int i)
         {
             return !i.IsEven();
+        }
+
+        public static bool IsNaN(this double value)
+        {
+            return double.IsNaN(value);
         }
 
         /// <summary>
@@ -67,6 +74,21 @@ namespace Commons
         public static int RoundUpToNearest(this int value, int resolution)
         {
             return (int)((double)value).RoundUpToNearest(resolution);
+        }
+
+        public static double Median(this IEnumerable<double> items)
+        {
+            var itemList = items.ToList();
+            var halfIndex = itemList.Count / 2;
+            if (itemList.Count.IsEven())
+            {
+                return (itemList[halfIndex - 1] + itemList[halfIndex])/2.0;
+            }
+            return itemList[halfIndex];
+        }
+        public static double Median<T>(this IEnumerable<T> items, Func<T,double> valueSelector)
+        {
+            return items.Select(valueSelector).Median();
         }
     }
 }

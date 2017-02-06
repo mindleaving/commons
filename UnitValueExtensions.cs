@@ -1,158 +1,116 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Commons
 {
     public static class UnitValueExtensions
     {
-        private static readonly Unit[] SIStandards = { Unit.Meter, Unit.MetersPerSecond, Unit.Second, Unit.MetersPerSecondSquared, Unit.Kelvin, Unit.Pascal };
         public static UnitValue Abs(this UnitValue unitValue)
         {
             return new UnitValue(unitValue.Unit, Math.Abs(unitValue.Value));
         }
-        public static UnitValue ConvertTo(this UnitValue unitValue, Unit newUnit)
+        public static double In(this UnitValue unitValue, CompoundUnit newUnit)
         {
-            if (!unitValue.Unit.CanConvertTo(newUnit))
+            if (!unitValue.Unit.Equals(newUnit))
                 throw new InvalidOperationException($"Cannot convert {unitValue.Unit} to {newUnit}");
-            if (unitValue.Unit == newUnit)
-                return new UnitValue(unitValue.Unit, unitValue.Value);
+            return unitValue.Value;
+        }
 
-            var standardUnitValue = unitValue.ConvertToSIStandard();
-            if (standardUnitValue.Unit.Equals(newUnit))
-                return standardUnitValue;
+        public static double In(this UnitValue unitValue, Unit newUnit)
+        {
+            if (!newUnit.ToCompoundUnit().Equals(unitValue.Unit))
+                throw new InvalidOperationException($"Cannot convert {unitValue.Unit} to {newUnit}");
 
-            switch (standardUnitValue.Unit)
+            switch (newUnit)
             {
+                case Unit.Compound:
+                    throw new NotSupportedException("Conversion to compound unit is not supported. " +
+                                                    "That enum value is intended to indicate non-named units");
                 case Unit.Meter:
-                    if (newUnit == Unit.NauticalMile)
-                        return new UnitValue(newUnit, standardUnitValue.Value / 1852.0);
-                    if(newUnit == Unit.StatuteMile)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 0.000621371);
-                    if(newUnit == Unit.Feet)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 3.28084);
-                    break;
                 case Unit.MetersPerSecond:
-                    if (newUnit == Unit.Knots)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 1.94384449);
-                    if (newUnit == Unit.FeetPerMinute)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 196.850394);
-                    if(newUnit == Unit.Mach)
-                        return new UnitValue(newUnit, standardUnitValue.Value/340.3);
-                    break;
-                case Unit.Second:
-                    break;
                 case Unit.MetersPerSecondSquared:
-                    if (newUnit == Unit.KnotsPerSeond)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 1.94384449);
-                    break;
-                case Unit.Kelvin:
-                    if(newUnit == Unit.Celcius)
-                        return new UnitValue(newUnit, standardUnitValue.Value - 273.15);
-                    if(newUnit == Unit.Fahrenheit)
-                        return new UnitValue(newUnit, standardUnitValue.Value*(9.0/5.0)-459.67);
-                    break;
-                case Unit.Pascal:
-                    if(newUnit == Unit.Bar)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 0.00001);
-                    if (newUnit == Unit.InchesOfMercury)
-                        return new UnitValue(newUnit, standardUnitValue.Value * 0.0002952998751);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(unitValue.Unit));
-            }
-            throw new InvalidOperationException($"Conversion from {unitValue.Unit} to {newUnit} is not implemented");
-        }
-        public static bool CanConvertTo(this UnitValue originalValue, Unit newUnit) { return CanConvertTo(originalValue.Unit, newUnit); }
-        public static bool CanConvertTo(this Unit originalUnit, Unit newUnit)
-        {
-            if (originalUnit.Equals(newUnit))
-                return true;
-            var originalStandardUnit = originalUnit.CorrespondingSIStandard();
-            if (originalStandardUnit.Equals(newUnit))
-                return true;
-            switch (originalStandardUnit)
-            {
-                case Unit.Meter:
-                    if (newUnit.InSet(Unit.Feet, Unit.NauticalMile, Unit.StatuteMile))
-                        return true;
-                    break;
-                case Unit.MetersPerSecond:
-                    if (newUnit.InSet(Unit.Knots, Unit.FeetPerMinute, Unit.Mach))
-                        return true;
-                    break;
                 case Unit.Second:
-                    break;
-                case Unit.MetersPerSecondSquared:
-                    if (newUnit.InSet(Unit.KnotsPerSeond))
-                        return true;
-                    break;
                 case Unit.Kelvin:
-                    if (newUnit.InSet(Unit.Celcius, Unit.Fahrenheit))
-                        return true;
-                    break;
                 case Unit.Pascal:
-                    if (newUnit.InSet(Unit.Bar, Unit.InchesOfMercury))
-                        return true;
-                    break;
+                case Unit.SquareMeter:
+                case Unit.CubicMeters:
+                case Unit.Kilogram:
+                case Unit.Coulombs:
+                case Unit.Joule:
+                case Unit.Newton:
+                case Unit.GramPerMole:
+                    return unitValue.Value;
+                case Unit.Feet:
+                    return 3.2808399*unitValue.Value;
+                case Unit.StatuteMile:
+                    return 0.000621371192 * unitValue.Value;
+                case Unit.NauticalMile:
+                    return 0.000539956803*unitValue.Value;
+                case Unit.FeetPerMinute:
+                    return 60*3.2808399*unitValue.Value;
+                case Unit.Knots:
+                    return 1.94384449244*unitValue.Value;
+                case Unit.Mach:
+                    return 0.002938669957977*unitValue.Value;
+                case Unit.KnotsPerSeond:
+                    return 1.94384449244 * unitValue.Value;
+                case Unit.Celcius:
+                    return unitValue.Value + 273.15;
+                case Unit.Fahrenheit:
+                    return unitValue.Value*(9.0/5.0) - 459.67;
+                case Unit.Bar:
+                    return 1e-5*unitValue.Value;
+                case Unit.InchesOfMercury:
+                    return 2.952998749e-4*unitValue.Value;
+                case Unit.ElementaryCharge:
+                    return unitValue.Value/(1.60217662*1e-19);
+                case Unit.ElectronVolts:
+                    return unitValue.Value / (1.60217662 * 1e-19);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(originalUnit));
+                    throw new InvalidOperationException($"Conversion from {unitValue.Unit} to {newUnit} is not implemented");
             }
-            return false;
         }
-        public static UnitValue ConvertToSIStandard(this UnitValue unitValue)
+        public static double In(this UnitValue unitValue, SIPrefix prefix, Unit unit)
         {
-            if (unitValue.Unit.InSet(SIStandards)) return unitValue.Clone();
-
-            switch(unitValue.Unit)
-            {
-                case Unit.Feet:
-                    return new UnitValue(Unit.Meter, unitValue.Value  * 0.3048);
-                case Unit.NauticalMile:
-                    return new UnitValue(Unit.Meter, unitValue.Value * 1852);
-                case Unit.StatuteMile:
-                    return new UnitValue(Unit.Meter, unitValue.Value * 1609.344);
-                case Unit.FeetPerMinute:
-                    return new UnitValue(Unit.MetersPerSecond, unitValue.Value * 0.00508);
-                case Unit.Knots:
-                    return new UnitValue(Unit.MetersPerSecond, unitValue.Value * 0.514444444);
-                case Unit.Mach:
-                    return new UnitValue(Unit.MetersPerSecond, unitValue.Value * 340.3);
-                case Unit.KnotsPerSeond:
-                    return new UnitValue(Unit.MetersPerSecondSquared, unitValue.Value * 0.514444444);
-                case Unit.Celcius:
-                    return new UnitValue(Unit.Kelvin, unitValue.Value + 273.15);
-                case Unit.Fahrenheit:
-                    return new UnitValue(Unit.Kelvin, (unitValue.Value + 459.67) * (5.0/9.0));
-                case Unit.Bar:
-                    return new UnitValue(Unit.Pascal, unitValue.Value * 100000);
-                case Unit.InchesOfMercury:
-                    return new UnitValue(Unit.Pascal, unitValue.Value * 3386.38816);
-            }
-            throw new NotSupportedException($"Conversion of {unitValue.Unit} to standard is not implemented");
+            var multiplier = GetMultiplier(prefix);
+            return unitValue.In(unit) / multiplier;
         }
-        public static Unit CorrespondingSIStandard(this Unit unit)
-        {
-            if (unit.InSet(SIStandards)) return unit;
 
-            switch (unit)
-            {
-                case Unit.Feet:
-                case Unit.NauticalMile:
-                case Unit.StatuteMile:
-                    return Unit.Meter;
-                case Unit.FeetPerMinute:
-                case Unit.Knots:
-                case Unit.Mach:
-                    return Unit.MetersPerSecond;
-                case Unit.KnotsPerSeond:
-                    return Unit.MetersPerSecondSquared;
-                case Unit.Celcius:
-                case Unit.Fahrenheit:
-                    return Unit.Kelvin;
-                case Unit.Bar:
-                case Unit.InchesOfMercury:
-                    return Unit.Pascal;
-            }
-            throw new NotSupportedException($"Conversion of {unit} to standard is not implemented");
+        public static UnitValue To(this double value, Unit unit)
+        {
+            return new UnitValue(unit, value);
+        }
+
+        public static UnitValue To(this float value, Unit unit)
+        {
+            return To((double)value, unit);
+        }
+
+        public static UnitValue To(this int value, Unit unit)
+        {
+            return To((double)value, unit);
+        }
+
+        public static UnitValue To(this double value, CompoundUnit unit)
+        {
+            return new UnitValue(unit, value);
+        }
+
+        public static UnitValue To(this double value, SIPrefix prefix, Unit unit)
+        {
+            var multiplier = GetMultiplier(prefix);
+            return new UnitValue(unit, multiplier * value);
+        }
+
+        public static UnitValue To(this float value, SIPrefix prefix, Unit unit)
+        {
+            return To((double)value, prefix, unit);
+        }
+
+        public static UnitValue To(this int value, SIPrefix prefix, Unit unit)
+        {
+            return To((double)value, prefix, unit);
         }
 
         public static string StringRepresentation(this Unit unit)
@@ -193,42 +151,162 @@ namespace Commons
                     return "bar";
                 case Unit.InchesOfMercury:
                     return "inHg";
+                case Unit.SquareMeter:
+                    return "m^2";
+                case Unit.CubicMeters:
+                    return "m^3";
+                case Unit.Kilogram:
+                    return "kg";
+                case Unit.GramPerMole:
+                    return "g/mol";
+                case Unit.Coulombs:
+                    return "C";
+                case Unit.ElementaryCharge:
+                    return "e";
+                case Unit.Joule:
+                    return "J";
+                case Unit.ElectronVolts:
+                    return "eV";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
             }
         }
 
-        public static double In(this UnitValue unitValue, Unit unit)
+        public static string StringRepresentation(this SIBaseUnit siBaseUnit)
         {
-            return unitValue.ConvertTo(unit).Value;
+            switch (siBaseUnit)
+            {
+                case SIBaseUnit.Meter:
+                    return "m";
+                case SIBaseUnit.Kilogram:
+                    return "kg";
+                case SIBaseUnit.Second:
+                    return "s";
+                case SIBaseUnit.Ampere:
+                    return "A";
+                case SIBaseUnit.Kelvin:
+                    return "K";
+                case SIBaseUnit.Mole:
+                    return "mol";
+                case SIBaseUnit.Candela:
+                    return "cd";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(siBaseUnit), siBaseUnit, null);
+            }
         }
 
-        public static UnitValue To(this double value, Unit unit)
+        public static string StringRepresentation(this SIPrefix prefix)
         {
-            return new UnitValue(unit, value);
+            switch (prefix)
+            {
+                case SIPrefix.None:
+                    return string.Empty;
+                case SIPrefix.Femto:
+                    return "f";
+                case SIPrefix.Pico:
+                    return "p";
+                case SIPrefix.Nano:
+                    return "n";
+                case SIPrefix.Micro:
+                    return "μ";
+                case SIPrefix.Milli:
+                    return "m";
+                case SIPrefix.Centi:
+                    return "c";
+                case SIPrefix.Deci:
+                    return "d";
+                case SIPrefix.Deca:
+                    return "D";
+                case SIPrefix.Hecto:
+                    return "H";
+                case SIPrefix.Kilo:
+                    return "K";
+                case SIPrefix.Mega:
+                    return "M";
+                case SIPrefix.Giga:
+                    return "G";
+                case SIPrefix.Tera:
+                    return "T";
+                case SIPrefix.Peta:
+                    return "P";
+                case SIPrefix.Exa:
+                    return "E";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(prefix), prefix, null);
+            }
         }
 
-        public static UnitValue To(this float value, Unit unit)
+        public static double GetMultiplier(this SIPrefix prefix)
         {
-            return new UnitValue(unit, value);
-        }
-
-        public static UnitValue To(this int value, Unit unit)
-        {
-            return new UnitValue(unit, value);
+            switch (prefix)
+            {
+                case SIPrefix.Femto:
+                    return 1e-15;
+                case SIPrefix.Pico:
+                    return 1e-12;
+                case SIPrefix.Nano:
+                    return 1e-9;
+                case SIPrefix.Micro:
+                    return 1e-6;
+                case SIPrefix.Milli:
+                    return 1e-3;
+                case SIPrefix.Centi:
+                    return 1e-2;
+                case SIPrefix.Deci:
+                    return 1e-1;
+                case SIPrefix.None:
+                    return 1;
+                case SIPrefix.Deca:
+                    return 1e1;
+                case SIPrefix.Hecto:
+                    return 1e2;
+                case SIPrefix.Kilo:
+                    return 1e3;
+                case SIPrefix.Mega:
+                    return 1e6;
+                case SIPrefix.Giga:
+                    return 1e9;
+                case SIPrefix.Tera:
+                    return 1e12;
+                case SIPrefix.Peta:
+                    return 1e15;
+                case SIPrefix.Exa:
+                    return 1e18;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(prefix), prefix, null);
+            }
         }
 
         public static UnitValue RoundToNearest(this UnitValue value, UnitValue resolution)
         {
-            return Math.Round(value.ConvertTo(resolution.Unit).Value / resolution.Value) * resolution.Value.To(resolution.Unit);
+            return Math.Round(value.In(resolution.Unit) / resolution.Value) * resolution.Value.To(resolution.Unit);
         }
         public static UnitValue RoundDownToNearest(this UnitValue value, UnitValue resolution)
         {
-            return Math.Floor(value.ConvertTo(resolution.Unit).Value / resolution.Value) * resolution.Value.To(resolution.Unit);
+            return Math.Floor(value.In(resolution.Unit) / resolution.Value) * resolution.Value.To(resolution.Unit);
         }
         public static UnitValue RoundUpToNearest(this UnitValue value, UnitValue resolution)
         {
-            return Math.Ceiling(value.ConvertTo(resolution.Unit).Value / resolution.Value) * resolution.Value.To(resolution.Unit);
+            return Math.Ceiling(value.In(resolution.Unit) / resolution.Value) * resolution.Value.To(resolution.Unit);
+        }
+
+        public static UnitValue Sum<T>(this IEnumerable<T> items, Func<T, UnitValue> valueSelector, Unit unit)
+        {
+            return items.Select(valueSelector).Sum(unit);
+        }
+        public static UnitValue Sum(this IEnumerable<UnitValue> items, Unit unit)
+        {
+            return items.Select(item => item.In(unit)).Sum().To(unit);
+        }
+
+        public static UnitValue Average<T>(this IEnumerable<T> items, Func<T, UnitValue> valueSelector,
+            SIPrefix siPrefix, Unit unit)
+        {
+            return items.Select(valueSelector).Average(siPrefix, unit);
+        }
+        public static UnitValue Average(this IEnumerable<UnitValue> items, SIPrefix siPrefix, Unit unit)
+        {
+            return items.Select(uv => uv.In(siPrefix, unit)).Average().To(siPrefix, unit);
         }
     }
 }
