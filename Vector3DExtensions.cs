@@ -14,6 +14,11 @@ namespace Commons
             return a.Divide(magnitude);
         }
 
+        public static Vector3D ProjectOnto(this Vector3D v1, Vector3D v2)
+        {
+            return v1.DotProduct(v2) * v2;
+        }
+
         public static Vector3D Divide(this Vector3D vector, double scalar)
         {
             return new Vector3D(vector.X / scalar, vector.Y / scalar, vector.Z / scalar);
@@ -37,6 +42,18 @@ namespace Commons
         public static double Magnitude(this Vector3D a)
         {
             return Math.Sqrt(a.X * a.X + a.Y * a.Y + a.Z * a.Z);
+        }
+
+        public static double AngleWith(this Vector3D v1, Vector3D v2)
+        {
+            var normalizedV1 = v1.Normalize();
+            var normalizedV2 = v2.Normalize();
+            return Math.Acos(normalizedV1.DotProduct(normalizedV2));
+        }
+
+        public static Point3D ToPoint3D(this Vector3D v)
+        {
+            return new Point3D(v.X, v.Y, v.Z);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Commons
@@ -12,6 +13,13 @@ namespace Commons
         public ulong GetUnusedEdgeId()
         {
             return nextEdgeId++;
+        }
+
+        public uint GetUnusedVertexId()
+        {
+            if (!Vertices.Any())
+                return 0;
+            return Vertices.Max(v => v.Key) + 1;
         }
 
         [DataMember]
@@ -102,6 +110,35 @@ namespace Commons
             var vertex2 = Vertices[vertex2Id];
 
             ConnectVertices(vertex1, vertex2);
+        }
+
+        public GraphMergeInfo AddGraph(Graph otherGraph)
+        {
+            var vertexIdMap = new Dictionary<uint, uint>();
+            foreach (var vertex in otherGraph.Vertices.Values)
+            {
+                var newVertexId = GetUnusedVertexId();
+                AddVertex(new Vertex(newVertexId, vertex.Weight)
+                {
+                    Object = vertex.Object
+                });
+                vertexIdMap.Add(vertex.Id, newVertexId);
+            }
+            var edgeIdMap = new Dictionary<ulong, ulong>();
+            foreach (var edge in otherGraph.Edges.Values)
+            {
+                var newEdgeId = GetUnusedEdgeId();
+                AddEdge(new Edge(newEdgeId,
+                    vertexIdMap[edge.Vertex1Id],
+                    vertexIdMap[edge.Vertex2Id],
+                    edge.Weight,
+                    edge.IsDirected)
+                {
+                    Object = edge.Object
+                });
+                edgeIdMap.Add(edge.Id, newEdgeId);
+            }
+            return new GraphMergeInfo(vertexIdMap, edgeIdMap);
         }
     }
 }
