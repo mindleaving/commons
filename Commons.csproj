@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2F75E8D3-B454-4198-A9B7-BC724211E0EB}</ProjectGuid>
+    <ProjectGuid>{D0E6B038-C939-487D-BB5E-A6270A0D18F5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Commons</RootNamespace>
@@ -68,6 +68,8 @@
     <Compile Include="MatrixOperations.cs" />
     <Compile Include="MinMaxMean.cs" />
     <Compile Include="NearestNeighborFinder.cs" />
+    <Compile Include="Point2D.cs" />
+    <Compile Include="Point2DExtensions.cs" />
     <Compile Include="Point3D.cs" />
     <Compile Include="Point3DExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

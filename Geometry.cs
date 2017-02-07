@@ -22,6 +22,40 @@ namespace Commons
             return distanceToLine;
         }
 
+        public static double DistanceToLine(this Point2D point, Point2D linePoint1, Point2D linePoint2)
+        {
+            var distanceToLinePoint1 = point.DistanceTo(linePoint1);
+            var distanceToLinePoint2 = point.DistanceTo(linePoint2);
+            if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
+                return 0;
+            var lineLength = linePoint1.DistanceTo(linePoint2);
+            if (lineLength == 0)
+                return distanceToLinePoint1;
+
+            var cosAngle = (lineLength * lineLength + distanceToLinePoint1 * distanceToLinePoint1 - distanceToLinePoint2 * distanceToLinePoint2)
+                / (2 * lineLength * distanceToLinePoint1);
+            var angle = Math.Acos(cosAngle);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
+            return distanceToLine;
+        }
+
+        public static double DistanceToLine(this Point3D point, Point3D linePoint1, Point3D linePoint2)
+        {
+            var distanceToLinePoint1 = point.DistanceTo(linePoint1);
+            var distanceToLinePoint2 = point.DistanceTo(linePoint2);
+            if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
+                return 0;
+            var lineLength = linePoint1.DistanceTo(linePoint2);
+            if (lineLength == 0)
+                return distanceToLinePoint1;
+
+            var cosAngle = (lineLength * lineLength + distanceToLinePoint1 * distanceToLinePoint1 - distanceToLinePoint2 * distanceToLinePoint2)
+                / (2 * lineLength * distanceToLinePoint1);
+            var angle = Math.Acos(cosAngle);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
+            return distanceToLine;
+        }
+
         public static UnitValue DistanceToLineSegment(this GeoCoordinate point, GeoCoordinate linePoint1, GeoCoordinate linePoint2)
         {
             // Assume short distances, such that euclidean coordinate system is a good approximation
@@ -45,6 +79,30 @@ namespace Commons
 
             var angle = Math.Acos(cosAngle1);
             var distanceToLine = Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
+            return distanceToLine;
+        }
+        public static double DistanceToLineSegment(this Point2D point, Point2D linePoint1, Point2D linePoint2)
+        {
+            var distanceToLinePoint1 = point.DistanceTo(linePoint1);
+            var distanceToLinePoint2 = point.DistanceTo(linePoint2);
+            if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
+                return 0;
+            var lineLength = linePoint1.DistanceTo(linePoint2);
+            if (lineLength == 0)
+                return distanceToLinePoint1;
+
+            var cosAngle1 = (lineLength * lineLength + distanceToLinePoint1 * distanceToLinePoint1 - distanceToLinePoint2 * distanceToLinePoint2)
+                / (2 * lineLength * distanceToLinePoint1);
+            if (cosAngle1 < 0)
+                return distanceToLinePoint1;
+
+            var cosAngle2 = (lineLength * lineLength + distanceToLinePoint2 * distanceToLinePoint2 - distanceToLinePoint1 * distanceToLinePoint1)
+                / (2 * lineLength * distanceToLinePoint2);
+            if (cosAngle2 < 0)
+                return distanceToLinePoint2;
+
+            var angle = Math.Acos(cosAngle1);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
             return distanceToLine;
         }
 

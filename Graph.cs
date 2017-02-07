@@ -96,20 +96,22 @@ namespace Commons
             return Edges.Remove(edge.Id);
         }
 
-        public void ConnectVertices(Vertex vertex1, Vertex vertex2)
+        public Edge ConnectVertices(Vertex vertex1, Vertex vertex2)
         {
             if (!Vertices.ContainsKey(vertex1.Id) || !Vertices.ContainsKey(vertex2.Id))
                 throw new Exception("Cannot add edge because one or both of its vertices are not in the graph");
 
-            AddEdge(new Edge(GetUnusedEdgeId(), vertex1.Id, vertex2.Id));
+            var edge = new Edge(GetUnusedEdgeId(), vertex1.Id, vertex2.Id);
+            AddEdge(edge);
+            return edge;
         }
 
-        public void ConnectVertices(uint vertex1Id, uint vertex2Id)
+        public Edge ConnectVertices(uint vertex1Id, uint vertex2Id)
         {
             var vertex1 = Vertices[vertex1Id];
             var vertex2 = Vertices[vertex2Id];
 
-            ConnectVertices(vertex1, vertex2);
+            return ConnectVertices(vertex1, vertex2);
         }
 
         public GraphMergeInfo AddGraph(Graph otherGraph)
