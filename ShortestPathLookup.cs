@@ -6,30 +6,30 @@ namespace Commons
     public class ShortestPathLookup
     {
         public readonly Vertex Source;
-        private readonly Dictionary<Vertex, GraphPath> paths;
+        public Dictionary<Vertex, GraphPath> Paths { get; }
 
         public ShortestPathLookup(Vertex source, Dictionary<Vertex, GraphPath> paths)
         {
             Source = source;
-            this.paths = paths;
+            Paths = paths;
         }
 
         public GraphPath PathTo(Vertex target)
         {
-            if (!paths.ContainsKey(target))
+            if (!Paths.ContainsKey(target))
                 throw new ArgumentException("Target is not in graph");
 
-            return paths[target];
+            return Paths[target];
         }
 
         public double PathLengthTo(Vertex target)
         {
-            return !paths.ContainsKey(target) ? Double.PositiveInfinity : paths[target].PathLength;
+            return !Paths.ContainsKey(target) ? Double.PositiveInfinity : Paths[target].PathLength;
         }
 
         public void RecalculateAllPathLengths()
         {
-            paths.Values.ForEach(path => path.RecalculatePathLength());
+            Paths.Values.ForEach(path => path.RecalculatePathLength());
         }
     }
 }

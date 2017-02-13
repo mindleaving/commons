@@ -22,6 +22,10 @@ namespace Commons
             return adjacencyMatrix;
         }
 
+        public static ShortestPathLookup ShortestPaths(Graph graph, uint sourceVertexId)
+        {
+            return ShortestPaths(graph, graph.Vertices[sourceVertexId]);
+        }
         public static ShortestPathLookup ShortestPaths(Graph graph, Vertex source)
         {
             if (!graph.Vertices.ContainsKey(source.Id))
@@ -142,6 +146,21 @@ namespace Commons
                 .Select(edge => edge.Vertex1Id == vertex.Id ? edge.Vertex2Id : edge.Vertex1Id)
                 .Distinct()
                 .Select(vId => graph.Vertices[vId]);
+        }
+
+        public static IEnumerable<Vertex> GetVerticesBetween(Graph graph, uint firstVertexId, uint lastVertexId)
+        {
+            var firstVertexPathLookup = ShortestPaths(graph, firstVertexId);
+            var lastVertexPathLookup = ShortestPaths(graph, lastVertexId);
+            var verticesAccessibleFromFirstVertex = firstVertexPathLookup.Paths
+                .Where(kvp => kvp.Value.Path.All(edge => !edge.HasVertex(lastVertexId)))
+                .Select(kvp => kvp.Key.Id);
+            var verticesAccessibleFromLastVertex = lastVertexPathLookup.Paths
+                .Where(kvp => kvp.Value.Path.All(edge => !edge.HasVertex(firstVertexId)))
+                .Select(kvp => kvp.Key.Id);
+            var intersection = verticesAccessibleFromFirstVertex
+                .Intersect(verticesAccessibleFromLastVertex);
+            return intersection.Select(vId => graph.Vertices[vId]);
         }
     }
 }

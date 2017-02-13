@@ -26,6 +26,15 @@ namespace Commons
             return !i.IsEven();
         }
 
+        public static bool IsEven(this uint i)
+        {
+            return i % 2 == 0;
+        }
+        public static bool IsOdd(this uint i)
+        {
+            return !i.IsEven();
+        }
+
         public static bool IsNaN(this double value)
         {
             return double.IsNaN(value);
