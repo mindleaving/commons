@@ -159,7 +159,8 @@ namespace Commons
                 .Where(kvp => kvp.Value.Path.All(edge => !edge.HasVertex(firstVertexId)))
                 .Select(kvp => kvp.Key.Id);
             var intersection = verticesAccessibleFromFirstVertex
-                .Intersect(verticesAccessibleFromLastVertex);
+                .Intersect(verticesAccessibleFromLastVertex)
+                .Concat(new []{firstVertexId, lastVertexId});
             return intersection.Select(vId => graph.Vertices[vId]);
         }
     }
