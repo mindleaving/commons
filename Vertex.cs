@@ -48,6 +48,20 @@ namespace Commons
             return EdgeIds.Remove(edge.Id);
         }
 
+        public static bool operator ==(Vertex vertex1, Vertex vertex2)
+        {
+            if (vertex1 == null && vertex2 == null)
+                return true;
+            if (vertex1 == null || vertex2 == null)
+                return false;
+            return vertex1.Id == vertex2.Id;
+        }
+
+        public static bool operator !=(Vertex vertex1, Vertex vertex2)
+        {
+            return !(vertex1 == vertex2);
+        }
+
         public override string ToString()
         {
             return $"V{Id}, #Edges: {EdgeIds.Count}";

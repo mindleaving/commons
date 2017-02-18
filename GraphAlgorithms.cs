@@ -37,10 +37,7 @@ namespace Commons
             var unVisitedVertexDictionary = graph.Vertices.ToDictionary(v => v.Key, v => true);
             var unvisitedVertexCount = unVisitedVertexDictionary.Count;
             var shortestPathLengths = new Dictionary<uint, double> { { source.Id, 0} };
-            var shortestPaths = new Dictionary<Vertex, GraphPath>
-            {
-                {source,new GraphPath(source.Id)}
-            };
+            var backtraceMap = new Dictionary<uint, uint>();
 
             while (unvisitedVertexCount > 0)
             {
@@ -63,9 +60,8 @@ namespace Commons
                 var adjacentEdgeVertexDictionary = currentVertex.EdgeIds
                     .Select(e => graph.Edges[e])
                     .Where(e => !e.IsDirected || e.Vertex1Id == currentVertex.Id)
-                    .Select(e => new { VertexId = e.Vertex1Id != currentVertex.Id ? e.Vertex1Id : e.Vertex2Id, Edge =e });
+                    .Select(e => new { VertexId = e.Vertex1Id != currentVertex.Id ? e.Vertex1Id : e.Vertex2Id, Edge = e });
                 var currentVertexPathLength = shortestPathLengths[currentVertex.Id];
-                var currentShortestPath = shortestPaths[currentVertex];
                 foreach (var vertexEdgePair in adjacentEdgeVertexDictionary)
                 {
                     var adjacentVertex = graph.Vertices[vertexEdgePair.VertexId];
@@ -78,17 +74,14 @@ namespace Commons
                         : double.PositiveInfinity;
                     if (currentShortestPathLength < currentVertexPathLength + adjacentEdge.Weight)
                         continue;
-
+                    backtraceMap[adjacentVertex.Id] = currentVertex.Id;
                     shortestPathLengths[adjacentVertex.Id] = currentVertexPathLength + adjacentEdge.Weight;
-                    var newShortestPath = new GraphPath(source.Id, currentShortestPath);
-                    newShortestPath.Append(adjacentEdge);
-                    if (shortestPaths.ContainsKey(adjacentVertex))
-                        shortestPaths[adjacentVertex] = newShortestPath;
-                    else
-                        shortestPaths.Add(adjacentVertex, newShortestPath);
                 }
             }
-            return new ShortestPathLookup(source, shortestPaths);
+            return new ShortestPathLookup(graph,
+                source,
+                backtraceMap,
+                shortestPathLengths);
         }
 
         public static bool IsGraphConnected(Graph graph)
@@ -151,22 +144,6 @@ namespace Commons
                 .Select(edge => edge.Vertex1Id == vertex.Id ? edge.Vertex2Id : edge.Vertex1Id)
                 .Distinct()
                 .Select(vId => graph.Vertices[vId]);
-        }
-
-        public static IEnumerable<Vertex> GetVerticesBetween(Graph graph, uint firstVertexId, uint lastVertexId)
-        {
-            var firstVertexPathLookup = ShortestPaths(graph, firstVertexId);
-            var lastVertexPathLookup = ShortestPaths(graph, lastVertexId);
-            var verticesAccessibleFromFirstVertex = firstVertexPathLookup.Paths
-                .Where(kvp => kvp.Value.Path.All(edge => !edge.HasVertex(lastVertexId)))
-                .Select(kvp => kvp.Key.Id);
-            var verticesAccessibleFromLastVertex = lastVertexPathLookup.Paths
-                .Where(kvp => kvp.Value.Path.All(edge => !edge.HasVertex(firstVertexId)))
-                .Select(kvp => kvp.Key.Id);
-            var intersection = verticesAccessibleFromFirstVertex
-                .Intersect(verticesAccessibleFromLastVertex)
-                .Concat(new []{firstVertexId, lastVertexId});
-            return intersection.Select(vId => graph.Vertices[vId]);
         }
     }
 }
