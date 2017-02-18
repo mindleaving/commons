@@ -35,25 +35,28 @@ namespace Commons
 
             // Dijkstra's algorithm
             var unVisitedVertexDictionary = graph.Vertices.ToDictionary(v => v.Key, v => true);
-            var shortestPathLengths = graph.Vertices.ToDictionary(v => v.Key, v => double.PositiveInfinity);
-            shortestPathLengths[source.Id] = 0;
+            var unvisitedVertexCount = unVisitedVertexDictionary.Count;
+            var shortestPathLengths = new Dictionary<uint, double> { { source.Id, 0} };
             var shortestPaths = new Dictionary<Vertex, GraphPath>
             {
                 {source,new GraphPath(source.Id)}
             };
 
-            while (unVisitedVertexDictionary.ContainsValue(true))
+            while (unvisitedVertexCount > 0)
             {
-                var currentVertex = graph.Vertices
-                    .Where(v => unVisitedVertexDictionary[v.Key])
-                    .OrderBy(v => shortestPathLengths[v.Key])
-                    .First().Value;
+                var vertexWithShortestDistance = shortestPathLengths
+                    .Where(kvp => unVisitedVertexDictionary[kvp.Key])
+                    .OrderBy(kvp => kvp.Value)
+                    .First().Key;
+                var currentVertex = graph.Vertices[vertexWithShortestDistance];
+
                 unVisitedVertexDictionary[currentVertex.Id] = false;
+                unvisitedVertexCount--;
 
                 // If all un-visisted vertices have +inf path lengths, the graph is not connected
                 // Either stop here and return vertices with +inf path length
                 // or throw an exception.
-                if (double.IsPositiveInfinity(shortestPathLengths[currentVertex.Id]))
+                if (!shortestPathLengths.ContainsKey(currentVertex.Id))
                     break;//throw new Exception("GraphAlgorithms.ShortestPath: Graph appears to be not connected.");
 
                 // Update adjacent vertices
@@ -70,7 +73,9 @@ namespace Commons
                     // Skip already visited vertices
                     if (!unVisitedVertexDictionary[adjacentVertex.Id])
                         continue;
-                    var currentShortestPathLength = shortestPathLengths[adjacentVertex.Id];
+                    var currentShortestPathLength = shortestPathLengths.ContainsKey(adjacentVertex.Id)
+                        ? shortestPathLengths[adjacentVertex.Id]
+                        : double.PositiveInfinity;
                     if (currentShortestPathLength < currentVertexPathLength + adjacentEdge.Weight)
                         continue;
 
