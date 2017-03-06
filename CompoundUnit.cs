@@ -77,6 +77,11 @@ namespace Commons
             return UnitExponents;
         }
 
+        public override int GetHashCode()
+        {
+            return UnitExponents?.GetHashCode() ?? 0;
+        }
+
         public bool Equals(CompoundUnit other)
         {
             if ((object)other == null)
@@ -125,6 +130,11 @@ namespace Commons
             if (denominator.Count > 1)
                 unitString += ")";
             return unitString;
+        }
+
+        public CompoundUnit Clone()
+        {
+            return new CompoundUnit(UnitExponents);
         }
     }
 }

@@ -6,8 +6,9 @@ using System.Runtime.Serialization;
 namespace Commons
 {
     [DataContract]
-    public struct UnitValue : IComparable
+    public class UnitValue : IComparable
     {
+        private UnitValue() { }
         public UnitValue(Unit unit, double value) : this()
         {
             Unit = unit.ToCompoundUnit();
@@ -22,8 +23,14 @@ namespace Commons
 
         [DataMember]
         public double Value { get; private set; }
-        [DataMember]
+        [IgnoreDataMember]
         public CompoundUnit Unit { get; private set; }
+        [DataMember]
+        private Unit SimpleUnit // For serialization
+        {
+            get { return Unit.ToUnit();  }
+            set { Unit = value.ToCompoundUnit(); }
+        }
 
         public static bool operator <(UnitValue value1, UnitValue value2)
         {
@@ -49,9 +56,10 @@ namespace Commons
         }
         public static bool operator ==(UnitValue value1, UnitValue value2)
         {
-            if (!value1.Unit.Equals(value2.Unit))
-                throw new InvalidOperationException($"Cannot compare unit values with incompatible units {value1.Unit} and {value2.Unit}");
-
+            if (ReferenceEquals(value1, null) && ReferenceEquals(value2, null))
+                return false;
+            if (ReferenceEquals(value1, null))
+                return false;
             return value1.Equals(value2);
         }
         public static bool operator !=(UnitValue value1, UnitValue value2)
@@ -103,8 +111,16 @@ namespace Commons
 
         public override bool Equals(object other)
         {
-            var otherUnitValue = other as UnitValue?;
-            return Value == otherUnitValue?.Value;
+            if (ReferenceEquals(other, this))
+                return true;
+            if (ReferenceEquals(other, null))
+                return false;
+            var otherUnitValue = other as UnitValue;
+            if (otherUnitValue == null)
+                return false;
+            if (!Unit.Equals(otherUnitValue.Unit))
+                return false;
+            return Value.Equals(otherUnitValue.Value);
         }
 
         public override int GetHashCode()
@@ -114,9 +130,9 @@ namespace Commons
 
         public int CompareTo(object obj)
         {
-            if (obj is UnitValue)
+            var otherUnitValue = obj as UnitValue;
+            if (otherUnitValue != null)
             {
-                var otherUnitValue = (UnitValue) obj;
                 return Value.CompareTo(otherUnitValue.Value);
             }
             return 0;
@@ -124,7 +140,7 @@ namespace Commons
 
         public UnitValue Clone()
         {
-            return new UnitValue(Unit, Value);
+            return new UnitValue(Unit.Clone(), Value);
         }
 
         public override string ToString()
