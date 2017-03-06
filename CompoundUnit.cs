@@ -15,16 +15,16 @@ namespace Commons
         { }
         public CompoundUnit(IEnumerable<SIBaseUnit> nominatorUnits, IEnumerable<SIBaseUnit> denominatorUnits)
         {
-            UnitExponents = new int[siBaseUnits.Count];
+            UnitExponents = new int[SIBaseUnits.Count];
 
             foreach (var nominatorUnit in nominatorUnits)
             {
-                var unitIdx = siBaseUnits[nominatorUnit];
+                var unitIdx = SIBaseUnits[nominatorUnit];
                 UnitExponents[unitIdx]++;
             }
             foreach (var denominatorUnit in denominatorUnits)
             {
-                var unitIdx = siBaseUnits[denominatorUnit];
+                var unitIdx = SIBaseUnits[denominatorUnit];
                 UnitExponents[unitIdx]--;
             }
         }
@@ -70,12 +70,8 @@ namespace Commons
             return Equals(other as CompoundUnit);
         }
 
-        private static readonly Dictionary<SIBaseUnit, int> siBaseUnits = ((SIBaseUnit[]) Enum.GetValues(typeof(SIBaseUnit)))
+        private static readonly Dictionary<SIBaseUnit, int> SIBaseUnits = ((SIBaseUnit[]) Enum.GetValues(typeof(SIBaseUnit)))
             .ToDictionary(unit => unit, unit => (int)unit);
-        public int[] GetUnitFingerprint()
-        {
-            return UnitExponents;
-        }
 
         public override int GetHashCode()
         {
@@ -88,7 +84,7 @@ namespace Commons
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            return GetUnitFingerprint().SequenceEqual(other.GetUnitFingerprint());
+            return UnitExponents.SequenceEqual(other.UnitExponents);
         }
 
         public override string ToString()
