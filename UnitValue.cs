@@ -57,7 +57,7 @@ namespace Commons
         public static bool operator ==(UnitValue value1, UnitValue value2)
         {
             if (ReferenceEquals(value1, null) && ReferenceEquals(value2, null))
-                return false;
+                return true;
             if (ReferenceEquals(value1, null))
                 return false;
             return value1.Equals(value2);
