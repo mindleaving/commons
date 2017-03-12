@@ -159,6 +159,7 @@ namespace Commons
         private static SIPrefix SelectSIPrefix(double value)
         {
             var allPrefixes = ((SIPrefix[]) Enum.GetValues(typeof(SIPrefix)))
+                .Except(new []{SIPrefix.Deca, SIPrefix.Deci, SIPrefix.Hecto, SIPrefix.Centi })
                 .ToDictionary(x => x, UnitValueExtensions.GetMultiplier);
             var multipliersSmallerThanValue = allPrefixes.Where(kvp => kvp.Value < value).ToList();
             if (!multipliersSmallerThanValue.Any())
