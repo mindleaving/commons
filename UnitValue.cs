@@ -158,10 +158,11 @@ namespace Commons
 
         private static SIPrefix SelectSIPrefix(double value)
         {
+            var absValue = Math.Abs(value);
             var allPrefixes = ((SIPrefix[]) Enum.GetValues(typeof(SIPrefix)))
                 .Except(new []{SIPrefix.Deca, SIPrefix.Deci, SIPrefix.Hecto, SIPrefix.Centi })
                 .ToDictionary(x => x, UnitValueExtensions.GetMultiplier);
-            var multipliersSmallerThanValue = allPrefixes.Where(kvp => kvp.Value < value).ToList();
+            var multipliersSmallerThanValue = allPrefixes.Where(kvp => kvp.Value < absValue).ToList();
             if (!multipliersSmallerThanValue.Any())
                 return allPrefixes.MinimumItem(kvp => kvp.Value).Key;
             return multipliersSmallerThanValue.MaximumItem(kvp => kvp.Value).Key;
