@@ -23,6 +23,8 @@ namespace Commons
 
         public GraphPath PathTo(Vertex target)
         {
+            if(target.Id == Source.Id)
+                return new GraphPath(Source.Id);
             if (!backtraceMap.ContainsKey(target.Id))
                 throw new ArgumentException("Target is not in graph");
 
