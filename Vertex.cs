@@ -50,9 +50,9 @@ namespace Commons
 
         public static bool operator ==(Vertex vertex1, Vertex vertex2)
         {
-            if (vertex1 == null && vertex2 == null)
+            if (ReferenceEquals(vertex1, vertex2))
                 return true;
-            if (vertex1 == null || vertex2 == null)
+            if (ReferenceEquals(vertex1, null) || ReferenceEquals(vertex2, null))
                 return false;
             return vertex1.Id == vertex2.Id;
         }
