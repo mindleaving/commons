@@ -23,6 +23,16 @@ namespace Commons
             return new Point2D(point.X + vector.X, point.Y + vector.Y);
         }
 
+        public static Point2D operator -(Point2D point, Vector2D vector)
+        {
+            return new Point2D(point.X - vector.X, point.Y - vector.Y);
+        }
+
+        public static Point2D operator -(Point2D point, Point2D vector)
+        {
+            return new Point2D(point.X - vector.X, point.Y - vector.Y);
+        }
+
         public static Point2D operator *(double scalar, Point2D point)
         {
             return new Point2D(scalar * point.X, scalar * point.Y);

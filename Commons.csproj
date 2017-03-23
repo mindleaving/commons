@@ -52,6 +52,13 @@
     <Compile Include="Combinatorics.cs" />
     <Compile Include="CompoundUnit.cs" />
     <Compile Include="CompoundUnitExtensions.cs" />
+    <Compile Include="CoordinateTransform\Embed2DIn3DTransform.cs" />
+    <Compile Include="CoordinateTransform\ICoordinateTransform.cs" />
+    <Compile Include="CoordinateTransform\PinholeToPlaneProjection.cs" />
+    <Compile Include="CoordinateTransform\TransformChain.cs" />
+    <Compile Include="CoordinateTransform\TransformTree.cs" />
+    <Compile Include="CoordinateTransform\TransformTreeEdge.cs" />
+    <Compile Include="CoordinateTransform\TransformTreeNode.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="EnumExtensions.cs" />
@@ -72,6 +79,7 @@
     <Compile Include="MatrixOperations.cs" />
     <Compile Include="MinMaxMean.cs" />
     <Compile Include="NearestNeighborFinder.cs" />
+    <Compile Include="Plane.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Point2DExtensions.cs" />
     <Compile Include="Point3D.cs" />

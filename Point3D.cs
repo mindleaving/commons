@@ -25,6 +25,16 @@ namespace Commons
             return new Point3D(point.X + vector.X, point.Y + vector.Y, point.Z + vector.Z);
         }
 
+        public static Point3D operator -(Point3D point, Vector3D vector)
+        {
+            return new Point3D(point.X - vector.X, point.Y - vector.Y, point.Z - vector.Z);
+        }
+
+        public static Point3D operator -(Point3D point, Point3D vector)
+        {
+            return new Point3D(point.X - vector.X, point.Y - vector.Y, point.Z - vector.Z);
+        }
+
         public static Point3D operator *(double scalar, Point3D point)
         {
             return new Point3D(scalar*point.X, scalar*point.Y, scalar*point.Z);
