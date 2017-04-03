@@ -24,6 +24,8 @@ namespace Commons
 
         public bool Equals(GeoCoordinate other)
         {
+            if (ReferenceEquals(other, null))
+                return false;
             return Latitude.Equals(other.Latitude) && Longitude.Equals(other.Longitude);
         }
 
