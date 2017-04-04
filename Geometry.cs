@@ -177,7 +177,7 @@ namespace Commons
         {
             var distanceToNavaid = position.GetDistanceTo(navaidCoordinate);
             var headingToNavaid = position.HeadingTo(navaidCoordinate);
-            var radialExtensionCoordinate = radial.CircularDifferene(headingToNavaid) < 90
+            var radialExtensionCoordinate = radial.CircularDifference(headingToNavaid) < 90
                 ? navaidCoordinate.MoveAlongRadial(radial, -distanceToNavaid)
                 : navaidCoordinate.MoveAlongRadial(radial, distanceToNavaid);
             var distanceFromRadial = position.DistanceToLine(navaidCoordinate, radialExtensionCoordinate);

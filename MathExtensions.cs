@@ -63,7 +63,7 @@ namespace Commons
         /// <summary>
         /// Calculates the small angle between two headings
         /// </summary>
-        public static double CircularDifferene(this double angle1, double angle2)
+        public static double CircularDifference(this double angle1, double angle2)
         {
             var modulusAngle1 = angle1.Modulus(360);
             var modulusAngle2 = angle2.Modulus(360);
@@ -74,9 +74,9 @@ namespace Commons
                 : greaterAngle - smallerAngle;
         }
 
-        public static double CircularDifferene(this int angle1, double angle2)
+        public static double CircularDifference(this int angle1, double angle2)
         {
-            return CircularDifferene((double) angle1, angle2);
+            return CircularDifference((double) angle1, angle2);
         }
 
         public static double RoundToNearest(this double value, double resolution)
