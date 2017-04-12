@@ -21,22 +21,23 @@
         }
         public static Vector3D In(this UnitVector3D unitPoint, CompoundUnit targetUnit)
         {
+            var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetUnit);
             return new Vector3D(
-                unitPoint.X.In(targetUnit),
-                unitPoint.Y.In(targetUnit),
-                unitPoint.Z.In(targetUnit));
+                multiplier*unitPoint.X,
+                multiplier*unitPoint.Y,
+                multiplier*unitPoint.Z);
         }
         public static Vector3D In(this UnitVector3D unitPoint, SIPrefix targetSIPrefix, Unit targetUnit)
         {
+            var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetSIPrefix, targetUnit);
             return new Vector3D(
-                unitPoint.X.In(targetSIPrefix, targetUnit),
-                unitPoint.Y.In(targetSIPrefix, targetUnit),
-                unitPoint.Z.In(targetSIPrefix, targetUnit));
+                multiplier*unitPoint.X,
+                multiplier*unitPoint.Y,
+                multiplier*unitPoint.Z);
         }
         public static UnitValue Magnitude(this UnitVector3D a)
         {
-            var commonUnit = a.X.Unit;
-            return a.In(commonUnit).Magnitude().To(commonUnit);
+            return ((Vector3D)a).Magnitude().To(a.Unit);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Commons
+﻿using System;
+
+namespace Commons
 {
     public static class UnitPoint3DExtensions
     {
@@ -21,34 +23,42 @@
         }
         public static Point3D In(this UnitPoint3D unitPoint, CompoundUnit targetUnit)
         {
+            var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetUnit);
             return new Point3D(
-                unitPoint.X.In(targetUnit),
-                unitPoint.Y.In(targetUnit),
-                unitPoint.Z.In(targetUnit));
+                multiplier*unitPoint.X,
+                multiplier*unitPoint.Y,
+                multiplier*unitPoint.Z);
         }
         public static Point3D In(this UnitPoint3D unitPoint, SIPrefix targetSIPrefix, Unit targetUnit)
         {
+            var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetSIPrefix, targetUnit);
             return new Point3D(
-                unitPoint.X.In(targetSIPrefix, targetUnit),
-                unitPoint.Y.In(targetSIPrefix, targetUnit),
-                unitPoint.Z.In(targetSIPrefix, targetUnit));
+                multiplier*unitPoint.X,
+                multiplier*unitPoint.Y,
+                multiplier*unitPoint.Z);
         }
         public static UnitValue DistanceTo(this UnitPoint3D unitPoint1, UnitPoint3D unitPoint2)
         {
-            var commonUnit = unitPoint1.X.Unit;
-            var point1 = unitPoint1.In(commonUnit);
-            var point2 = unitPoint2.In(commonUnit);
+#if CHECK_UNITS
+            if (unitPoint1.Unit != unitPoint2.Unit)
+                throw new InvalidOperationException($"Cannot calculate distance between points with different units, got {unitPoint1.Unit} and {unitPoint2.Unit}");
+#endif
+            var commonUnit = unitPoint1.Unit;
+            var distance = unitPoint1.DistanceTo((Point3D) unitPoint2);
 
-            return point1.DistanceTo(point2).To(commonUnit);
+            return distance.To(commonUnit);
         }
 
         public static UnitVector3D VectorTo(this UnitPoint3D unitPoint1, UnitPoint3D unitPoint2)
         {
-            var commonUnit = unitPoint1.X.Unit;
-            var point1 = unitPoint1.In(commonUnit);
-            var point2 = unitPoint2.In(commonUnit);
+#if CHECK_UNITS
+            if (unitPoint1.Unit != unitPoint2.Unit)
+                throw new InvalidOperationException($"Cannot calculate vector between points with different units, got {unitPoint1.Unit} and {unitPoint2.Unit}");
+#endif
+            var commonUnit = unitPoint1.Unit;
+            var vector = unitPoint1.VectorTo((Point3D) unitPoint2);
 
-            return point1.VectorTo(point2).To(commonUnit);
+            return vector.To(commonUnit);
         }
     }
 }
