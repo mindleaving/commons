@@ -53,5 +53,9 @@
 
         // Force
         Newton,
+
+        // Angles
+        Radians,
+        Degree
     }
 }

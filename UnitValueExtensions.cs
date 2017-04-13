@@ -40,6 +40,7 @@ namespace Commons
                 case Unit.Joule:
                 case Unit.Newton:
                 case Unit.GramPerMole:
+                case Unit.Radians:
                     return unitValue.Value;
                 case Unit.Feet:
                     return 3.2808399*unitValue.Value;
@@ -67,6 +68,8 @@ namespace Commons
                     return unitValue.Value/(1.60217662*1e-19);
                 case Unit.ElectronVolts:
                     return unitValue.Value / (1.60217662 * 1e-19);
+                case Unit.Degree:
+                    return unitValue.Value*180/Math.PI;
                 default:
                     throw new InvalidOperationException($"Conversion from {unitValue.Unit} to {newUnit} is not implemented");
             }
@@ -167,6 +170,12 @@ namespace Commons
                     return "J";
                 case Unit.ElectronVolts:
                     return "eV";
+                case Unit.Newton:
+                    return "N";
+                case Unit.Radians:
+                    return "rad";
+                case Unit.Degree:
+                    return "°";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
             }
@@ -190,6 +199,8 @@ namespace Commons
                     return "mol";
                 case SIBaseUnit.Candela:
                     return "cd";
+                case SIBaseUnit.Radians:
+                    return "rad";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(siBaseUnit), siBaseUnit, null);
             }

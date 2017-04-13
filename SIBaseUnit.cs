@@ -8,6 +8,7 @@
         Ampere = 3,
         Kelvin = 4,
         Mole = 5,
-        Candela = 6
+        Candela = 6,
+        Radians = 7
     }
 }

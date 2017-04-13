@@ -53,6 +53,9 @@ namespace Commons
                     return new CompoundUnit(
                         new[] { SIBaseUnit.Kilogram, SIBaseUnit.Meter },
                         new[] { SIBaseUnit.Second, SIBaseUnit.Second });
+                case Unit.Radians:
+                    return new CompoundUnit(
+                        new []{SIBaseUnit.Radians });
                 default:
                     throw new NotImplementedException();
             }
@@ -73,7 +76,8 @@ namespace Commons
                 Unit.GramPerMole,
                 Unit.Coulombs,
                 Unit.Joule,
-                Unit.Newton);
+                Unit.Newton,
+                Unit.Radians);
         }
 
         public static Unit ToSIUnit(this Unit unit)
@@ -103,6 +107,8 @@ namespace Commons
                     return Unit.Coulombs;
                 case Unit.ElectronVolts:
                     return Unit.Joule;
+                case Unit.Degree:
+                    return Unit.Radians;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
             }
@@ -140,6 +146,8 @@ namespace Commons
                     return new UnitConversionResult(Unit.Coulombs, value * 1.60217662 * 1e-19);
                 case Unit.ElectronVolts:
                     return new UnitConversionResult(Unit.Joule, value * 1.60217662 * 1e-19);
+                case Unit.Degree:
+                    return new UnitConversionResult(Unit.Radians, value * Math.PI / 180);
                 case Unit.Meter:
                 case Unit.MetersPerSecond:
                 case Unit.MetersPerSecondSquared:
@@ -153,6 +161,7 @@ namespace Commons
                 case Unit.Coulombs:
                 case Unit.Joule:
                 case Unit.Newton:
+                case Unit.Radians:
                     return new UnitConversionResult(unit, value);
                 default:
                     throw new NotSupportedException($"Conversion of {unit} to standard is not implemented");

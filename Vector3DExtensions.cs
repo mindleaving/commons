@@ -44,11 +44,14 @@ namespace Commons
             return Math.Sqrt(a.X * a.X + a.Y * a.Y + a.Z * a.Z);
         }
 
-        public static double AngleWith(this Vector3D v1, Vector3D v2)
+        /// <summary>
+        /// Measures angle in radians between two vectors
+        /// </summary>
+        public static UnitValue AngleWith(this Vector3D v1, Vector3D v2)
         {
             var normalizedV1 = v1.Normalize();
             var normalizedV2 = v2.Normalize();
-            return Math.Acos(normalizedV1.DotProduct(normalizedV2));
+            return Math.Acos(normalizedV1.DotProduct(normalizedV2)).To(Unit.Radians);
         }
 
         public static Point3D ToPoint3D(this Vector3D v)
