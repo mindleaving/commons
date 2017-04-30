@@ -51,7 +51,10 @@ namespace Commons
         {
             var normalizedV1 = v1.Normalize();
             var normalizedV2 = v2.Normalize();
-            return Math.Acos(normalizedV1.DotProduct(normalizedV2)).To(Unit.Radians);
+            var dotProduct = normalizedV1.DotProduct(normalizedV2);
+            if (dotProduct > 1)
+                dotProduct = 1;
+            return Math.Acos(dotProduct).To(Unit.Radians);
         }
 
         public static Point3D ToPoint3D(this Vector3D v)
