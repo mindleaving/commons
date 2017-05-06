@@ -79,6 +79,11 @@
     <Compile Include="MatrixOperations.cs" />
     <Compile Include="MinMaxMean.cs" />
     <Compile Include="NearestNeighborFinder.cs" />
+    <Compile Include="Optimization\GradientCalculator.cs" />
+    <Compile Include="Optimization\GradientDescentOptimizer.cs" />
+    <Compile Include="Optimization\OptimizationResult.cs" />
+    <Compile Include="Optimization\ParameterCyclingOptimizer.cs" />
+    <Compile Include="Optimization\ParameterSetting.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Point2DExtensions.cs" />
@@ -100,7 +105,10 @@
     <Compile Include="UnitConverter.cs" />
     <Compile Include="UnitPoint3D.cs" />
     <Compile Include="UnitPoint3DExtensions.cs" />
+    <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
+    <Compile Include="UnitTests\Optimization\ParameterCyclingOptimizerTest.cs" />
     <Compile Include="UnitTests\UnitValueSerializationTest.cs" />
+    <Compile Include="UnitTests\UnitValueTest.cs" />
     <Compile Include="UnitValue.cs" />
     <Compile Include="UnitValueExtensions.cs" />
     <Compile Include="UnitVector3D.cs" />
@@ -115,6 +123,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
