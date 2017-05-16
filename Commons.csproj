@@ -62,6 +62,7 @@
     <Compile Include="Edge.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="EnumExtensions.cs" />
+    <Compile Include="FilterFuncs.cs" />
     <Compile Include="GeoCoordinate.cs" />
     <Compile Include="GeoCoordinateExtensions.cs" />
     <Compile Include="GeoLine.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="UnitConverter.cs" />
     <Compile Include="UnitPoint3D.cs" />
     <Compile Include="UnitPoint3DExtensions.cs" />
+    <Compile Include="UnitTests\FilterFuncsTest.cs" />
     <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
     <Compile Include="UnitTests\Optimization\ParameterCyclingOptimizerTest.cs" />
     <Compile Include="UnitTests\UnitValueSerializationTest.cs" />

@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return string.Format("Cost: {0}", Cost);
+            return $"Cost: {Cost}";
         }
     }
 }
