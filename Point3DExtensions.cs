@@ -15,6 +15,16 @@ namespace Commons
             return distance;
         }
 
+        public static double DistanceFromPlane(this Point3D point, 
+            Point3D planeOrigin, 
+            Vector3D spanVector1,
+            Vector3D spanVector2)
+        {
+            var normalVector = spanVector1.CrossProduct(spanVector2);
+            var planeOriginToPoint = (point - planeOrigin).ToVector3D();
+            return planeOriginToPoint.ProjectOnto(normalVector).Magnitude();
+        }
+
         public static Vector3D VectorTo(this Point3D point1, Point3D point2)
         {
             var diffX = point2.X - point1.X;
