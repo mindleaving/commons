@@ -138,7 +138,7 @@ namespace Commons
             return 0;
         }
 
-        public UnitValue Clone()
+        public UnitValue DeepClone()
         {
             return new UnitValue(Unit.Clone(), Value);
         }

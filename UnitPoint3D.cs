@@ -90,5 +90,10 @@ namespace Commons
         {
             return $"{X};{Y};{Z}";
         }
+
+        public UnitPoint3D DeepClone()
+        {
+            return new UnitPoint3D(Unit.Clone(), X, Y, Z);
+        }
     }
 }
