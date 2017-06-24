@@ -121,6 +121,7 @@
     <Compile Include="Vector3D.cs" />
     <Compile Include="Vector3DExtensions.cs" />
     <Compile Include="Vertex.cs" />
+    <Compile Include="Wpf\RelayCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
