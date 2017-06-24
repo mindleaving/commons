@@ -135,7 +135,7 @@ namespace Commons
                 case Unit.KnotsPerSeond:
                     return new UnitConversionResult(Unit.MetersPerSecondSquared, value * 0.514444444);
                 case Unit.Celcius:
-                    return new UnitConversionResult(Unit.Kelvin, value - 273.15);
+                    return new UnitConversionResult(Unit.Kelvin, value + 273.15);
                 case Unit.Fahrenheit:
                     return new UnitConversionResult(Unit.Kelvin, (value + 459.67) * (5.0 / 9.0));
                 case Unit.Bar:
