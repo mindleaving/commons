@@ -59,7 +59,8 @@
     <Compile Include="CoordinateTransform\TransformTree.cs" />
     <Compile Include="CoordinateTransform\TransformTreeEdge.cs" />
     <Compile Include="CoordinateTransform\TransformTreeNode.cs" />
-    <Compile Include="Debug\CsvWriter.cs" />
+    <Compile Include="IO\CsvReader.cs" />
+    <Compile Include="IO\CsvWriter.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="EnumExtensions.cs" />

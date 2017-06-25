@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.IO;
 
-namespace Commons.Debug
+namespace Commons.IO
 {
     public static class CsvWriter
     {
