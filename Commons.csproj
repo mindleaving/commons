@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.7.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.7.0\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -106,7 +106,9 @@
     <Compile Include="TrapLatch.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="UnitConverter.cs" />
+    <Compile Include="UnitPoint2D.cs" />
     <Compile Include="UnitPoint3D.cs" />
+    <Compile Include="UnitPoint2DExtensions.cs" />
     <Compile Include="UnitPoint3DExtensions.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />
     <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
@@ -115,7 +117,9 @@
     <Compile Include="UnitTests\UnitValueTest.cs" />
     <Compile Include="UnitValue.cs" />
     <Compile Include="UnitValueExtensions.cs" />
+    <Compile Include="UnitVector2D.cs" />
     <Compile Include="UnitVector3D.cs" />
+    <Compile Include="UnitVector2DExtensions.cs" />
     <Compile Include="UnitVector3DExtensions.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Vector2D.cs" />
