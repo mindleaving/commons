@@ -54,7 +54,8 @@ namespace Commons
             var dotProduct = normalizedV1.DotProduct(normalizedV2);
             if (dotProduct > 1)
                 dotProduct = 1;
-            return Math.Acos(dotProduct).To(Unit.Radians);
+            var angle = Math.Acos(dotProduct).To(Unit.Radians);
+            return angle.Value >= 0 ? angle : angle + (Math.PI/2).To(Unit.Radians);
         }
 
         public static Point3D ToPoint3D(this Vector3D v)
