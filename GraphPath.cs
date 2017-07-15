@@ -7,12 +7,12 @@ using System.Runtime.Serialization;
 namespace Commons
 {
     [DataContract]
-    public class GraphPath
+    public class GraphPath<TVertex, TEdge>
     {
         [DataMember]
         public uint StartVertexId { get; set; }
         [DataMember]
-        public LinkedList<Edge> Path { get; private set; }
+        public LinkedList<Edge<TEdge>> Path { get; private set; }
         [DataMember]
         public double PathLength { get; private set; }
 
@@ -20,26 +20,26 @@ namespace Commons
         {
             StartVertexId = startVertexId;
             PathLength = 0.0;
-            Path = new LinkedList<Edge>();
+            Path = new LinkedList<Edge<TEdge>>();
         }
 
-        public GraphPath(uint startVertexId, IList<Edge> edges)
+        public GraphPath(uint startVertexId, IList<Edge<TEdge>> edges)
             : this(startVertexId)
         {
             ValidateEdgeList(edges);
-            Path = new LinkedList<Edge>(edges);
+            Path = new LinkedList<Edge<TEdge>>(edges);
             RecalculatePathLength();
         }
 
-        public GraphPath(uint startVertexId, GraphPath path)
+        public GraphPath(uint startVertexId, GraphPath<TVertex, TEdge> path)
             : this(startVertexId)
         {
             // No validation necessary
-            Path = new LinkedList<Edge>(path.Path);
+            Path = new LinkedList<Edge<TEdge>>(path.Path);
             PathLength = path.PathLength;
         }
 
-        public void Append(Edge edge)
+        public void Append(Edge<TEdge> edge)
         {
             if(Path.Any())
                 ValidateEdgePair(Path.Last.Value, edge);
@@ -52,7 +52,7 @@ namespace Commons
             PathLength = Path.Sum(e => e.Weight);
         }
 
-        private void ValidateEdgeList(IList<Edge> edges)
+        private void ValidateEdgeList(IList<Edge<TEdge>> edges)
         {
             for (int edgeIdx = 0; edgeIdx < edges.Count - 1; edgeIdx++)
             {
@@ -62,19 +62,19 @@ namespace Commons
             }
         }
 
-        private static void ValidateEdgePair(Edge currentEdge, Edge nextEdge)
+        private static void ValidateEdgePair(Edge<TEdge> currentEdge, Edge<TEdge> nextEdge)
         {
             if (currentEdge.IsDirected)
             {
                 if (nextEdge.IsDirected)
                 {
                     if (currentEdge.Vertex2Id != nextEdge.Vertex1Id)
-                        throw new ArgumentException(nameof(GraphPath) + ": At least one pair of edges in path are not connected");
+                        throw new ArgumentException(nameof(GraphPath<TVertex, TEdge>) + ": At least one pair of edges in path are not connected");
                 }
                 else
                 {
                     if(currentEdge.Vertex2Id != nextEdge.Vertex1Id && currentEdge.Vertex2Id != nextEdge.Vertex2Id)
-                        throw new ArgumentException(nameof(GraphPath) + ": At least one pair of edges in path are not connected");
+                        throw new ArgumentException(nameof(GraphPath<TVertex, TEdge>) + ": At least one pair of edges in path are not connected");
                 }
             }
             else
@@ -82,13 +82,13 @@ namespace Commons
                 if (nextEdge.IsDirected)
                 {
                     if(currentEdge.Vertex1Id != nextEdge.Vertex1Id && currentEdge.Vertex2Id != nextEdge.Vertex1Id)
-                        throw new ArgumentException(nameof(GraphPath) + ": At least one pair of edges in path are not connected");
+                        throw new ArgumentException(nameof(GraphPath<TVertex, TEdge>) + ": At least one pair of edges in path are not connected");
                 }
                 else
                 {
                     if(currentEdge.Vertex1Id != nextEdge.Vertex1Id && currentEdge.Vertex2Id != nextEdge.Vertex1Id
                         && currentEdge.Vertex1Id != nextEdge.Vertex2Id && currentEdge.Vertex2Id != nextEdge.Vertex2Id)
-                        throw new ArgumentException(nameof(GraphPath) + ": At least one pair of edges in path are not connected");
+                        throw new ArgumentException(nameof(GraphPath<TVertex, TEdge>) + ": At least one pair of edges in path are not connected");
                 }
             }
         }

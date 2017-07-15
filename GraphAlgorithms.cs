@@ -6,7 +6,7 @@ namespace Commons
 {
     public static class GraphAlgorithms
     {
-        public static double[,] ComputeAdjacencyMatrix(Graph graph)
+        public static double[,] ComputeAdjacencyMatrix<TVertex, TEdge>(Graph<TVertex, TEdge> graph)
         {
             var adjacencyMatrix = new double[graph.Vertices.Count, graph.Vertices.Count];
 
@@ -22,11 +22,11 @@ namespace Commons
             return adjacencyMatrix;
         }
 
-        public static ShortestPathLookup ShortestPaths(Graph graph, uint sourceVertexId)
+        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(Graph<TVertex,TEdge> graph, uint sourceVertexId)
         {
             return ShortestPaths(graph, graph.Vertices[sourceVertexId]);
         }
-        public static ShortestPathLookup ShortestPaths(Graph graph, Vertex source)
+        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> source)
         {
             if (!graph.Vertices.ContainsKey(source.Id))
                 throw new ArgumentException("GraphAlgorithms.ShortestPath: Source vertex not in graph");
@@ -78,13 +78,13 @@ namespace Commons
                     shortestPathLengths[adjacentVertex.Id] = currentVertexPathLength + adjacentEdge.Weight;
                 }
             }
-            return new ShortestPathLookup(graph,
+            return new ShortestPathLookup<TVertex, TEdge>(graph,
                 source,
                 backtraceMap,
                 shortestPathLengths);
         }
 
-        public static bool IsGraphConnected(Graph graph)
+        public static bool IsGraphConnected<TVertex, TEdge>(Graph<TVertex, TEdge> graph)
         {
             if (!graph.Vertices.Any())
                 return true;
@@ -93,7 +93,7 @@ namespace Commons
             return graph.Vertices.Count == connectedVertices.Count();
         }
 
-        public static void ApplyMethodToAllConnectedVertices(Graph graph, Vertex startVertex, Action<Vertex> action)
+        public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex, Action<Vertex<TVertex>> action)
         {
             foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex))
             {
@@ -101,7 +101,7 @@ namespace Commons
             }
         }
 
-        public static IEnumerable<Vertex> GetConnectedSubgraph(Graph graph, Vertex startVertex)
+        public static IEnumerable<Vertex<TVertex>> GetConnectedSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex)
         {
             // Use depth first search for traversing connected component
             // Initialize graph algorithm data
@@ -114,7 +114,7 @@ namespace Commons
             }
         }
 
-        private static IEnumerable<Vertex> GetConnectedSubgraphStep(Graph graph, Vertex currentVertex)
+        private static IEnumerable<Vertex<TVertex>> GetConnectedSubgraphStep<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> currentVertex)
         {
             // Mark vertex as visited
             currentVertex.AlgorithmData = true;
@@ -137,7 +137,7 @@ namespace Commons
             yield return currentVertex;
         }
 
-        public static IEnumerable<Vertex> GetAdjacentVertices(Graph graph, Vertex vertex)
+        public static IEnumerable<Vertex<TVertex>> GetAdjacentVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> vertex)
         {
             return vertex.EdgeIds
                 .Select(edgeId => graph.Edges[edgeId])
@@ -146,13 +146,13 @@ namespace Commons
                 .Select(vId => graph.Vertices[vId]);
         }
 
-        public static Graph GetSubgraph(Graph graph, IList<uint> vertices)
+        public static Graph<TVertex, TEdge> GetSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IList<uint> vertices)
         {
             var subgraphVertices = vertices.Select(vertexId => graph.Vertices[vertexId]);
             var vertexIdHashSet = new HashSet<uint>(vertices);
             var subgraphEdges = graph.Edges.Values
                 .Where(e => vertexIdHashSet.Contains(e.Vertex1Id) && vertexIdHashSet.Contains(e.Vertex2Id));
-            return new Graph(subgraphVertices, subgraphEdges);
+            return new Graph<TVertex, TEdge>(subgraphVertices, subgraphEdges);
         }
     }
 }

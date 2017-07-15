@@ -6,14 +6,14 @@ namespace Commons
 {
     [DataContract]
     [KnownType(typeof(GeoCoordinate))]
-    public class Vertex
+    public class Vertex<T>
     {
         /// <summary>
         /// Property for holding an object which is represented by this vertex.
         /// Intended to make it possible to model problems as graphs.
         /// </summary>
         [DataMember]
-        public object Object { get; set; }
+        public T Object { get; set; }
 
         [DataMember]
         public uint Id { get; private set; }
@@ -35,20 +35,17 @@ namespace Commons
             Weight = weight;
         }
 
-        internal void AddEdge(Edge edge)
+        internal void AddEdge(ulong edgeId)
         {
-            if (edge.Vertex1Id != Id || edge.Vertex2Id != Id)
-                throw new ArgumentException("Cannot add edge to vertex if vertex is not an endpoint");
-
-            EdgeIds.Add(edge.Id);
+            EdgeIds.Add(edgeId);
         }
 
-        internal bool RemoveEdge(Edge edge)
+        internal bool RemoveEdge(ulong edgeId)
         {
-            return EdgeIds.Remove(edge.Id);
+            return EdgeIds.Remove(edgeId);
         }
 
-        public static bool operator ==(Vertex vertex1, Vertex vertex2)
+        public static bool operator ==(Vertex<T> vertex1, Vertex<T> vertex2)
         {
             if (ReferenceEquals(vertex1, vertex2))
                 return true;
@@ -57,7 +54,7 @@ namespace Commons
             return vertex1.Id == vertex2.Id;
         }
 
-        public static bool operator !=(Vertex vertex1, Vertex vertex2)
+        public static bool operator !=(Vertex<T> vertex1, Vertex<T> vertex2)
         {
             return !(vertex1 == vertex2);
         }

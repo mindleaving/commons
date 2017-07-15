@@ -56,7 +56,6 @@
     <Compile Include="CoordinateTransform\ICoordinateTransform.cs" />
     <Compile Include="CoordinateTransform\PinholeToPlaneProjection.cs" />
     <Compile Include="CoordinateTransform\TransformChain.cs" />
-    <Compile Include="CoordinateTransform\TransformTree.cs" />
     <Compile Include="CoordinateTransform\TransformTreeEdge.cs" />
     <Compile Include="CoordinateTransform\TransformTreeNode.cs" />
     <Compile Include="IO\CsvReader.cs" />

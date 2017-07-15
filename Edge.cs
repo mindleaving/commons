@@ -4,7 +4,7 @@ namespace Commons
 {
     [DataContract]
     [KnownType(typeof(TaxiEdge))]
-    public class Edge
+    public class Edge<T>
     {
         [DataMember]
         public ulong Id { get; private set; }
@@ -13,7 +13,7 @@ namespace Commons
         /// Intended to make it possible to model problems as graphs.
         /// </summary>
         [DataMember]
-        public object Object { get; set; }
+        public T Object { get; set; }
 
         [DataMember]
         public uint Vertex1Id { get; private set; }
@@ -38,12 +38,7 @@ namespace Commons
             Vertex2Id = vertex2Id;
             Weight = weight;
             IsDirected = isDirected;
-            Object = null;
-        }
-
-        public bool HasVertex(Vertex vertex)
-        {
-            return HasVertex(vertex.Id);
+            Object = default(T);
         }
 
         public bool HasVertex(uint vertexId)
