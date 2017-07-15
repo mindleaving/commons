@@ -145,5 +145,14 @@ namespace Commons
                 .Distinct()
                 .Select(vId => graph.Vertices[vId]);
         }
+
+        public static Graph GetSubgraph(Graph graph, IList<uint> vertices)
+        {
+            var subgraphVertices = vertices.Select(vertexId => graph.Vertices[vertexId]);
+            var vertexIdHashSet = new HashSet<uint>(vertices);
+            var subgraphEdges = graph.Edges.Values
+                .Where(e => vertexIdHashSet.Contains(e.Vertex1Id) && vertexIdHashSet.Contains(e.Vertex2Id));
+            return new Graph(subgraphVertices, subgraphEdges);
+        }
     }
 }
