@@ -89,32 +89,30 @@ namespace Commons
             if (!graph.Vertices.Any())
                 return true;
             var startVertex = graph.Vertices.Values.First();
-            var connectedVertices = GetConnectedSubgraph(graph, startVertex);
-            return graph.Vertices.Count == connectedVertices.Count();
+            var connectedVertices = GetConnectedSubgraph(graph, startVertex).Vertices;
+            return graph.Vertices.Count == connectedVertices.Count;
         }
 
         public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex, Action<Vertex<TVertex>> action)
         {
-            foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex))
+            foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex).Vertices.Values)
             {
                 action(connectedVertex);
             }
         }
 
-        public static IEnumerable<Vertex<TVertex>> GetConnectedSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex)
+        public static Graph<TVertex, TEdge> GetConnectedSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex)
         {
             // Use depth first search for traversing connected component
             // Initialize graph algorithm data
             graph.Vertices.ForEach(v => v.Value.AlgorithmData = false);
             graph.Edges.Values.ForEach(e => e.AlgorithmData = false);
 
-            foreach (var connectedVertex in GetConnectedSubgraphStep(graph, startVertex))
-            {
-                yield return connectedVertex;
-            }
+            var connectedVertices = GetConnectedVertices(graph, startVertex).Select(v => v.Id).ToList();
+            return GetSubgraph(graph, connectedVertices);
         }
 
-        private static IEnumerable<Vertex<TVertex>> GetConnectedSubgraphStep<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> currentVertex)
+        private static IEnumerable<Vertex<TVertex>> GetConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> currentVertex)
         {
             // Mark vertex as visited
             currentVertex.AlgorithmData = true;
@@ -129,7 +127,7 @@ namespace Commons
                 if (adjacentVertex.AlgorithmData.Equals(true))
                     continue;
 
-                foreach (var vertex in GetConnectedSubgraphStep(graph, adjacentVertex))
+                foreach (var vertex in GetConnectedVertices(graph, adjacentVertex))
                 {
                     yield return vertex;
                 }
