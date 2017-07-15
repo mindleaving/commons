@@ -59,6 +59,24 @@ namespace Commons
             return !(vertex1 == vertex2);
         }
 
+        private bool Equals(Vertex<T> other)
+        {
+            return Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Vertex<T>)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)Id;
+        }
+
         public override string ToString()
         {
             return $"V{Id}, #Edges: {EdgeIds.Count}";
