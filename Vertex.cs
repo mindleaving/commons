@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Commons
@@ -80,6 +81,15 @@ namespace Commons
         public override string ToString()
         {
             return $"V{Id}, #Edges: {EdgeIds.Count}";
+        }
+
+        public Vertex<T> Clone()
+        {
+            return new Vertex<T>(Id, Weight)
+            {
+                EdgeIds = EdgeIds.ToList(),
+                Object = Object
+            };
         }
     }
 }
