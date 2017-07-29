@@ -41,20 +41,20 @@ namespace Commons
 
             while (unvisitedVertexCount > 0)
             {
-                var vertexWithShortestDistance = shortestPathLengths
+                var unvisitedVertices = shortestPathLengths
                     .Where(kvp => unVisitedVertexDictionary[kvp.Key])
+                    .ToList();
+                // Graph is not connected. Either stop here or throw exception.
+                if(!unvisitedVertices.Any())
+                    break;//throw new Exception("GraphAlgorithms.ShortestPath: Graph appears to be not connected.");
+
+                var unvisitedWithShortestPathLength = unvisitedVertices
                     .OrderBy(kvp => kvp.Value)
                     .First().Key;
-                var currentVertex = graph.Vertices[vertexWithShortestDistance];
+                var currentVertex = graph.Vertices[unvisitedWithShortestPathLength];
 
                 unVisitedVertexDictionary[currentVertex.Id] = false;
                 unvisitedVertexCount--;
-
-                // If all un-visisted vertices have +inf path lengths, the graph is not connected
-                // Either stop here and return vertices with +inf path length
-                // or throw an exception.
-                if (!shortestPathLengths.ContainsKey(currentVertex.Id))
-                    break;//throw new Exception("GraphAlgorithms.ShortestPath: Graph appears to be not connected.");
 
                 // Update adjacent vertices
                 var adjacentEdgeVertexDictionary = currentVertex.EdgeIds
@@ -146,11 +146,20 @@ namespace Commons
 
         public static Graph<TVertex, TEdge> GetSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IList<uint> vertices)
         {
-            var subgraphVertices = vertices.Select(vertexId => graph.Vertices[vertexId]);
+            var subgraphVertices = vertices
+                .Distinct()
+                .Select(vertexId => graph.Vertices[vertexId].Clone())
+                .ToList();
+            subgraphVertices.ForEach(v => v.EdgeIds.Clear());
             var vertexIdHashSet = new HashSet<uint>(vertices);
             var subgraphEdges = graph.Edges.Values
                 .Where(e => vertexIdHashSet.Contains(e.Vertex1Id) && vertexIdHashSet.Contains(e.Vertex2Id));
-            return new Graph<TVertex, TEdge>(subgraphVertices, subgraphEdges);
+            var subgraph = new Graph<TVertex, TEdge>(subgraphVertices, subgraphEdges);
+            foreach (var vertex in subgraph.Vertices.Values)
+            {
+                vertex.EdgeIds.RemoveAll(edgeId => !subgraph.Edges.ContainsKey(edgeId));
+            }
+            return subgraph;
         }
     }
 }
