@@ -110,6 +110,9 @@
     <Compile Include="UnitPoint2DExtensions.cs" />
     <Compile Include="UnitPoint3DExtensions.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />
+    <Compile Include="UnitTests\GeometryTest.cs" />
+    <Compile Include="UnitTests\GraphAlgorithmsTest.cs" />
+    <Compile Include="UnitTests\GraphClassesTest.cs" />
     <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
     <Compile Include="UnitTests\Optimization\ParameterCyclingOptimizerTest.cs" />
     <Compile Include="UnitTests\UnitValueSerializationTest.cs" />
