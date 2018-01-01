@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
+using Commons.Physics;
 using NUnit.Framework;
 
 namespace Commons.UnitTests

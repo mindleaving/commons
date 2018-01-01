@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Commons.Extensions;
+using Commons.Mathematics;
+using Commons.Physics;
+using NUnit.Framework;
 
 namespace Commons.UnitTests
 {
