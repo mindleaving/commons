@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Commons
+﻿namespace Commons
 {
     public class UnitVector2D : Vector2D
     {

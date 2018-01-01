@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Commons
+﻿namespace Commons
 {
     public class UnitPoint2D : Point2D
     {

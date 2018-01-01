@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Commons
+﻿namespace Commons
 {
     public static class UnitPoint2DExtensions
     {

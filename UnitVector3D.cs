@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Commons
+﻿namespace Commons
 {
     public class UnitVector3D : Vector3D
     {
