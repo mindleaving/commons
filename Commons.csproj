@@ -92,6 +92,8 @@
     <Compile Include="Extensions\Point2DExtensions.cs" />
     <Compile Include="Mathematics\Point3D.cs" />
     <Compile Include="Extensions\Point3DExtensions.cs" />
+    <Compile Include="Physics\TimePoint.cs" />
+    <Compile Include="Physics\TimeSeries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Mathematics\Range.cs" />
     <Compile Include="Mathematics\RestrictedBoltzmannMachine.cs" />
