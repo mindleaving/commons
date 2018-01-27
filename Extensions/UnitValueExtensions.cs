@@ -117,135 +117,90 @@ namespace Commons.Extensions
             return To((double)value, prefix, unit);
         }
 
+        public static readonly Dictionary<Unit, string> UnitStringRepresentation = new Dictionary<Unit, string>
+        {
+            {Unit.Meter, "m"},
+            {Unit.Feet, "ft"},
+            {Unit.NauticalMile, "NM"},
+            {Unit.StatuteMile, "mi"},
+            {Unit.MetersPerSecond, "m/s"},
+            {Unit.FeetPerMinute, "ft/min"},
+            {Unit.Knots, "kn"},
+            {Unit.Mach, "mach"},
+            {Unit.MetersPerSecondSquared, "m/s^2"},
+            {Unit.KnotsPerSeond, "kn/s"},
+            {Unit.Second, "s"},
+            {Unit.Kelvin, "°K"},
+            {Unit.Celcius, "°C"},
+            {Unit.Fahrenheit, "°F"},
+            {Unit.Pascal, "Pa"},
+            {Unit.Bar, "bar"},
+            {Unit.InchesOfMercury, "inHg"},
+            {Unit.SquareMeter, "m^2"},
+            {Unit.CubicMeters, "m^3"},
+            {Unit.Kilogram, "kg"},
+            {Unit.GramPerMole, "g/mol"},
+            {Unit.Coulombs, "C"},
+            {Unit.ElementaryCharge, "e"},
+            {Unit.Joule, "J"},
+            {Unit.ElectronVolts, "eV"},
+            {Unit.Newton, "N"},
+            {Unit.Radians, "rad"}
+        };
+        public static readonly Dictionary<string, Unit> InverseUnitStringRepresentation =
+            UnitStringRepresentation.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+
         public static string StringRepresentation(this Unit unit)
         {
-            switch (unit)
-            {
-                case Unit.Meter:
-                    return "m";
-                case Unit.Feet:
-                    return "ft";
-                case Unit.NauticalMile:
-                    return "NM";
-                case Unit.StatuteMile:
-                    return "mi";
-                case Unit.MetersPerSecond:
-                    return "m/s";
-                case Unit.FeetPerMinute:
-                    return "ft/min";
-                case Unit.Knots:
-                    return "kn";
-                case Unit.Mach:
-                    return "mach";
-                case Unit.MetersPerSecondSquared:
-                    return "m/s^2";
-                case Unit.KnotsPerSeond:
-                    return "kn/s";
-                case Unit.Second:
-                    return "s";
-                case Unit.Kelvin:
-                    return "°K";
-                case Unit.Celcius:
-                    return "°C";
-                case Unit.Fahrenheit:
-                    return "°F";
-                case Unit.Pascal:
-                    return "Pa";
-                case Unit.Bar:
-                    return "bar";
-                case Unit.InchesOfMercury:
-                    return "inHg";
-                case Unit.SquareMeter:
-                    return "m^2";
-                case Unit.CubicMeters:
-                    return "m^3";
-                case Unit.Kilogram:
-                    return "kg";
-                case Unit.GramPerMole:
-                    return "g/mol";
-                case Unit.Coulombs:
-                    return "C";
-                case Unit.ElementaryCharge:
-                    return "e";
-                case Unit.Joule:
-                    return "J";
-                case Unit.ElectronVolts:
-                    return "eV";
-                case Unit.Newton:
-                    return "N";
-                case Unit.Radians:
-                    return "rad";
-                case Unit.Degree:
-                    return "°";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
-            }
+            if(!UnitStringRepresentation.ContainsKey(unit))
+                throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
+            return UnitStringRepresentation[unit];
         }
 
         public static string StringRepresentation(this SIBaseUnit siBaseUnit)
         {
             switch (siBaseUnit)
             {
-                case SIBaseUnit.Meter:
-                    return "m";
-                case SIBaseUnit.Kilogram:
-                    return "kg";
-                case SIBaseUnit.Second:
-                    return "s";
-                case SIBaseUnit.Ampere:
-                    return "A";
-                case SIBaseUnit.Kelvin:
-                    return "K";
-                case SIBaseUnit.Mole:
-                    return "mol";
-                case SIBaseUnit.Candela:
-                    return "cd";
-                case SIBaseUnit.Radians:
-                    return "rad";
+                case SIBaseUnit.Meter: return "m";
+                case SIBaseUnit.Kilogram: return "kg";
+                case SIBaseUnit.Second: return "s";
+                case SIBaseUnit.Ampere: return "A";
+                case SIBaseUnit.Kelvin: return "K";
+                case SIBaseUnit.Mole: return "mol";
+                case SIBaseUnit.Candela: return "cd";
+                case SIBaseUnit.Radians: return "rad";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(siBaseUnit), siBaseUnit, null);
             }
         }
 
+        public static readonly Dictionary<SIPrefix, string> SIPrefixStringRepresentation = new Dictionary<SIPrefix, string>
+        {
+            {SIPrefix.None, string.Empty},
+            {SIPrefix.Femto, "f"},
+            {SIPrefix.Pico, "p"},
+            {SIPrefix.Nano, "n"},
+            {SIPrefix.Micro, "μ"},
+            {SIPrefix.Milli, "m"},
+            {SIPrefix.Centi, "c"},
+            {SIPrefix.Deci, "d"},
+            {SIPrefix.Deca, "D"},
+            {SIPrefix.Hecto, "H"},
+            {SIPrefix.Kilo, "K"},
+            {SIPrefix.Mega, "M"},
+            {SIPrefix.Giga, "G"},
+            {SIPrefix.Tera, "T"},
+            {SIPrefix.Peta, "P"},
+            {SIPrefix.Exa, "E"}
+        };
+        public static readonly Dictionary<string, SIPrefix> InverseSIPrefixStringRepresentation = SIPrefixStringRepresentation
+            .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+
         public static string StringRepresentation(this SIPrefix prefix)
         {
-            switch (prefix)
-            {
-                case SIPrefix.None:
-                    return string.Empty;
-                case SIPrefix.Femto:
-                    return "f";
-                case SIPrefix.Pico:
-                    return "p";
-                case SIPrefix.Nano:
-                    return "n";
-                case SIPrefix.Micro:
-                    return "μ";
-                case SIPrefix.Milli:
-                    return "m";
-                case SIPrefix.Centi:
-                    return "c";
-                case SIPrefix.Deci:
-                    return "d";
-                case SIPrefix.Deca:
-                    return "D";
-                case SIPrefix.Hecto:
-                    return "H";
-                case SIPrefix.Kilo:
-                    return "K";
-                case SIPrefix.Mega:
-                    return "M";
-                case SIPrefix.Giga:
-                    return "G";
-                case SIPrefix.Tera:
-                    return "T";
-                case SIPrefix.Peta:
-                    return "P";
-                case SIPrefix.Exa:
-                    return "E";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(prefix), prefix, null);
-            }
+            if (!SIPrefixStringRepresentation.ContainsKey(prefix))
+                throw new ArgumentOutOfRangeException(nameof(prefix), prefix, null);
+            return SIPrefixStringRepresentation[prefix];
         }
 
         public static double GetMultiplier(this SIPrefix prefix)

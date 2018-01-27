@@ -168,5 +168,10 @@ namespace Commons.Physics
                 return allPrefixes.MinimumItem(kvp => kvp.Value).Key;
             return multipliersSmallerThanValue.MaximumItem(kvp => kvp.Value).Key;
         }
+
+        public static UnitValue Parse(string value)
+        {
+            return UnitValueParser.Parse(value);
+        }
     }
 }
