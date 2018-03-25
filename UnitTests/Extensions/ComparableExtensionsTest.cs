@@ -1,5 +1,4 @@
 ﻿using Commons.Extensions;
-using Commons.Mathematics;
 using NUnit.Framework;
 
 namespace Commons.UnitTests.Extensions

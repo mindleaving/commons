@@ -1,5 +1,4 @@
-﻿using System;
-using Commons.Mathematics;
+﻿using Commons.Mathematics;
 using NUnit.Framework;
 
 namespace Commons.UnitTests

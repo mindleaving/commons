@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Commons.Mathematics
 {
@@ -46,7 +47,7 @@ namespace Commons.Mathematics
         /// <summary>
         /// Statistical sample standard deviation of numbers added. Returns NaN if count &lt; 2.
         /// </summary>
-        public double SampleStddev => Count < 2 ? double.NaN : System.Math.Sqrt(SampleVariance);
+        public double SampleStddev => Count < 2 ? double.NaN : Math.Sqrt(SampleVariance);
 
         /// <summary>
         /// Statistical full population variance of numbers added. Returns NaN if count &lt; 1.
@@ -56,7 +57,7 @@ namespace Commons.Mathematics
         /// <summary>
         /// Statistical full population standard deviation of numbers added. Returns NaN if count &lt; 1.
         /// </summary>
-        public double PopulationStddev => Count < 1 ? double.NaN : System.Math.Sqrt(PopulationVariance);
+        public double PopulationStddev => Count < 1 ? double.NaN : Math.Sqrt(PopulationVariance);
 
         /// <summary>
         /// Adds a value to the accumulator. All calculation properties will be updated automatically.

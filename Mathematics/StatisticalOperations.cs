@@ -1,4 +1,6 @@
-﻿namespace Commons.Mathematics
+﻿using System;
+
+namespace Commons.Mathematics
 {
     public static class StatisticalOperations
     {
@@ -17,7 +19,7 @@
                     i++;
                     continue;
                 }
-                MSE += System.Math.Pow(y[i] - yhat[i], 2);
+                MSE += Math.Pow(y[i] - yhat[i], 2);
                 i++;
             }
             return MSE;
@@ -42,7 +44,7 @@
             {
                 corr += (X[i] - meanX) * (Y[i] - meanY);
             }
-            corr /= System.Math.Sqrt(varX * varY) * X.Length;
+            corr /= Math.Sqrt(varX * varY) * X.Length;
             return corr;
         }
         public static double Mean(double[] X)

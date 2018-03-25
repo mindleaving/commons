@@ -37,7 +37,7 @@ namespace Commons.Mathematics
             {
                 norm += v[r] * v[r];
             }
-            norm = System.Math.Sqrt(norm);
+            norm = Math.Sqrt(norm);
             return norm;
         }
 
@@ -306,7 +306,7 @@ namespace Commons.Mathematics
                 {
                     for (int c = 0; c < cols; c++)
                     {
-                        if (System.Math.Abs(array[r, c] - 0) < double.Epsilon)
+                        if (Math.Abs(array[r, c] - 0) < double.Epsilon)
                         {
                             ZerosInRow[r]++;
                             ZerosInColumn[c]++;
@@ -339,7 +339,7 @@ namespace Commons.Mathematics
                 {
                     for (int c = 0; c < cols; c++)
                     {
-                        if (System.Math.Abs(array[maxZeroIndex, c] - 0) < double.Epsilon)
+                        if (Math.Abs(array[maxZeroIndex, c] - 0) < double.Epsilon)
                         {
                             continue;
                         }
@@ -354,7 +354,7 @@ namespace Commons.Mathematics
                 {
                     for (int r = 0; r < rows; r++)
                     {
-                        if (System.Math.Abs(array[r, maxZeroIndex] - 0) < double.Epsilon)
+                        if (Math.Abs(array[r, maxZeroIndex] - 0) < double.Epsilon)
                         {
                             continue;
                         }
@@ -584,7 +584,7 @@ namespace Commons.Mathematics
                 change = 0;
                 for (int r = 0; r < rows; r++)
                 {
-                    change += System.Math.Abs(eigenvalueArray[r] - array[r, r]);
+                    change += Math.Abs(eigenvalueArray[r] - array[r, r]);
                     eigenvalueArray[r] = array[r, r];
                 }
             }
@@ -639,7 +639,7 @@ namespace Commons.Mathematics
                     }
                 }
                 // Normalize:
-                norm = System.Math.Sqrt(norm);
+                norm = Math.Sqrt(norm);
                 for (int r = 0; r < rows; r++)
                 {
                     eigenvectorsArray[i, r] /= norm;
@@ -673,7 +673,7 @@ namespace Commons.Mathematics
                 {
                     for (int c = cols - 1; c >= 0; c--)
                     {
-                        if (System.Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
+                        if (Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
                         {
                             operationRow++;
                             if (operationRow == rows)
@@ -683,7 +683,7 @@ namespace Commons.Mathematics
                         }
                         if (r == operationRow)
                         {
-                            if (System.Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
+                            if (Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
                             {
                                 rrefArray[operationRow, operationRow] = double.Epsilon;
                             }
@@ -691,7 +691,7 @@ namespace Commons.Mathematics
                         }
                         else
                         {
-                            if (System.Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
+                            if (Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
                             {
                                 rrefArray[operationRow, operationRow] = double.Epsilon;
                             }

@@ -134,7 +134,7 @@ namespace Commons.Mathematics
                 for (int x = 0; x < Columns; x++)
                 {
                     var valueString = Data[y, x].ToString();
-                    columnWidths[x] = System.Math.Max(columnWidths[x], valueString.Length);
+                    columnWidths[x] = Math.Max(columnWidths[x], valueString.Length);
                 }
 
             // Format output

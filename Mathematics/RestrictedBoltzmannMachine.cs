@@ -29,7 +29,7 @@ namespace Commons.Mathematics
         {
             var hiddenNodes = Weights.Rows;
             var inputNodes = Weights.Columns;
-            var highValue = 4*System.Math.Sqrt(6.0/(hiddenNodes + inputNodes));
+            var highValue = 4*Math.Sqrt(6.0/(hiddenNodes + inputNodes));
             var lowValue = -highValue;
             for (var row = 0; row < Weights.Rows; row++)
             {
@@ -135,7 +135,7 @@ namespace Commons.Mathematics
             var preSigmoidHiddenValues = Weights.Data.Multiply(inputValues.ConvertToMatrix()).Vectorize()
                 .Sum(HiddenOffsets.Data);
             var valueOffsetProduct = inputValues.InnerProduct(InputOffsets.Data);
-            var hiddenLog = preSigmoidHiddenValues.Sum(x => System.Math.Log(1 + System.Math.Exp(x)));
+            var hiddenLog = preSigmoidHiddenValues.Sum(x => Math.Log(1 + Math.Exp(x)));
             return -hiddenLog - valueOffsetProduct;
         }
 

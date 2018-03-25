@@ -1,4 +1,5 @@
-﻿using Commons.Extensions;
+﻿using System;
+using Commons.Extensions;
 using Commons.Physics;
 
 namespace Commons.Mathematics
@@ -18,8 +19,8 @@ namespace Commons.Mathematics
 
             var cosAngle = (lineLength*lineLength + distanceToLinePoint1*distanceToLinePoint1 - distanceToLinePoint2*distanceToLinePoint2)
                 / (2*lineLength*distanceToLinePoint1);
-            var angle = System.Math.Acos(cosAngle);
-            var distanceToLine = System.Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
+            var angle = Math.Acos(cosAngle);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
             return distanceToLine;
         }
 
@@ -35,8 +36,8 @@ namespace Commons.Mathematics
 
             var cosAngle = (lineLength * lineLength + distanceToLinePoint1 * distanceToLinePoint1 - distanceToLinePoint2 * distanceToLinePoint2)
                 / (2 * lineLength * distanceToLinePoint1);
-            var angle = System.Math.Acos(cosAngle);
-            var distanceToLine = System.Math.Sin(angle) * distanceToLinePoint1;
+            var angle = Math.Acos(cosAngle);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
             return distanceToLine;
         }
 
@@ -52,8 +53,8 @@ namespace Commons.Mathematics
 
             var cosAngle = (lineLength * lineLength + distanceToLinePoint1 * distanceToLinePoint1 - distanceToLinePoint2 * distanceToLinePoint2)
                 / (2 * lineLength * distanceToLinePoint1);
-            var angle = System.Math.Acos(cosAngle);
-            var distanceToLine = System.Math.Sin(angle) * distanceToLinePoint1;
+            var angle = Math.Acos(cosAngle);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
             return distanceToLine;
         }
 
@@ -78,8 +79,8 @@ namespace Commons.Mathematics
             if (cosAngle2 < 0)
                 return distanceToLinePoint2.To(Unit.Meter);
 
-            var angle = System.Math.Acos(cosAngle1);
-            var distanceToLine = System.Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
+            var angle = Math.Acos(cosAngle1);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
             return distanceToLine;
         }
         public static double DistanceToLineSegment(this Point2D point, Point2D linePoint1, Point2D linePoint2)
@@ -102,8 +103,8 @@ namespace Commons.Mathematics
             if (cosAngle2 < 0)
                 return distanceToLinePoint2;
 
-            var angle = System.Math.Acos(cosAngle1);
-            var distanceToLine = System.Math.Sin(angle) * distanceToLinePoint1;
+            var angle = Math.Acos(cosAngle1);
+            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
             return distanceToLine;
         }
 
@@ -120,7 +121,7 @@ namespace Commons.Mathematics
             });
             var rref = matrix.Data.ReducedRowEchelonForm();
 
-            if (System.Math.Abs(rref[1, 1]) <= double.Epsilon) // Lines are parallel
+            if (Math.Abs(rref[1, 1]) <= double.Epsilon) // Lines are parallel
                 return false;
             return rref[0, 2] >= 0 && rref[0, 2] <= 1 && rref[1, 2] >= 0 && rref[1, 2] <= 1;
         }
@@ -128,42 +129,42 @@ namespace Commons.Mathematics
         public static GeoCoordinate MoveAlongRadial(this GeoCoordinate point, double heading, UnitValue distance)
         {
             var distanceInNM = distance.In(Unit.NauticalMile);
-            var distanceInRadians = distanceInNM * System.Math.PI / (180 * 60);
-            var headingInRadians = heading * System.Math.PI / 180;
-            var latitudeInRadians = point.Latitude * System.Math.PI / 180;
-            var longitudeInRadians = -point.Longitude * System.Math.PI / 180;
-            var newLatitudeInRadians = System.Math.Asin(System.Math.Sin(latitudeInRadians) * System.Math.Cos(distanceInRadians)
-                + System.Math.Cos(latitudeInRadians)*System.Math.Sin(distanceInRadians)*System.Math.Cos(headingInRadians));
+            var distanceInRadians = distanceInNM * Math.PI / (180 * 60);
+            var headingInRadians = heading * Math.PI / 180;
+            var latitudeInRadians = point.Latitude * Math.PI / 180;
+            var longitudeInRadians = -point.Longitude * Math.PI / 180;
+            var newLatitudeInRadians = Math.Asin(Math.Sin(latitudeInRadians) * Math.Cos(distanceInRadians)
+                + Math.Cos(latitudeInRadians)*Math.Sin(distanceInRadians)*Math.Cos(headingInRadians));
             
-            var longitudeDiff = System.Math.Atan2(
-                System.Math.Sin(headingInRadians)*System.Math.Sin(distanceInRadians)*System.Math.Cos(latitudeInRadians),
-                System.Math.Cos(distanceInRadians) - System.Math.Sin(latitudeInRadians)*System.Math.Sin(newLatitudeInRadians));
-            var newLongitudeInRadians = (longitudeInRadians - longitudeDiff + System.Math.PI).Modulus(2 * System.Math.PI) - System.Math.PI;
+            var longitudeDiff = Math.Atan2(
+                Math.Sin(headingInRadians)*Math.Sin(distanceInRadians)*Math.Cos(latitudeInRadians),
+                Math.Cos(distanceInRadians) - Math.Sin(latitudeInRadians)*Math.Sin(newLatitudeInRadians));
+            var newLongitudeInRadians = (longitudeInRadians - longitudeDiff + Math.PI).Modulus(2 * Math.PI) - Math.PI;
 
-            var newLatitude = newLatitudeInRadians * 180 / System.Math.PI;
-            var newLongitude = -newLongitudeInRadians * 180 / System.Math.PI;
+            var newLatitude = newLatitudeInRadians * 180 / Math.PI;
+            var newLongitude = -newLongitudeInRadians * 180 / Math.PI;
 
             return new GeoCoordinate(newLatitude, newLongitude);
         }
 
         public static double HeadingTo(this GeoCoordinate point1, GeoCoordinate point2)
         {
-            var latitude1InRadians = point1.Latitude * System.Math.PI / 180;
-            var longitude1InRadians = point1.Longitude * System.Math.PI / 180;
-            var latitude2InRadians = point2.Latitude * System.Math.PI / 180;
-            var longitude2InRadians = point2.Longitude * System.Math.PI / 180;
+            var latitude1InRadians = point1.Latitude * Math.PI / 180;
+            var longitude1InRadians = point1.Longitude * Math.PI / 180;
+            var latitude2InRadians = point2.Latitude * Math.PI / 180;
+            var longitude2InRadians = point2.Longitude * Math.PI / 180;
 
             // Handle poles
-            if(System.Math.Cos(latitude1InRadians) < 1e-6)
+            if(Math.Cos(latitude1InRadians) < 1e-6)
             {
                 return latitude1InRadians > 0 ? 180 : 0;
             }
 
-            var headingInRadians = System.Math.Atan2(
-                    System.Math.Sin(longitude2InRadians - longitude1InRadians) * System.Math.Cos(latitude2InRadians),
-                    System.Math.Cos(latitude1InRadians)*System.Math.Sin(latitude2InRadians) - System.Math.Sin(latitude1InRadians)*System.Math.Cos(latitude2InRadians)*System.Math.Cos(longitude2InRadians-longitude1InRadians) )
-                .Modulus(2 * System.Math.PI);
-            return headingInRadians * 180 / System.Math.PI;
+            var headingInRadians = Math.Atan2(
+                    Math.Sin(longitude2InRadians - longitude1InRadians) * Math.Cos(latitude2InRadians),
+                    Math.Cos(latitude1InRadians)*Math.Sin(latitude2InRadians) - Math.Sin(latitude1InRadians)*Math.Cos(latitude2InRadians)*Math.Cos(longitude2InRadians-longitude1InRadians) )
+                .Modulus(2 * Math.PI);
+            return headingInRadians * 180 / Math.PI;
         }
 
         public static GeoCoordinate ExtendCenterLineBy(GeoCoordinate startCoordinate, GeoCoordinate endCoordinate, UnitValue extendDistance)
