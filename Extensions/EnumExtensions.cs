@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Commons.Extensions
 {
     public static class EnumExtensions
     {
-        public static bool InSet<T>(this T value, params T[] set) where T: struct, IConvertible
+        public static bool InSet<T>(this T value, params T[] set)
         {
             return set.Contains(value);
         }
