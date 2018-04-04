@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -6,7 +7,7 @@ namespace Commons.Mathematics
 {
     [DataContract]
     [KnownType(typeof(GeoCoordinate))]
-    public class Vertex<T>
+    public class Vertex<T> : IDisposable
     {
         /// <summary>
         /// Property for holding an object which is represented by this vertex.
@@ -89,6 +90,12 @@ namespace Commons.Mathematics
                 EdgeIds = EdgeIds.ToList(),
                 Object = Object
             };
+        }
+
+        public void Dispose()
+        {
+            if(Object is IDisposable disposableObject)
+                disposableObject.Dispose();
         }
     }
 }

@@ -7,7 +7,7 @@ using Commons.Extensions;
 namespace Commons.Mathematics
 {
     [DataContract]
-    public class Graph<TVertex, TEdge>
+    public class Graph<TVertex, TEdge> : IDisposable
     {
         [IgnoreDataMember] 
         private bool idsAreInitialized;
@@ -159,6 +159,15 @@ namespace Commons.Mathematics
                 edgeIdMap.Add(edge.Id, newEdgeId);
             }
             return new GraphMergeInfo(vertexIdMap, edgeIdMap);
+        }
+
+        public void Dispose()
+        {
+            var vertices = Vertices.Values.ToList();
+            var edges = Edges.Values.ToList();
+            vertices.ForEach(v => RemoveVertex(v));
+            vertices.ForEach(v => v.Dispose());
+            edges.ForEach(e => e.Dispose());
         }
     }
 }

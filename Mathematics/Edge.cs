@@ -1,10 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace Commons.Mathematics
 {
     [DataContract]
     [KnownType(typeof(TaxiEdge))]
-    public class Edge<T>
+    public class Edge<T> : IDisposable
     {
         [DataMember]
         public ulong Id { get; private set; }
@@ -50,6 +51,12 @@ namespace Commons.Mathematics
         {
             var directednesSymbol = IsDirected ? "->" : "<->";
             return $"V{Vertex1Id} {directednesSymbol} V{Vertex2Id}, {Object}";
+        }
+
+        public void Dispose()
+        {
+            if(Object is IDisposable disposableObject)
+                disposableObject.Dispose();
         }
     }
 }
