@@ -9,18 +9,33 @@ namespace Commons.Mathematics
     [DataContract]
     public class Graph<TVertex, TEdge>
     {
+        [IgnoreDataMember] 
+        private bool idsAreInitialized;
         [IgnoreDataMember]
         private ulong nextEdgeId;
         public ulong GetUnusedEdgeId()
         {
+            if (!idsAreInitialized)
+                InitializeIds();
             return nextEdgeId++;
         }
 
+        [IgnoreDataMember] 
+        private uint nextVertexId;
         public uint GetUnusedVertexId()
         {
-            if (!Vertices.Any())
-                return 0;
-            return Vertices.Max(v => v.Key) + 1;
+            if (!idsAreInitialized)
+                InitializeIds();
+            return nextVertexId++;
+        }
+
+        private void InitializeIds()
+        {
+            if(Edges.Any())
+                nextEdgeId = Edges.Keys.Max() + 1;
+            if(Vertices.Any())
+                nextVertexId = Vertices.Keys.Max() + 1;
+            idsAreInitialized = true;
         }
 
         [DataMember]
@@ -46,6 +61,8 @@ namespace Commons.Mathematics
                 throw new ArgumentException($"Vertex with ID '{newVertex.Id}' already exists.");
 
             Vertices.Add(newVertex.Id, newVertex);
+            if (newVertex.Id >= nextVertexId)
+                nextVertexId = newVertex.Id + 1;
         }
 
         public void AddVertices(IEnumerable<Vertex<TVertex>> newVertices)
