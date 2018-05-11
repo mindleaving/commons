@@ -1,63 +1,22 @@
 ﻿using System;
 using Commons.Mathematics;
-using Commons.Physics;
 
 namespace Commons.Extensions
 {
     public static class Vector3DExtensions
     {
-        /// <summary>
-        /// Divide the vector by its length to produce a unit vector
-        /// </summary>
-        /// <returns>The resulting unit vector</returns>
-        public static Vector3D Normalize(this Vector3D a)
-        {
-            var magnitude = a.Magnitude();
-            return a.Divide(magnitude);
-        }
-
-        public static Vector3D ProjectOnto(this Vector3D v1, Vector3D v2)
-        {
-            return v1.DotProduct(v2) * v2;
-        }
-
-        public static Vector3D Divide(this Vector3D vector, double scalar)
-        {
-            return new Vector3D(vector.X / scalar, vector.Y / scalar, vector.Z / scalar);
-        }
-
-        public static Vector3D Multiply(this Vector3D vector, double scalar)
-        {
-            return new Vector3D(vector.X * scalar, vector.Y * scalar, vector.Z * scalar);
-        }
-
-        public static double DotProduct(this Vector3D v1, Vector3D v2)
-        {
-            return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
-        }
-
         public static Vector3D CrossProduct(this Vector3D a, Vector3D b)
         {
             return new Vector3D(a.Y * b.Z - a.Z * b.Y, a.Z * b.X - a.X * b.Z, a.X * b.Y - a.Y * b.X);
         }
 
-        public static double Magnitude(this Vector3D a)
+        public static Vector3D ToVector3D(this Vector vector)
         {
-            return Math.Sqrt(a.X * a.X + a.Y * a.Y + a.Z * a.Z);
-        }
-
-        /// <summary>
-        /// Measures angle in radians between two vectors
-        /// </summary>
-        public static UnitValue AngleWith(this Vector3D v1, Vector3D v2)
-        {
-            var normalizedV1 = v1.Normalize();
-            var normalizedV2 = v2.Normalize();
-            var dotProduct = normalizedV1.DotProduct(normalizedV2);
-            if (dotProduct > 1)
-                dotProduct = 1;
-            var angle = Math.Acos(dotProduct).To(Unit.Radians);
-            return angle.Value >= 0 ? angle : angle + (Math.PI/2).To(Unit.Radians);
+            if(vector.Dimension != 3)
+                throw new InvalidOperationException($"Cannot convert Vector with dimension '{vector.Dimension}' to Vector3D");
+            if (vector is Vector3D vector3D)
+                return vector3D;
+            return new Vector3D(vector.Data);
         }
 
         public static Point3D ToPoint3D(this Vector3D v)

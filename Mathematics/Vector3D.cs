@@ -39,11 +39,11 @@ namespace Commons.Mathematics
         }
         public static Vector3D operator *(double scalar, Vector3D v)
         {
-            return v.Multiply(scalar);
+            return v.Multiply(scalar).ToVector3D();
         }
         public static Vector3D operator *(Vector3D v, double scalar)
         {
-            return v.Multiply(scalar);
+            return v.Multiply(scalar).ToVector3D();
         }
         public static UnitVector3D operator *(UnitValue scalar, Vector3D v)
         {
