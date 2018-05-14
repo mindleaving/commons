@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace Commons.Mathematics
 {
+    [DataContract]
     public class Point2D
     {
         public Point2D(double x, double y)
@@ -10,7 +12,9 @@ namespace Commons.Mathematics
             Y = y;
         }
 
+        [DataMember]
         public double X { get; set; }
+        [DataMember]
         public double Y { get; set; }
 
         public static Point2D operator +(Point2D point, Vector2D vector)
