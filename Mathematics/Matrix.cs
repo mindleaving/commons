@@ -1,13 +1,41 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Commons.Mathematics
 {
+    [DataContract]
     public class Matrix : IEquatable<Matrix>
     {
-        public int Rows { get; }
-        public int Columns { get; }
-        public double[,] Data { get; }
+        [DataMember]
+        public int Rows { get; private set; }
+        [DataMember]
+        public int Columns { get; private set; }
+
+        private double[,] data;
+        [IgnoreDataMember]
+        public double[,] Data => data ?? (data = ReconstructFromFlattenedData());
+
+        [IgnoreDataMember]
+        private double[] flattenedData;
+        [DataMember]
+        public double[] FlattenedData
+        {
+            get => Data.Vectorize();
+            set => flattenedData = value;
+        }
+
+        /// <summary>
+        /// Reconstruct deserialized matrix from flattened data.
+        /// </summary>
+        private double[,] ReconstructFromFlattenedData()
+        {
+            if (flattenedData == null)
+                throw new Exception("Matrix is not initialized");
+            var reconstructedData = flattenedData.Reshape(Rows, Columns);
+            flattenedData = null; // Discard flattened data such that GC can free the duplicate memory
+            return reconstructedData;
+        }
 
         public Matrix(int rows, int columns)
         {
@@ -16,7 +44,7 @@ namespace Commons.Mathematics
 
             Rows = rows;
             Columns = columns;
-            Data = new double[rows, columns];
+            data = new double[rows, columns];
         }
 
         public void SetRow(int rowIdx, double[] values)

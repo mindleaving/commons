@@ -1,20 +1,25 @@
-﻿using Commons.Extensions;
+﻿using System.Runtime.Serialization;
+using Commons.Extensions;
 using Commons.Physics;
 
 namespace Commons.Mathematics
 {
+    [DataContract]
     public class Vector3D : Vector
     {
+        [IgnoreDataMember]
         public double X
         {
             get { return Data[0]; }
             set { Data[0] = value; }
         }
+        [IgnoreDataMember]
         public double Y
         {
             get { return Data[1]; }
             set { Data[1] = value; }
         }
+        [IgnoreDataMember]
         public double Z
         {
             get { return Data[2]; }

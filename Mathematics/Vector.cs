@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Commons.Mathematics
 {
+    [DataContract]
     public class Vector : IEquatable<Vector>
     {
-        public int Dimension { get; }
-        public double[] Data { get; }
+        [IgnoreDataMember]
+        public int Dimension => Data.Length;
+        [DataMember]
+        public double[] Data { get; private set; }
 
         public Vector(int dimension, params double[] data)
         {
@@ -16,7 +20,6 @@ namespace Commons.Mathematics
                 throw new ArgumentException($"If data is provided in the constructor, it must have the same length as the specified dimension." +
                                             $"Dimension: {dimension}, Data length: {data.Length}");
 
-            Dimension = dimension;
             Data = new double[dimension];
             if (data.Length > 0)
                 Set(data);

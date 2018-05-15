@@ -229,6 +229,24 @@ namespace Commons.Mathematics
             return array;
         }
 
+        public static double[,] Reshape(this double[] vector, int rows, int columns)
+        {
+            if (vector == null)
+                throw new ArgumentNullException(nameof(vector));
+            if(vector.Length != rows*columns)
+                throw new InvalidOperationException($"Cannot reshape vector of length {vector.Length} to matrix of shape ({rows},{columns})");
+
+            var array = new double[rows, columns];
+            for (int row = 0; row < rows; row++)
+            {
+                for (int column = 0; column < columns; column++)
+                {
+                    array[row, column] = vector[row*columns+column];
+                }
+            }
+            return array;
+        }
+
         public static double[] ScalarMultiply(this double[] vector, double scalar)
         {
             var multiplyVector = new double[vector.Length];

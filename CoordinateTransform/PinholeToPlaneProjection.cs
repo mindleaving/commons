@@ -92,12 +92,6 @@ namespace Commons.CoordinateTransform
         }
     }
 
-    public class DistortionParameters
-    {
-        public double Radial2 { get; set; }
-        public double Radial4 { get; set; }
-    }
-
     public class PlaneProjection : ICoordinateTransform<Point3D, Point2D>
     {
         private readonly Point3D projectionPoint;

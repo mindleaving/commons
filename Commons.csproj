@@ -33,6 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CoordinateTransform\Calibration.cs" />
+    <Compile Include="CoordinateTransform\DistortionParameters.cs" />
     <Compile Include="Extensions\BitExtensions.cs" />
     <Compile Include="DataProcessing\CappedFrequencyCounter.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Physics\UnitPoint3D.cs" />
     <Compile Include="Extensions\UnitPoint2DExtensions.cs" />
     <Compile Include="Extensions\UnitPoint3DExtensions.cs" />
+    <Compile Include="UnitTests\CoordinateTransform\CalibrationTest.cs" />
     <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />
     <Compile Include="UnitTests\GeometryTest.cs" />
