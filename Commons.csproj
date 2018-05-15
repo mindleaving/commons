@@ -35,6 +35,8 @@
   <ItemGroup>
     <Compile Include="CoordinateTransform\Calibration.cs" />
     <Compile Include="CoordinateTransform\DistortionParameters.cs" />
+    <Compile Include="CoordinateTransform\ImageCoordinateNormalizer.cs" />
+    <Compile Include="CoordinateTransform\PlaneProjection.cs" />
     <Compile Include="Extensions\BitExtensions.cs" />
     <Compile Include="DataProcessing\CappedFrequencyCounter.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />

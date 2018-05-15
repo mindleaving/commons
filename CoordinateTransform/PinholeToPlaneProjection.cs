@@ -1,5 +1,4 @@
-﻿using System;
-using Commons.Extensions;
+﻿using Commons.Extensions;
 using Commons.Mathematics;
 
 namespace Commons.CoordinateTransform
@@ -16,6 +15,13 @@ namespace Commons.CoordinateTransform
         private readonly PlaneProjection planeProjection;
         private readonly PlaneProjection imagePlaneProjection;
 
+        public PinholeToPlaneProjection(Calibration calibration)
+            : this(calibration.FocalLength,
+                calibration.PrincipalPoint,
+                calibration.Distortion,
+                calibration.TranslationVector,
+                calibration.RotationMatrix)
+        { }
         public PinholeToPlaneProjection(Point2D focalLength,
             Point2D principalPoint,
             DistortionParameters distortionParameters,
@@ -56,74 +62,6 @@ namespace Commons.CoordinateTransform
             var planePoint3D = planeEmbeddingTransform.Transform(point);
             var imagePoint = imagePlaneProjection.Transform(planePoint3D);
             return imagePoint;
-        }
-    }
-
-    public class ImageCoordinateNormalizer : ICoordinateTransform<Point2D, Point2D>
-    {
-        private readonly Point2D focalLength;
-        private readonly Point2D principalPoint;
-        private readonly DistortionParameters distortionParameters;
-
-        public ImageCoordinateNormalizer(Point2D focalLength, Point2D principalPoint, DistortionParameters distortionParameters)
-        {
-            this.focalLength = focalLength;
-            this.principalPoint = principalPoint;
-            this.distortionParameters = distortionParameters;
-        }
-
-        public Point2D Transform(Point2D point)
-        {
-            var offsetPoint = point - principalPoint;
-            var normalizedPoint = new Point2D(
-                offsetPoint.X / focalLength.X,
-                offsetPoint.Y / focalLength.Y);
-            // TODO: Correct distortion
-            return normalizedPoint;
-        }
-
-        public Point2D InverseTransform(Point2D point)
-        {
-            var distortedPoint = point; // TODO: Apply distortion
-            var imagePoint = new Point2D(
-                distortedPoint.X*focalLength.X + principalPoint.X,
-                distortedPoint.Y*focalLength.Y + principalPoint.Y);
-            return imagePoint;
-        }
-    }
-
-    public class PlaneProjection : ICoordinateTransform<Point3D, Point2D>
-    {
-        private readonly Point3D projectionPoint;
-        private readonly Plane plane;
-        private readonly Embed2DIn3DTransform embeddingTransform;
-
-        public PlaneProjection(Point3D projectionPoint, Plane plane)
-        {
-            this.projectionPoint = projectionPoint;
-            this.plane = plane;
-            embeddingTransform = new Embed2DIn3DTransform(plane);
-        }
-
-        public Point2D Transform(Point3D point)
-        {
-            // Find intersection of line defined by point and projection point
-            // and plane
-            var vectorToPlaneOrigin = (point - plane.Origin).ToVector3D();
-            var distanceFromPlane = vectorToPlaneOrigin
-                .ProjectOnto(plane.NormalVector)
-                .Magnitude();
-            var lineVector = (point - projectionPoint).ToVector3D();
-            var scalar = distanceFromPlane/lineVector.ProjectOnto(plane.NormalVector).Magnitude();
-            var polarity = lineVector.DotProduct(plane.NormalVector) > 0 ? -1 : 1;
-            var intersectionPoint = point + polarity*scalar*lineVector;
-
-            return embeddingTransform.InverseTransform(intersectionPoint);
-        }
-
-        public Point3D InverseTransform(Point2D point)
-        {
-            throw new InvalidOperationException("Projections cannot be inverted.");
         }
     }
 }

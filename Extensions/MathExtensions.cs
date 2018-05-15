@@ -6,6 +6,10 @@ namespace Commons.Extensions
 {
     public static class MathExtensions
     {
+        public static double Square(this double x)
+        {
+            return x * x;
+        }
         public static int Modulus(this int n, int modulus)
         {
             var residual = n % modulus;
