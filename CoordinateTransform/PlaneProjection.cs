@@ -21,14 +21,14 @@ namespace Commons.CoordinateTransform
         {
             // Find intersection of line defined by point and projection point
             // and plane
-            var vectorToPlaneOrigin = (point - plane.Origin).ToVector3D();
-            var distanceFromPlane = vectorToPlaneOrigin
-                .ProjectOnto(plane.NormalVector)
-                .Magnitude();
             var lineVector = (point - projectionPoint).ToVector3D();
-            var scalar = distanceFromPlane/lineVector.ProjectOnto(plane.NormalVector).Magnitude();
-            var polarity = lineVector.DotProduct(plane.NormalVector) < 0 ? -1 : 1;
-            var intersectionPoint = point + polarity*scalar*lineVector;
+            var denominator = lineVector.DotProduct(plane.NormalVector);
+            if(denominator.Abs() < 1e-12)
+                throw new Exception("Intersection of plane and line could not be calculated as they appear to be parallel");
+            var vectorToPlaneOrigin = (point - plane.Origin).ToVector3D();
+            var nominator = vectorToPlaneOrigin.DotProduct(plane.NormalVector);
+            var scalar = nominator / denominator;
+            var intersectionPoint = point - scalar * lineVector;
 
             return embeddingTransform.InverseTransform(intersectionPoint);
         }
