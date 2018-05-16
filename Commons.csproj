@@ -41,6 +41,7 @@
     <Compile Include="DataProcessing\CappedFrequencyCounter.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Extensions\VectorExtensions.cs" />
+    <Compile Include="IO\Serializer.cs" />
     <Compile Include="Mathematics\Combinatorics.cs" />
     <Compile Include="Extensions\ComparableExtensions.cs" />
     <Compile Include="Physics\CompoundUnit.cs" />
