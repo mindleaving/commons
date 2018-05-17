@@ -16,16 +16,26 @@ namespace Commons.IO
         {
             using (var stream = File.OpenRead(path))
             {
-                return (T) serializer.ReadObject(stream);
+                return Load(stream);
             }
+        }
+
+        public T Load(Stream stream)
+        {
+            return (T)serializer.ReadObject(stream);
         }
 
         public void Store(T obj, string path)
         {
             using (var stream = File.Create(path))
             {
-                serializer.WriteObject(stream, obj);
+                Store(obj, stream);
             }
+        }
+
+        public void Store(T obj, Stream stream)
+        {
+            serializer.WriteObject(stream, obj);
         }
     }
 }
