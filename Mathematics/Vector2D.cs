@@ -15,5 +15,10 @@
 
         public Vector2D() : base(2) { }
         public Vector2D(params double[] data) : base(2, data) { }
+
+        public static implicit operator Point2D(Vector2D v)
+        {
+            return new Point2D(v.X, v.Y);
+        }
     }
 }

@@ -30,6 +30,11 @@ namespace Commons.Mathematics
         public Vector3D(params double[] data) : base(3, data) { }
         public Vector3D(double x, double y, double z) : base(3, x, y, z) { }
 
+        public static implicit operator Point3D(Vector3D v)
+        {
+            return new Point3D(v.X, v.Y, v.Z);
+        }
+
         public static Vector3D operator -(Vector3D v)
         {
             return -1*v;

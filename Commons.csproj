@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CoordinateTransform\BasisShiftTransform2D.cs" />
     <Compile Include="CoordinateTransform\Calibration.cs" />
     <Compile Include="CoordinateTransform\DistortionParameters.cs" />
     <Compile Include="CoordinateTransform\ImageCoordinateNormalizer.cs" />
@@ -43,8 +44,10 @@
     <Compile Include="Extensions\VectorExtensions.cs" />
     <Compile Include="IO\DeepCloner.cs" />
     <Compile Include="IO\Serializer.cs" />
+    <Compile Include="Mathematics\Circle.cs" />
     <Compile Include="Mathematics\Combinatorics.cs" />
     <Compile Include="Extensions\ComparableExtensions.cs" />
+    <Compile Include="Mathematics\PolarPoint.cs" />
     <Compile Include="Physics\CompoundUnit.cs" />
     <Compile Include="Extensions\CompoundUnitExtensions.cs" />
     <Compile Include="Collections\ConcurrentCappedQueue.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Physics\UnitPoint3D.cs" />
     <Compile Include="Extensions\UnitPoint2DExtensions.cs" />
     <Compile Include="Extensions\UnitPoint3DExtensions.cs" />
+    <Compile Include="UnitTests\CoordinateTransform\BasisShiftTransform2DTest.cs" />
     <Compile Include="UnitTests\CoordinateTransform\CalibrationTest.cs" />
     <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />

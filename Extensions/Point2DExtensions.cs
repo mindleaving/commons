@@ -22,9 +22,9 @@ namespace Commons.Extensions
             return new Vector2D(diffX, diffY);
         }
 
-        public static Vector2D ToVector3D(this Point2D point3D)
+        public static Vector2D ToVector2D(this Point2D point2D)
         {
-            return new Vector2D(point3D.X, point3D.Y);
+            return new Vector2D(point2D.X, point2D.Y);
         }
 
         public static Point2D Average(this IEnumerable<Point2D> points)
