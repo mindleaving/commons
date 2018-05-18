@@ -61,7 +61,7 @@ namespace Commons.CoordinateTransform
         {
             var planePoint3D = planeEmbeddingTransform.Transform(point);
             var imagePoint = imagePlaneProjection.Transform(planePoint3D);
-            return imagePoint;
+            return imageCoordinateNormalizer.InverseTransform(imagePoint);
         }
     }
 }

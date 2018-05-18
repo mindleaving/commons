@@ -47,6 +47,7 @@
     <Compile Include="Mathematics\Circle.cs" />
     <Compile Include="Mathematics\Combinatorics.cs" />
     <Compile Include="Extensions\ComparableExtensions.cs" />
+    <Compile Include="Mathematics\SequenceGeneration.cs" />
     <Compile Include="Mathematics\PolarPoint.cs" />
     <Compile Include="Physics\CompoundUnit.cs" />
     <Compile Include="Extensions\CompoundUnitExtensions.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Extensions\UnitPoint3DExtensions.cs" />
     <Compile Include="UnitTests\CoordinateTransform\BasisShiftTransform2DTest.cs" />
     <Compile Include="UnitTests\CoordinateTransform\CalibrationTest.cs" />
+    <Compile Include="UnitTests\CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
     <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />
     <Compile Include="UnitTests\GeometryTest.cs" />
