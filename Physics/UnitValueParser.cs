@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Commons.Extensions;
 
@@ -16,7 +17,7 @@ namespace Commons.Physics
                 throw new FormatException();
             var valueGroup = match.Groups[1];
             var unitGroup = match.Groups[3];
-            var value = double.Parse(valueGroup.Value);
+            var value = double.Parse(valueGroup.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
             ParseUnit(unitGroup.Value, out var unit, out var siPrefix);
             var multiplier = siPrefix.GetMultiplier();
             return new UnitValue(unit, multiplier * value);
