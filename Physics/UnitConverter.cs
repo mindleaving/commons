@@ -110,6 +110,10 @@ namespace Commons.Physics
                     return Unit.Joule;
                 case Unit.Degree:
                     return Unit.Radians;
+                case Unit.Liter:
+                    return Unit.CubicMeters;
+                case Unit.Gram:
+                    return Unit.Kilogram;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
             }
@@ -149,6 +153,10 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.Joule, value * 1.60217662 * 1e-19);
                 case Unit.Degree:
                     return new UnitConversionResult(Unit.Radians, value * Math.PI / 180);
+                case Unit.Liter:
+                    return new UnitConversionResult(Unit.CubicMeters, value * 0.001);
+                case Unit.Gram:
+                    return new UnitConversionResult(Unit.Kilogram, value * 0.001);
                 case Unit.Meter:
                 case Unit.MetersPerSecond:
                 case Unit.MetersPerSecondSquared:

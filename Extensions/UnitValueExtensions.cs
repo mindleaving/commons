@@ -43,6 +43,8 @@ namespace Commons.Extensions
                 case Unit.GramPerMole:
                 case Unit.Radians:
                     return unitValue.Value;
+                case Unit.Gram:
+                    return 1000 * unitValue.Value;
                 case Unit.Feet:
                     return 3.2808399*unitValue.Value;
                 case Unit.StatuteMile:
@@ -58,7 +60,7 @@ namespace Commons.Extensions
                 case Unit.KnotsPerSeond:
                     return 1.94384449244 * unitValue.Value;
                 case Unit.Celcius:
-                    return unitValue.Value + 273.15;
+                    return unitValue.Value - 273.15;
                 case Unit.Fahrenheit:
                     return unitValue.Value*(9.0/5.0) - 459.67;
                 case Unit.Bar:
@@ -71,6 +73,8 @@ namespace Commons.Extensions
                     return unitValue.Value / (1.60217662 * 1e-19);
                 case Unit.Degree:
                     return unitValue.Value*180/Math.PI;
+                case Unit.Liter:
+                    return unitValue.Value * 1000;
                 default:
                     throw new InvalidOperationException($"Conversion from {unitValue.Unit} to {newUnit} is not implemented");
             }
@@ -139,6 +143,8 @@ namespace Commons.Extensions
             {Unit.SquareMeter, "m^2"},
             {Unit.CubicMeters, "m^3"},
             {Unit.Kilogram, "kg"},
+            {Unit.Gram, "g"},
+            {Unit.Liter, "L"},
             {Unit.GramPerMole, "g/mol"},
             {Unit.Coulombs, "C"},
             {Unit.ElementaryCharge, "e"},
@@ -186,7 +192,7 @@ namespace Commons.Extensions
             {SIPrefix.Deci, "d"},
             {SIPrefix.Deca, "D"},
             {SIPrefix.Hecto, "H"},
-            {SIPrefix.Kilo, "K"},
+            {SIPrefix.Kilo, "k"},
             {SIPrefix.Mega, "M"},
             {SIPrefix.Giga, "G"},
             {SIPrefix.Tera, "T"},

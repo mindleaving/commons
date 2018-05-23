@@ -15,6 +15,7 @@ namespace Commons.UnitTests
         [TestCase(Unit.InchesOfMercury)]
         [TestCase(Unit.Fahrenheit)]
         [TestCase(Unit.Mach)]
+        [TestCase(Unit.Liter)]
         public void UnitConversionRoundtripReturnsInput(Unit unit)
         {
             var number = StaticRandom.Rng.NextDouble();
@@ -61,8 +62,17 @@ namespace Commons.UnitTests
             var product = mass*acceleration;
 
             Assert.That(product.Unit == Unit.Newton);
-            var expectedValue = mass.In(Unit.Kilogram)*acceleration.In(Unit.MetersPerSecondSquared);
+            var expectedValue = mass.In(SIPrefix.Kilo, Unit.Gram)*acceleration.In(Unit.MetersPerSecondSquared);
             Assert.That(product.Value, Is.EqualTo(expectedValue).Within(1e-5));
+        }
+
+        [Test]
+        public void GramPerMilliliterTest()
+        {
+            var weight = 4.To(SIPrefix.Kilo, Unit.Gram);
+            var volume = 8.To(Unit.Liter);
+            var density = weight / volume;
+            Assert.That(density.Value, Is.EqualTo(500).Within(1e-5));
         }
     }
 }

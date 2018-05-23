@@ -37,10 +37,12 @@
         SquareMeter,
 
         // Volume
+        Liter,
         CubicMeters,
 
         // Mass
         Kilogram,
+        Gram,
         GramPerMole,
 
         // Charge,
