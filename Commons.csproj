@@ -47,6 +47,8 @@
     <Compile Include="Mathematics\Circle.cs" />
     <Compile Include="Mathematics\Combinatorics.cs" />
     <Compile Include="Extensions\ComparableExtensions.cs" />
+    <Compile Include="Mathematics\ContinuousLine2D.cs" />
+    <Compile Include="Mathematics\Point2DXYComparer.cs" />
     <Compile Include="Mathematics\SequenceGeneration.cs" />
     <Compile Include="Mathematics\PolarPoint.cs" />
     <Compile Include="Physics\CompoundUnit.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="UnitTests\GeometryTest.cs" />
     <Compile Include="UnitTests\GraphAlgorithmsTest.cs" />
     <Compile Include="UnitTests\GraphClassesTest.cs" />
+    <Compile Include="UnitTests\Mathematics\ContinuousLine2DTest.cs" />
     <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
     <Compile Include="UnitTests\Optimization\ParameterCyclingOptimizerTest.cs" />
     <Compile Include="UnitTests\RangeTest.cs" />
