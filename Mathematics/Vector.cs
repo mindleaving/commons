@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -103,7 +104,7 @@ namespace Commons.Mathematics
 
         public override string ToString()
         {
-            return string.Join(" ", Data.Select(x => x.ToString()));
+            return string.Join(" ", Data.Select(x => x.ToString(CultureInfo.InvariantCulture)));
         }
     }
 }
