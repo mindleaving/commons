@@ -35,6 +35,13 @@ namespace Commons.Extensions
             return !i.IsEven();
         }
 
+        public static bool IsBetween(this double x, double a, double b)
+        {
+            var min = Math.Min(a, b);
+            var max = Math.Max(a, b);
+
+            return x >= min && x <= max;
+        }
         public static bool IsEven(this uint i)
         {
             return i % 2 == 0;

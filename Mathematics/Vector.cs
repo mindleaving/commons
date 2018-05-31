@@ -34,6 +34,11 @@ namespace Commons.Mathematics
             Array.Copy(values, Data, Dimension);
         }
 
+        public static implicit operator double[](Vector v)
+        {
+            return v.Data;
+        }
+
         public static Vector operator +(Vector v1, Vector v2)
         {
             if (v1.Dimension != v2.Dimension)
