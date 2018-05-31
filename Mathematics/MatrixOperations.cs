@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Commons.Extensions;
 
 namespace Commons.Mathematics
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class MatrixOperations
     {
         public static double[,] IdentityMatrix(int dimensions, double diagonalValue)
@@ -26,6 +29,22 @@ namespace Commons.Mathematics
             return IdentityMatrix(dimensions, 1);
         }
 
+        public static double[,] AppendColumn(this double[,] array, double[] column)
+        {
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            var newArray = new double[rows, cols + 1];
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    newArray[row, col] = array[row, col];
+                }
+                newArray[row, cols] = column[row];
+            }
+            return newArray;
+        }
+
         public static double Norm(this double[] v)
         {
             if (v == null)
@@ -47,8 +66,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
 
             var transposedArray = new double[cols, rows];
 
@@ -73,7 +92,7 @@ namespace Commons.Mathematics
                 throw new ArgumentException("Vectors must have the same length");
             }
             var sumVector = new double[a.Length];
-            for (int i = 0; i < a.Length; i++)
+            for (var i = 0; i < a.Length; i++)
             {
                 sumVector[i] = a[i] + b[i];
             }
@@ -86,8 +105,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = A.GetLength(0);
-            int cols = A.GetLength(1);
+            var rows = A.GetLength(0);
+            var cols = A.GetLength(1);
             if (B.GetLength(0) != rows || B.GetLength(1) != cols)
             {
                 throw new ArgumentException("Arrays must have the same size");
@@ -127,8 +146,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = A.GetLength(0);
-            int cols = A.GetLength(1);
+            var rows = A.GetLength(0);
+            var cols = A.GetLength(1);
             if (B.GetLength(0) != rows || B.GetLength(1) != cols)
             {
                 throw new ArgumentException("Arrays must have the same size");
@@ -146,10 +165,10 @@ namespace Commons.Mathematics
 
         public static double[,] Multiply(this double[,] A, double[,] B)
         {
-            int rowsA = A.GetLength(0);
-            int colsA = A.GetLength(1);
-            int rowsB = B.GetLength(0);
-            int colsB = B.GetLength(1);
+            var rowsA = A.GetLength(0);
+            var colsA = A.GetLength(1);
+            var rowsB = B.GetLength(0);
+            var colsB = B.GetLength(1);
             if (colsA != rowsB)
             {
                 return null;
@@ -259,8 +278,8 @@ namespace Commons.Mathematics
 
         public static double[,] ScalarMultiply(this double[,] array, double scalar)
         {
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             var multiplyArray = new double[rows, cols];
             for (int r = 0; r < rows; r++)
             {
@@ -307,8 +326,8 @@ namespace Commons.Mathematics
             {
                 return double.NaN;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows != cols)
             {
                 return 0;
@@ -404,8 +423,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows < 2 || cols < 2)
             {
                 throw new ArgumentException("Array of size smaller than 2x2 cannot be reduced");
@@ -453,8 +472,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows != cols)
             {
                 throw new ArgumentException("Array must be square to calculate the adjugated matrix");
@@ -490,8 +509,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows != cols)
             {
                 throw new ArgumentException("Array must be square to be inversed");
@@ -525,8 +544,8 @@ namespace Commons.Mathematics
             {
                 array = Transpose(array);
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             var covarianceArray = new double[cols, cols];
 
             var X = new double[rows];
@@ -572,8 +591,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows != cols)
             {
                 return null;
@@ -616,8 +635,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows != cols || eigenvalues.Length != rows)
             {
                 return null;
@@ -673,8 +692,8 @@ namespace Commons.Mathematics
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             double[,] rrefArray = new double[rows, cols];
 
             for (int r = 0; r < rows; r++)
@@ -723,14 +742,62 @@ namespace Commons.Mathematics
             return rrefArray;
         }
 
+        public static double[] GetColumn(this double[,] array, int columnIndex)
+        {
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            if(columnIndex >= cols)
+                throw new IndexOutOfRangeException();
+            var column = new double[rows];
+            for (int row = 0; row < rows; row++)
+            {
+                column[row] = array[row, columnIndex];
+            }
+            return column;
+        }
+
+        public static double[] LinSolve(double[,] A, double[] b, out bool isValid)
+        {
+            var rref = A.AppendColumn(b).ReducedRowEchelonForm();
+
+            var rows = rref.GetLength(0);
+            var cols = rref.GetLength(1);
+            isValid = true;
+            const double Tolerance = 1e-12;
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols-1; col++)
+                {
+                    var value = rref[row, col];
+                    if (row == col)
+                    {
+                        if ((value-1).Abs() > Tolerance)
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (value.Abs() > Tolerance)
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            return rref.GetColumn(rref.GetLength(1)-1);
+        }
+
         public static double[,] HesselbergMatrix(this double[,] array)
         {
             if (array == null)
             {
                 return null;
             }
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
             if (rows != cols)
             {
                 return null;
@@ -797,8 +864,8 @@ namespace Commons.Mathematics
             {
                 return false;
             }
-            int rows = A.GetLength(0);
-            int cols = A.GetLength(1);
+            var rows = A.GetLength(0);
+            var cols = A.GetLength(1);
             if (rows != cols)
             {
                 return false;
@@ -813,16 +880,14 @@ namespace Commons.Mathematics
             }
             Q = new double[rows, rows];
             R = new double[rows, rows];
-            double[,] Pk;
-            double[] transformVector;
             for (int d = 0; d < rows - 1; d++)
             {
-                transformVector = new double[rows - d];
+                var transformVector = new double[rows - d];
                 for (int r = d; r < rows; r++)
                 {
                     transformVector[r - d] = Ak[r, d];
                 }
-                Pk = HouseholderTransform(transformVector, rows);
+                var Pk = HouseholderTransform(transformVector, rows);
                 Ak = Multiply(Pk, Ak);
 
                 if (d == 0)
