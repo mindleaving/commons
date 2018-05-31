@@ -52,6 +52,9 @@
     <Compile Include="Mathematics\Point2DXYComparer.cs" />
     <Compile Include="Mathematics\SequenceGeneration.cs" />
     <Compile Include="Mathematics\PolarPoint.cs" />
+    <Compile Include="Misc\Annotation.cs" />
+    <Compile Include="Misc\AnnotationCollection.cs" />
+    <Compile Include="Misc\AnnotationShapeType.cs" />
     <Compile Include="Physics\CompoundUnit.cs" />
     <Compile Include="Extensions\CompoundUnitExtensions.cs" />
     <Compile Include="Collections\ConcurrentCappedQueue.cs" />
