@@ -52,5 +52,16 @@ namespace Commons.Extensions
                 throw new InvalidOperationException("No minimum found");
             return minValueItem;
         }
+
+        public static IList<T> SubArray<T>(this IList<T> array, int startIdx, int count)
+        {
+            var subArray = new T[count];
+            for (int targetIdx = 0; targetIdx < count; targetIdx++)
+            {
+                var sourceIdx = targetIdx + startIdx;
+                subArray[targetIdx] = array[sourceIdx];
+            }
+            return subArray;
+        }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Commons.IO
 {
@@ -47,6 +49,51 @@ namespace Commons.IO
                 }
             }
             return array;
+        }
+
+        public static Dictionary<string, List<string>> ReadColumns(string filename, bool hasHeader = true)
+        {
+            Dictionary<string, List<string>> columns = null;
+            Dictionary<int, string> columnIdxToHeaderMap = null;
+            using (var streamReader = new StreamReader(filename))
+            {
+                var isFirstLine = true;
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    var splittedLine = line.Split(Delimiter);
+                    if (isFirstLine)
+                    {
+                        isFirstLine = false;
+                        if (hasHeader)
+                        {
+                            columns = splittedLine.ToDictionary(x => x, x => new List<string>());
+                            columnIdxToHeaderMap = Enumerable.Range(0, splittedLine.Length)
+                                .ToDictionary(x => x, x => splittedLine[x]);
+                            continue;
+                        }
+                        else
+                        {
+                            columns = Enumerable.Range(0, splittedLine.Length)
+                                .ToDictionary(x => x.ToString(), x => new List<string>());
+                        }
+                    }
+
+                    for (int columnIdx = 0; columnIdx < splittedLine.Length; columnIdx++)
+                    {
+                        if (hasHeader)
+                        {
+                            var header = columnIdxToHeaderMap[columnIdx];
+                            columns[header].Add(splittedLine[columnIdx]);
+                        }
+                        else
+                        {
+                            columns[columnIdx.ToString()].Add(splittedLine[columnIdx]);
+                        }
+                    }
+                }
+            }
+            return columns;
         }
     }
 }
