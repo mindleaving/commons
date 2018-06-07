@@ -118,13 +118,13 @@ namespace Commons.Extensions
 
         public static double Median(this IEnumerable<double> items)
         {
-            var itemList = items.ToList();
-            var halfIndex = itemList.Count / 2;
-            if (itemList.Count.IsEven())
+            var orderedItemList = items.OrderBy(x => x).ToList();
+            var halfIndex = orderedItemList.Count / 2;
+            if (orderedItemList.Count.IsEven())
             {
-                return (itemList[halfIndex - 1] + itemList[halfIndex])/2.0;
+                return (orderedItemList[halfIndex - 1] + orderedItemList[halfIndex])/2.0;
             }
-            return itemList[halfIndex];
+            return orderedItemList[halfIndex];
         }
         public static double Median<T>(this IEnumerable<T> items, Func<T,double> valueSelector)
         {
