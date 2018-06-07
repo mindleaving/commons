@@ -30,6 +30,20 @@ namespace Commons.Physics
                 yield return buffer.Average();
             }
         }
+
+        public static IEnumerable<Point2D> MovingAverage(this IList<Point2D> data, double windowSize)
+        {
+            if (data.Count == 0)
+                yield break;
+
+            var orderedData = data.OrderBy(p => p.X).ToList();
+            var slidingWindow = new SlidingWindow<Point2D>(orderedData, p => p.X, windowSize, WindowPositioningType.CenteredAtPosition);
+            foreach (var point in orderedData)
+            {
+                slidingWindow.SetPosition(point.X);
+                yield return new Point2D(point.X, slidingWindow.Average(p => p.Y));
+            }
+        }
         
         public static IEnumerable<double> MedianFilter(this IList<double> data, int windowSize)
         {
@@ -59,10 +73,11 @@ namespace Commons.Physics
 
             var orderedData = data.OrderBy(p => p.X).ToList();
             var slidingWindow = new SlidingWindow<Point2D>(orderedData, p => p.X, windowSize, WindowPositioningType.CenteredAtPosition);
-            foreach (var point in data)
+            foreach (var point in orderedData)
             {
                 slidingWindow.SetPosition(point.X);
-                yield return new Point2D(point.X, slidingWindow.Median(p => p.Y));
+                var medianY = slidingWindow.Median(p => p.Y);
+                yield return new Point2D(point.X, medianY);
             }
         }
     }

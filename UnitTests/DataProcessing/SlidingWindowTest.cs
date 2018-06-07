@@ -43,6 +43,21 @@ namespace Commons.UnitTests.DataProcessing
             Assert.That(sut.Select(p => p.X), Is.EquivalentTo(new[] {2, 2.5}));
         }
 
+        [Test]
+        public void SlidingWindowRemovesPointsInNoLongerInWindow()
+        {
+            var points = CreateTestPoints();
+            var windowSize = 1;
+            var windowPositioningType = WindowPositioningType.CenteredAtPosition;
+            var sut = new SlidingWindow<Point2D>(points, p => p.X, windowSize, windowPositioningType);
+            sut.SetPosition(2.2);
+            Assert.That(sut.Count(), Is.EqualTo(2));
+            Assert.That(sut.Select(p => p.X), Is.EquivalentTo(new[] {2, 2.5}));
+            sut.SetPosition(3.1);
+            Assert.That(sut.Count(), Is.EqualTo(1));
+            Assert.That(sut.Select(p => p.X), Is.EquivalentTo(new[] {3}));
+        }
+
         private static List<Point2D> CreateTestPoints()
         {
             var points = new List<Point2D>

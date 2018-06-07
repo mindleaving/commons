@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Commons.Mathematics;
 using Commons.Physics;
 using NUnit.Framework;
 
@@ -50,5 +51,30 @@ namespace Commons.UnitTests
             Assert.That(actual.Count, Is.EqualTo(data.Count));
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void MedianFilterAsExpected()
+        {
+            var data = new List<Point2D>
+            {
+                new Point2D(0, 1),
+                new Point2D(1, 1.5),
+                new Point2D(2, 1.8),
+                new Point2D(3, 1.1),
+                new Point2D(4, 1.2),
+            };
+            var filteredSignal = data.MedianFilter(2.5).ToList();
+            Assert.That(filteredSignal.Count, Is.EqualTo(data.Count));
+
+            var expectedY = new[] {1.25, 1.5, 1.5, 1.2, 1.15};
+            for (var pointIdx = 0; pointIdx < filteredSignal.Count; pointIdx++)
+            {
+                var filteredPoint = filteredSignal[pointIdx];
+                Assert.That(filteredPoint.X, Is.EqualTo(data[pointIdx].X).Within(Tolerance));
+                Assert.That(filteredPoint.Y, Is.EqualTo(expectedY[pointIdx]).Within(Tolerance));
+            }
+        }
+
+        private const double Tolerance = 1e-12;
     }
 }
