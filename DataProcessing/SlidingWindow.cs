@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Commons.Mathematics;
 
-namespace Commons.Collections
+namespace Commons.DataProcessing
 {
     public class SlidingWindow<T> : IEnumerable<T>
     {
@@ -55,7 +55,7 @@ namespace Commons.Collections
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (Window.From > windowStart)
+            if (Window != null && Window.From > windowStart)
             {
                 throw new InvalidOperationException("Window can only be moved forward. "
                                                     + $"Is currently at ({Window.From},{Window.To}) and was requested to move to ({windowStart},{windowEnd})");
@@ -88,6 +88,8 @@ namespace Commons.Collections
 
         public IEnumerator<T> GetEnumerator()
         {
+            if(Window == null)
+                throw new InvalidOperationException("Window position not set");
             return itemsInWindow.GetEnumerator();
         }
 
