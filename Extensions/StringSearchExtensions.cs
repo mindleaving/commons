@@ -11,7 +11,7 @@ namespace Commons.Extensions
             if (input == null) throw new ArgumentNullException(nameof(input));
             var currentPosition = input.IndexOf(searchValue, StringComparison.InvariantCulture);
             var indices = new List<int>();
-            while (currentPosition > 0)
+            while (currentPosition >= 0)
             {
                 indices.Add(currentPosition);
                 currentPosition = input.IndexOf(searchValue, currentPosition+searchValue.Length, StringComparison.InvariantCulture);

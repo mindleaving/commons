@@ -19,6 +19,17 @@ namespace Commons.UnitTests.Extensions
         }
 
         [Test]
+        public void AllIndicesOfFindsSearchValueAtStart()
+        {
+            var input = "fox and dog";
+            var searchValue = "fox";
+            var expected = new[] {0};
+            var actual = input.AllIndicesOf(searchValue);
+            Assert.That(actual.Count, Is.EqualTo(expected.Length));
+            Assert.That(actual.SequenceEqual(expected));
+        }
+
+        [Test]
         public void AllIndicesOfThrowsIfInputNull()
         {
             string input = null;
