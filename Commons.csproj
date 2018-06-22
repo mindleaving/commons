@@ -44,6 +44,7 @@
     <Compile Include="Extensions\BitExtensions.cs" />
     <Compile Include="DataProcessing\CappedFrequencyCounter.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
+    <Compile Include="Extensions\StringSearchExtensions.cs" />
     <Compile Include="Extensions\VectorExtensions.cs" />
     <Compile Include="IO\DeepCloner.cs" />
     <Compile Include="IO\Serializer.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="UnitTests\CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
     <Compile Include="UnitTests\DataProcessing\SlidingWindowTest.cs" />
     <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
+    <Compile Include="UnitTests\Extensions\StringSearchExtensions.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />
     <Compile Include="UnitTests\GeometryTest.cs" />
     <Compile Include="UnitTests\GraphAlgorithmsTest.cs" />
