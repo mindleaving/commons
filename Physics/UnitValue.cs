@@ -22,11 +22,22 @@ namespace Commons.Physics
             Value = value;
         }
 
-        [DataMember]
+        [IgnoreDataMember]
         public double Value { get; private set; }
+        [DataMember]
+        public string StringValue
+        {
+            get => ToString();
+            set
+            {
+                var parsedValue = Parse(value);
+                Value = parsedValue.Value;
+                Unit = parsedValue.Unit;
+            }
+        }
         [IgnoreDataMember]
         public CompoundUnit Unit { get; private set; }
-        [DataMember]
+        [IgnoreDataMember]
         private Unit SimpleUnit // For serialization
         {
             get { return Unit.ToUnit();  }
@@ -146,15 +157,28 @@ namespace Commons.Physics
 
         public override string ToString()
         {
-            var unit = Unit.ToUnit();
-            var appropriateSIPrefix = SelectSIPrefix(Value);
-            var multiplier = appropriateSIPrefix.GetMultiplier();
-            var valueString = (Value/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
-                + " "
-                + appropriateSIPrefix.StringRepresentation();
-            if (unit == Physics.Unit.Compound)
-                return valueString + Unit;
-            return valueString + unit.StringRepresentation();
+            if (SimpleUnit == Physics.Unit.Kilogram)
+            {
+                var gramValue = Value * 1000;
+                var appropriateSIPrefix = SelectSIPrefix(gramValue);
+                var multiplier = appropriateSIPrefix.GetMultiplier();
+                var valueString = (gramValue/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
+                              + " "
+                              + appropriateSIPrefix.StringRepresentation();
+                return valueString + Physics.Unit.Gram.StringRepresentation();
+            }
+            else
+            {
+                var appropriateSIPrefix = SelectSIPrefix(Value);
+                var multiplier = appropriateSIPrefix.GetMultiplier();
+                var valueString = (Value/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
+                                  + " "
+                                  + appropriateSIPrefix.StringRepresentation();
+                if (SimpleUnit == Physics.Unit.Compound)
+                    return valueString + Unit;
+
+                return valueString + SimpleUnit.StringRepresentation();
+            }
         }
 
         private static SIPrefix SelectSIPrefix(double value)
