@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Commons")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("mindleaving.Commons")]
+[assembly: AssemblyDescription("General code for various projects")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("mindleaving")]
 [assembly: AssemblyProduct("Commons")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

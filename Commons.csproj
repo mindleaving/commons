@@ -125,24 +125,6 @@
     <Compile Include="Physics\UnitPoint3D.cs" />
     <Compile Include="Extensions\UnitPoint2DExtensions.cs" />
     <Compile Include="Extensions\UnitPoint3DExtensions.cs" />
-    <Compile Include="UnitTests\CoordinateTransform\BasisShiftTransform2DTest.cs" />
-    <Compile Include="UnitTests\CoordinateTransform\CalibrationTest.cs" />
-    <Compile Include="UnitTests\CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
-    <Compile Include="UnitTests\DataProcessing\SlidingWindowTest.cs" />
-    <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
-    <Compile Include="UnitTests\Extensions\StringSearchExtensions.cs" />
-    <Compile Include="UnitTests\FilterFuncsTest.cs" />
-    <Compile Include="UnitTests\GeometryTest.cs" />
-    <Compile Include="UnitTests\GraphAlgorithmsTest.cs" />
-    <Compile Include="UnitTests\GraphClassesTest.cs" />
-    <Compile Include="UnitTests\Mathematics\ContinuousLine2DTest.cs" />
-    <Compile Include="UnitTests\Mathematics\LineSegment2DTest.cs" />
-    <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
-    <Compile Include="UnitTests\Optimization\ParameterCyclingOptimizerTest.cs" />
-    <Compile Include="UnitTests\RangeTest.cs" />
-    <Compile Include="UnitTests\UnitValueParserTest.cs" />
-    <Compile Include="UnitTests\UnitValueSerializationTest.cs" />
-    <Compile Include="UnitTests\UnitValueTest.cs" />
     <Compile Include="Physics\UnitValue.cs" />
     <Compile Include="Extensions\UnitValueExtensions.cs" />
     <Compile Include="Physics\UnitVector2D.cs" />
@@ -160,17 +142,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>$(SolutionDir)\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Device" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
