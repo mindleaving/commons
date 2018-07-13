@@ -174,6 +174,8 @@ namespace Commons.Physics
 
         private static SIPrefix SelectSIPrefix(double value)
         {
+            if (value.IsNaN() || value == 0 || value.IsInfinity())
+                return SIPrefix.None;
             var absValue = Math.Abs(value);
             var allPrefixes = ((SIPrefix[]) Enum.GetValues(typeof(SIPrefix)))
                 .Except(new []{SIPrefix.Deca, SIPrefix.Deci, SIPrefix.Hecto, SIPrefix.Centi })
