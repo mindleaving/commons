@@ -22,22 +22,13 @@ namespace Commons.Physics
             Value = value;
         }
 
-        [IgnoreDataMember]
+        [DataMember]
         public double Value { get; private set; }
         [DataMember]
-        public string StringValue
-        {
-            get => ToString();
-            set
-            {
-                var parsedValue = Parse(value);
-                Value = parsedValue.Value;
-                Unit = parsedValue.Unit;
-            }
-        }
+        public string StringValue => ToString();
         [IgnoreDataMember]
         public CompoundUnit Unit { get; private set; }
-        [IgnoreDataMember]
+        [DataMember]
         private Unit SimpleUnit // For serialization
         {
             get { return Unit.ToUnit();  }

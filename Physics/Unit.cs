@@ -2,62 +2,62 @@
 {
     public enum Unit
     {
-        Compound,
+        Compound = 0,
 
         // Distances
-        Meter,
-        Feet,
-        StatuteMile,
-        NauticalMile,
+        Meter = 1,
+        Feet = 2,
+        StatuteMile = 3,
+        NauticalMile = 4,
 
         // Velocities
-        MetersPerSecond,
-        FeetPerMinute,
-        Knots,
-        Mach,
+        MetersPerSecond = 101,
+        FeetPerMinute = 102,
+        Knots = 103,
+        Mach = 104,
 
         // Acceleration
-        MetersPerSecondSquared,
-        KnotsPerSeond,
+        MetersPerSecondSquared = 201,
+        KnotsPerSeond = 202,
 
         // Time
-        Second,
+        Second = 301,
 
         // Temperature
-        Kelvin,
-        Celcius,
-        Fahrenheit,
+        Kelvin = 401,
+        Celcius = 402,
+        Fahrenheit = 403,
 
         // Pressure
-        Pascal,
-        Bar,
-        InchesOfMercury,
+        Pascal = 501,
+        Bar = 502,
+        InchesOfMercury = 503,
 
         // Area
-        SquareMeter,
+        SquareMeter = 601,
 
         // Volume
-        Liter,
-        CubicMeters,
+        Liter = 701,
+        CubicMeters = 702,
 
         // Mass
-        Kilogram,
-        Gram,
-        GramPerMole,
+        Kilogram = 801,
+        Gram = 802,
+        GramPerMole = 803,
 
         // Charge,
-        Coulombs,
-        ElementaryCharge,
+        Coulombs = 901,
+        ElementaryCharge = 902,
 
         // Energy,
-        Joule,
-        ElectronVolts,
+        Joule = 1001,
+        ElectronVolts = 1002,
 
         // Force
-        Newton,
+        Newton = 1101,
 
         // Angles
-        Radians,
-        Degree
+        Radians = 1201,
+        Degree = 1202
     }
 }
