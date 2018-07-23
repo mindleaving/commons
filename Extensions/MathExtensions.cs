@@ -21,6 +21,10 @@ namespace Commons.Extensions
             return residual < 0 ? residual + modulus : residual;
         }
 
+        public static double Abs(this int value)
+        {
+            return Math.Abs(value);
+        }
         public static double Abs(this double value)
         {
             return Math.Abs(value);

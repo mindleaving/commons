@@ -163,21 +163,27 @@ namespace Commons.Extensions
             return UnitStringRepresentation[unit];
         }
 
-        public static string StringRepresentation(this SIBaseUnit siBaseUnit)
+
+        public static readonly Dictionary<SIBaseUnit, string> SIBaseUnitStringRepresentation = new Dictionary<SIBaseUnit, string>
         {
-            switch (siBaseUnit)
-            {
-                case SIBaseUnit.Meter: return "m";
-                case SIBaseUnit.Kilogram: return "kg";
-                case SIBaseUnit.Second: return "s";
-                case SIBaseUnit.Ampere: return "A";
-                case SIBaseUnit.Kelvin: return "K";
-                case SIBaseUnit.Mole: return "mol";
-                case SIBaseUnit.Candela: return "cd";
-                case SIBaseUnit.Radians: return "rad";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(siBaseUnit), siBaseUnit, null);
-            }
+            {SIBaseUnit.Meter, "m"},
+            {SIBaseUnit.Kilogram, "kg"},
+            {SIBaseUnit.Second, "s"},
+            {SIBaseUnit.Ampere, "A"},
+            {SIBaseUnit.Kelvin, "K"},
+            {SIBaseUnit.Mole, "mol"},
+            {SIBaseUnit.Candela, "cd"},
+            {SIBaseUnit.Radians, "rad"}
+        };
+
+        public static readonly Dictionary<string, SIBaseUnit> InverseSIBaseUnitStringRepresentation =
+            SIBaseUnitStringRepresentation.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+
+        public static string StringRepresentation(this SIBaseUnit unit)
+        {
+            if(!SIBaseUnitStringRepresentation.ContainsKey(unit))
+                throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
+            return SIBaseUnitStringRepresentation[unit];
         }
 
         public static readonly Dictionary<SIPrefix, string> SIPrefixStringRepresentation = new Dictionary<SIPrefix, string>

@@ -96,7 +96,7 @@ namespace Commons.Physics
                     SIBaseUnit = (SIBaseUnit)idx,
                     Multiplicity = multiplicity
                 })
-                .Where(kvp => kvp.Multiplicity > 0);
+                .Where(kvp => kvp.Multiplicity > 0).ToList();
             var denominator = UnitExponents
                 .Select((multiplicity, idx) => new
                 {
@@ -105,27 +105,36 @@ namespace Commons.Physics
                 })
                 .Where(kvp => kvp.Multiplicity < 0)
                 .ToList();
-            var unitString = "";
+            if (!nominator.Any() && !denominator.Any())
+                return "";
+
+            var nominatorStrings = new List<string>();
             foreach (var unitMultiplicity in nominator)
             {
-                unitString += unitMultiplicity.SIBaseUnit.StringRepresentation();
+                var nominatorUnit = unitMultiplicity.SIBaseUnit.StringRepresentation();
                 if (unitMultiplicity.Multiplicity > 1)
-                    unitString += "^" + unitMultiplicity.Multiplicity;
-                unitString += " ";
+                    nominatorUnit += "^" + unitMultiplicity.Multiplicity;
+                nominatorStrings.Add(nominatorUnit);
             }
-            if (denominator.Any())
-                unitString += "/";
-            if (denominator.Count > 1)
-                unitString += "(";
+            var denominatorStrings = new List<string>();
             foreach (var unitMultiplicity in denominator)
             {
-                unitString += unitMultiplicity.SIBaseUnit.StringRepresentation();
-                if (-unitMultiplicity.Multiplicity > 1)
-                    unitString += "^" + -unitMultiplicity.Multiplicity;
-                unitString += " ";
+                var denominatorUnit = unitMultiplicity.SIBaseUnit.StringRepresentation();
+                if (unitMultiplicity.Multiplicity.Abs() > 1)
+                    denominatorUnit += "^" + unitMultiplicity.Multiplicity.Abs();
+                denominatorStrings.Add(denominatorUnit);
             }
-            if (denominator.Count > 1)
-                unitString += ")";
+            var unitString = "";
+            if (nominatorStrings.Any())
+                unitString += nominatorStrings.Aggregate((a, b) => a + " " + b);
+            else
+                unitString += "1";
+            if (!denominator.Any())
+                return unitString;
+            unitString += "/";
+            unitString += denominatorStrings.Count > 1
+                ? $"({denominatorStrings.Aggregate((a, b) => a + " " + b)})"
+                : denominatorStrings.Single();
             return unitString;
         }
 

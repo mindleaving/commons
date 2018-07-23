@@ -22,17 +22,20 @@ namespace Commons.Physics
             Value = value;
         }
 
-        [DataMember]
+        [IgnoreDataMember]
         public double Value { get; private set; }
-        [DataMember]
-        public string StringValue => ToString();
         [IgnoreDataMember]
         public CompoundUnit Unit { get; private set; }
         [DataMember]
-        private Unit SimpleUnit // For serialization
+        public string StringValue
         {
-            get { return Unit.ToUnit();  }
-            set { Unit = value.ToCompoundUnit(); }
+            get => ToString();
+            private set
+            {
+                var parsedValue = Parse(value);
+                Value = parsedValue.Value;
+                Unit = parsedValue.Unit;
+            }
         }
 
         public static bool operator <(UnitValue value1, UnitValue value2)
@@ -123,7 +126,7 @@ namespace Commons.Physics
                 return false;
             if (!Unit.Equals(otherUnitValue.Unit))
                 return false;
-            return Value.Equals(otherUnitValue.Value);
+            return (Value - otherUnitValue.Value).Abs() < 1e-15;
         }
 
         public override int GetHashCode()
@@ -148,7 +151,12 @@ namespace Commons.Physics
 
         public override string ToString()
         {
-            if (SimpleUnit == Physics.Unit.Kilogram)
+            var simpleUnit = Unit.ToUnit();
+            if (simpleUnit == Physics.Unit.Compound)
+            {
+                return $"{Value} {Unit}";
+            }
+            if (simpleUnit == Physics.Unit.Kilogram)
             {
                 var gramValue = Value * 1000;
                 var appropriateSIPrefix = SelectSIPrefix(gramValue);
@@ -165,10 +173,7 @@ namespace Commons.Physics
                 var valueString = (Value/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
                                   + " "
                                   + appropriateSIPrefix.StringRepresentation();
-                if (SimpleUnit == Physics.Unit.Compound)
-                    return valueString + Unit;
-
-                return valueString + SimpleUnit.StringRepresentation();
+                return valueString + simpleUnit.StringRepresentation();
             }
         }
 
