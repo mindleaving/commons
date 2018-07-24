@@ -13,5 +13,8 @@
     <releaseNotes>NuGet package created</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>commons mindleaving janscholtyssek</tags>
+	<dependencies>
+		<dependency id="Newtonsoft.Json" version="11.0.2" />
+	</dependencies>
   </metadata>
 </package>
