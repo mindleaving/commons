@@ -2,9 +2,8 @@
 using System.Linq;
 using Commons.Mathematics;
 using Commons.Physics;
-using NUnit.Framework;
 
-namespace Commons.UnitTests
+namespace CommonsTest.UnitTests
 {
     [TestFixture]
     public class FilterFuncsTest

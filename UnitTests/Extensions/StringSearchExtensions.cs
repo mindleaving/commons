@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using Commons.Extensions;
-using NUnit.Framework;
 
-namespace Commons.UnitTests.Extensions
+namespace CommonsTest.UnitTests.Extensions
 {
     [TestFixture]
     public class StringSearchExtensionsTest

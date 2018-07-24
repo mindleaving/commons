@@ -57,15 +57,15 @@
     <Compile Include="UnitTests\UnitValueTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NUnit">
+      <Version>3.10.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="Commons.csproj">
       <Project>{d0e6b038-c939-487d-bb5e-a6270a0d18f5}</Project>
       <Name>Commons</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NUnit">
-      <Version>3.10.1</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

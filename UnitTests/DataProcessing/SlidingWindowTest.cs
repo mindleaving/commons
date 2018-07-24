@@ -2,9 +2,8 @@
 using System.Linq;
 using Commons.DataProcessing;
 using Commons.Mathematics;
-using NUnit.Framework;
 
-namespace Commons.UnitTests.DataProcessing
+namespace CommonsTest.UnitTests.DataProcessing
 {
     [TestFixture]
     public class SlidingWindowTest

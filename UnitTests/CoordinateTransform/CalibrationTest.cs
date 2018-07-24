@@ -1,11 +1,9 @@
 ﻿using System.IO;
-using System.Runtime.Serialization;
 using Commons.CoordinateTransform;
 using Commons.IO;
 using Commons.Mathematics;
-using NUnit.Framework;
 
-namespace Commons.UnitTests.CoordinateTransform
+namespace CommonsTest.UnitTests.CoordinateTransform
 {
     [TestFixture]
     public class CalibrationTest

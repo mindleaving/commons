@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Commons.Mathematics;
-using NUnit.Framework;
 
-namespace Commons.UnitTests
+namespace CommonsTest.UnitTests
 {
     [TestFixture]
     public class GraphAlgorithmsTest

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Commons.Mathematics;
-using NUnit.Framework;
 
-namespace Commons.UnitTests.Mathematics
+namespace CommonsTest.UnitTests.Mathematics
 {
     [TestFixture]
     public class ContinuousLine2DTest

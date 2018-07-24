@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Commons.Optimization;
-using NUnit.Framework;
 
-namespace Commons.UnitTests.Optimization
+namespace CommonsTest.UnitTests.Optimization
 {
     [TestFixture]
     public class GradientDescentOptimizerTest

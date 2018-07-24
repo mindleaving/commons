@@ -1,8 +1,8 @@
-﻿using Commons.Extensions;
+﻿using Commons;
+using Commons.Extensions;
 using Commons.Physics;
-using NUnit.Framework;
 
-namespace Commons.UnitTests
+namespace CommonsTest.UnitTests
 {
     [TestFixture]
     public class UnitValueTest
