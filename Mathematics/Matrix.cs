@@ -1,42 +1,28 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
     public class Matrix : IEquatable<Matrix>
     {
-        [DataMember]
-        public int Rows { get; private set; }
-        [DataMember]
-        public int Columns { get; private set; }
+        [JsonProperty]
+        public int Rows { get; }
+        [JsonProperty]
+        public int Columns { get; }
+        [JsonIgnore]
+        public double[,] Data { get; }
 
-        private double[,] data;
-        [IgnoreDataMember]
-        public double[,] Data => data ?? (data = ReconstructFromFlattenedData());
+        [JsonProperty]
+        private double[] FlattenedData => Data.Vectorize();
 
-        [IgnoreDataMember]
-        private double[] flattenedData;
-        [DataMember]
-        public double[] FlattenedData
+        [JsonConstructor]
+        protected Matrix(int rows, int columns, double[] flattenedData)
         {
-            get => Data.Vectorize();
-            set => flattenedData = value;
+            Rows = rows;
+            Columns = columns;
+            Data = flattenedData.Reshape(Rows, Columns);
         }
-
-        /// <summary>
-        /// Reconstruct deserialized matrix from flattened data.
-        /// </summary>
-        private double[,] ReconstructFromFlattenedData()
-        {
-            if (flattenedData == null)
-                throw new Exception("Matrix is not initialized");
-            var reconstructedData = flattenedData.Reshape(Rows, Columns);
-            flattenedData = null; // Discard flattened data such that GC can free the duplicate memory
-            return reconstructedData;
-        }
-
         public Matrix(int rows, int columns)
         {
             if (rows < 1 || columns < 1)
@@ -44,7 +30,7 @@ namespace Commons.Mathematics
 
             Rows = rows;
             Columns = columns;
-            data = new double[rows, columns];
+            Data = new double[rows, columns];
         }
 
         public void SetRow(int rowIdx, double[] values)

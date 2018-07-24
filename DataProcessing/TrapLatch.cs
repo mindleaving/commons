@@ -16,7 +16,7 @@ namespace Commons.DataProcessing
         {
             Open,
             Trapping,
-            Closed,
+            Closed
         }
 
         private int state;

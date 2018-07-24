@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
 using Commons.CoordinateTransform;
+using Commons.IO;
 using Commons.Mathematics;
 using NUnit.Framework;
 
@@ -28,13 +29,15 @@ namespace Commons.UnitTests.CoordinateTransform
                 TranslationVector = new Vector3D(2, 15, 3050),
                 RotationMatrix = rotationMatrix
             };
-            var serializer = new DataContractSerializer(typeof(Calibration));
+            var serializer = new Serializer<Calibration>();
             using (var stream = new MemoryStream())
             {
-                Assert.That(() => serializer.WriteObject(stream, calibration), Throws.Nothing);
+                Assert.That(() => serializer.Store(calibration, stream), Throws.Nothing);
+                stream.Seek(0, SeekOrigin.Begin);
+                var json = new StreamReader(stream).ReadToEnd();
                 stream.Seek(0, SeekOrigin.Begin);
                 Calibration deserializedCalibration = null;
-                Assume.That(() => deserializedCalibration = (Calibration)serializer.ReadObject(stream), Throws.Nothing);
+                Assume.That(() => deserializedCalibration = serializer.Load(stream), Throws.Nothing);
                 Assert.That(deserializedCalibration.FocalLength, Is.EqualTo(calibration.FocalLength));
                 Assert.That(deserializedCalibration.PrincipalPoint, Is.EqualTo(calibration.PrincipalPoint));
                 Assert.That(deserializedCalibration.Distortion.Radial2, Is.EqualTo(0.7).Within(Tolerance));

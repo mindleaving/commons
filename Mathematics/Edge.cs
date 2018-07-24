@@ -1,35 +1,27 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
-    [KnownType(typeof(TaxiEdge))]
     public class Edge<T> : IDisposable
     {
-        [DataMember]
         public ulong Id { get; private set; }
         /// <summary>
         /// Property for holding an object which is represented by this edge.
         /// Intended to make it possible to model problems as graphs.
         /// </summary>
-        [DataMember]
         public T Object { get; set; }
 
-        [DataMember]
         public uint Vertex1Id { get; private set; }
-        [DataMember]
         public uint Vertex2Id { get; private set; }
-        [DataMember]
         public bool IsDirected { get; set; }
-        [DataMember]
         public double Weight { get; set; }
 
         /// <summary>
         /// Property used for efficient implementations of graph algorithms.
         /// E.g. could hold a flag if this vertex has already been visited
         /// </summary>
-        [IgnoreDataMember]
+        [JsonIgnore]
         public object AlgorithmData { get; set; }
 
         public Edge(ulong id, uint vertex1Id, uint vertex2Id, double weight = 1.0, bool isDirected = false)

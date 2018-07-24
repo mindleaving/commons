@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
+using Commons.IO;
 using Commons.Physics;
 using NUnit.Framework;
 
@@ -9,20 +10,21 @@ namespace Commons.UnitTests
     public class UnitValueSerializationTest
     {
         [Test]
-        [TestCase(1.3)]
-        [TestCase(0.013)]
-        [TestCase(1030)]
-        public void SerializationRoundtripSimpleUnit(double value)
+        [TestCase(1.3, Unit.Second)]
+        [TestCase(0.013, Unit.Second)]
+        [TestCase(1030, Unit.Second)]
+        [TestCase(1030, Unit.Kelvin)]
+        public void SerializationRoundtripSimpleUnit(double value, Unit unit)
         {
-            var unitValue = new UnitValue(Unit.Second, value);
-            var serializer = new DataContractSerializer(typeof(UnitValue));
+            var unitValue = new UnitValue(unit, value);
+            var serializer = new Serializer<UnitValue>();
 
             UnitValue deserializedUnitValue;
             using (var stream = new MemoryStream())
             {
-                serializer.WriteObject(stream, unitValue);
+                serializer.Store(unitValue, stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                deserializedUnitValue = (UnitValue) serializer.ReadObject(stream);
+                deserializedUnitValue = serializer.Load(stream);
             }
             Assert.That(deserializedUnitValue, Is.EqualTo(unitValue));
         }
@@ -63,16 +65,15 @@ namespace Commons.UnitTests
         public void SerializationRoundtripCompoundUnit()
         {
             var unitValue = new UnitValue(new CompoundUnit(new []{ SIBaseUnit.Kilogram, SIBaseUnit.Meter}, new []{SIBaseUnit.Second, SIBaseUnit.Kelvin}), 1.3);
-            var serializer = new DataContractSerializer(typeof(UnitValue));
+            var serializer = new Serializer<UnitValue>();
 
-            UnitValue deserializedUnitValue;
             using (var stream = new MemoryStream())
             {
-                serializer.WriteObject(stream, unitValue);
+                serializer.Store(unitValue, stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                deserializedUnitValue = (UnitValue) serializer.ReadObject(stream);
+                var deserializedUnitValue = serializer.Load(stream);
+                Assert.That(deserializedUnitValue, Is.EqualTo(unitValue));
             }
-            Assert.That(deserializedUnitValue, Is.EqualTo(unitValue));
         }
     }
 }

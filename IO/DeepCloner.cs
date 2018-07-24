@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Commons.IO
 {
@@ -7,13 +6,8 @@ namespace Commons.IO
     {
         public static T Clone(T obj)
         {
-            var serializer = new DataContractSerializer(typeof(T));
-            using (var stream = new MemoryStream())
-            {
-                serializer.WriteObject(stream, obj);
-                stream.Seek(0, SeekOrigin.Begin);
-                return (T) serializer.ReadObject(stream);
-            }
+            var json = JsonConvert.SerializeObject(obj);
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

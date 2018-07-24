@@ -26,12 +26,12 @@ namespace Commons.Extensions
 
         public static Vector Divide(this Vector vector, double scalar)
         {
-            return new Vector(vector.Dimension, vector.Data.Select(x => x/scalar).ToArray());
+            return new Vector(vector.Data.Select(x => x/scalar).ToArray());
         }
 
         public static Vector Multiply(this Vector vector, double scalar)
         {
-            return new Vector(vector.Dimension, vector.Data.Select(x => scalar * x).ToArray());
+            return new Vector(vector.Data.Select(x => scalar * x).ToArray());
         }
 
         public static double DotProduct(this Vector v1, Vector v2)

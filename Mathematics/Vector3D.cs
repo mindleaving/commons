@@ -1,34 +1,38 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
 using Commons.Extensions;
 using Commons.Physics;
+using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
     public class Vector3D : Vector
     {
-        [IgnoreDataMember]
+        [JsonIgnore]
         public double X
         {
             get { return Data[0]; }
             set { Data[0] = value; }
         }
-        [IgnoreDataMember]
+        [JsonIgnore]
         public double Y
         {
             get { return Data[1]; }
             set { Data[1] = value; }
         }
-        [IgnoreDataMember]
+        [JsonIgnore]
         public double Z
         {
             get { return Data[2]; }
             set { Data[2] = value; }
         }
 
-        public Vector3D() : base(3) { }
-        public Vector3D(params double[] data) : base(3, data) { }
-        public Vector3D(double x, double y, double z) : base(3, x, y, z) { }
+        [JsonConstructor]
+        public Vector3D(params double[] data) : base(data)
+        {
+            if (data.Length != 3)
+                throw new ArgumentException($"Wrong dimension of data. Expected 3 values, got {data.Length}");
+        }
+        public Vector3D(double x, double y, double z) : base(x, y, z) { }
 
         public static implicit operator Point3D(Vector3D v)
         {

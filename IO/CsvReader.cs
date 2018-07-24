@@ -72,11 +72,9 @@ namespace Commons.IO
                                 .ToDictionary(x => x, x => splittedLine[x]);
                             continue;
                         }
-                        else
-                        {
-                            columns = Enumerable.Range(0, splittedLine.Length)
-                                .ToDictionary(x => x.ToString(), x => new List<string>());
-                        }
+
+                        columns = Enumerable.Range(0, splittedLine.Length)
+                            .ToDictionary(x => x.ToString(), x => new List<string>());
                     }
 
                     for (int columnIdx = 0; columnIdx < splittedLine.Length; columnIdx++)

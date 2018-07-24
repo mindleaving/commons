@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
     public class Vector : IEquatable<Vector>
     {
-        [IgnoreDataMember]
+        [JsonIgnore]
         public int Dimension => Data.Length;
-        [DataMember]
+        [JsonProperty]
         public double[] Data { get; private set; }
 
-        public Vector(int dimension, params double[] data)
+        [JsonConstructor]
+        public Vector(params double[] data)
         {
-            if (dimension < 1)
-                throw new ArgumentException($"Vector must have dimension of at least 1, but {dimension} was request");
-            if (data.Length > 0 && data.Length != dimension)
-                throw new ArgumentException($"If data is provided in the constructor, it must have the same length as the specified dimension." +
-                                            $"Dimension: {dimension}, Data length: {data.Length}");
-
-            Data = new double[dimension];
-            if (data.Length > 0)
-                Set(data);
+            Data = new double[data.Length];
+            Set(data);
         }
 
         public void Set(double[] values)
@@ -31,7 +24,7 @@ namespace Commons.Mathematics
             if (values.Length != Dimension)
                 throw new ArgumentException($"Data provided must have same length as vector, {Dimension}, but was {values.Length}");
 
-            Array.Copy(values, Data, Dimension);
+            Array.Copy(values, Data, values.Length);
         }
 
         public static implicit operator double[](Vector v)
@@ -48,7 +41,7 @@ namespace Commons.Mathematics
                 return new Vector2D(additionResult);
             if (v1.Dimension == 3)
                 return new Vector3D(additionResult);
-            return new Vector(v1.Dimension, additionResult);
+            return new Vector(additionResult);
         }
 
         public static Vector operator -(Vector v1, Vector v2)
@@ -60,12 +53,12 @@ namespace Commons.Mathematics
                 return new Vector2D(subtractionResult);
             if (v1.Dimension == 3)
                 return new Vector3D(subtractionResult);
-            return new Vector(v1.Dimension, subtractionResult);
+            return new Vector(subtractionResult);
         }
 
         public static Vector operator *(double scalar, Vector v2)
         {
-            return new Vector(v2.Dimension, v2.Data.ScalarMultiply(scalar));
+            return new Vector(v2.Data.ScalarMultiply(scalar));
         }
 
         public double this[int idx]

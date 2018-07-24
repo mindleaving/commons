@@ -1,33 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
-    [KnownType(typeof(GeoCoordinate))]
     public class Vertex<T> : IDisposable
     {
         /// <summary>
         /// Property for holding an object which is represented by this vertex.
         /// Intended to make it possible to model problems as graphs.
         /// </summary>
-        [DataMember]
         public T Object { get; set; }
 
-        [DataMember]
         public uint Id { get; private set; }
-        [DataMember]
         public List<ulong> EdgeIds { get; private set; } = new List<ulong>();
-        [DataMember]
         public double Weight { get; set; }
 
         /// <summary>
         /// Property used for efficient implementations of graph algorithms.
         /// E.g. could hold a flag if this vertex has already been visited
         /// </summary>
-        [IgnoreDataMember]
+        [JsonIgnore]
         public object AlgorithmData { get; set; }
 
         public Vertex(uint id, double weight = 1.0)
@@ -69,7 +63,7 @@ namespace Commons.Mathematics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Vertex<T>)obj);
         }
 

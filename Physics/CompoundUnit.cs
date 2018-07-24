@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using Commons.Extensions;
 
 namespace Commons.Physics
 {
-    [DataContract]
     public class CompoundUnit : IEquatable<CompoundUnit>
     {
         public CompoundUnit()
@@ -34,7 +32,6 @@ namespace Commons.Physics
             UnitExponents = unitExponents.ToArray();
         }
 
-        [DataMember]
         public int[] UnitExponents { get; private set; }
 
         public static CompoundUnit operator *(CompoundUnit unit1, CompoundUnit unit2)

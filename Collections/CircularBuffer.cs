@@ -7,7 +7,7 @@ namespace Commons.Collections
     {
         private readonly T[] buffer;
         private readonly int bufferSize;
-        private int nextIndex = 0;
+        private int nextIndex;
         private bool bufferFilled;
 
         public CircularBuffer(int bufferSize)

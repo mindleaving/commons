@@ -32,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +40,7 @@
     <Compile Include="UnitTests\CoordinateTransform\CalibrationTest.cs" />
     <Compile Include="UnitTests\CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
     <Compile Include="UnitTests\DataProcessing\SlidingWindowTest.cs" />
+    <Compile Include="UnitTests\DeepClonerTest.cs" />
     <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
     <Compile Include="UnitTests\Extensions\StringSearchExtensions.cs" />
     <Compile Include="UnitTests\FilterFuncsTest.cs" />

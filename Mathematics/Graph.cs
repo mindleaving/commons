@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using Commons.Extensions;
+using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
     public class Graph<TVertex, TEdge> : IDisposable
     {
-        [IgnoreDataMember] 
+        [JsonIgnore] 
         private bool idsAreInitialized;
-        [IgnoreDataMember]
+        [JsonIgnore]
         private ulong nextEdgeId;
         public ulong GetUnusedEdgeId()
         {
@@ -20,7 +19,7 @@ namespace Commons.Mathematics
             return nextEdgeId++;
         }
 
-        [IgnoreDataMember] 
+        [JsonIgnore] 
         private uint nextVertexId;
         public uint GetUnusedVertexId()
         {
@@ -38,9 +37,7 @@ namespace Commons.Mathematics
             idsAreInitialized = true;
         }
 
-        [DataMember]
         public Dictionary<ulong, Edge<TEdge>> Edges { get; private set; }
-        [DataMember]
         public Dictionary<uint, Vertex<TVertex>> Vertices { get; private set; }
 
         public Graph()

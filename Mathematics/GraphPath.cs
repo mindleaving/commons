@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
     public class GraphPath<TVertex, TEdge>
     {
-        [DataMember]
         public uint StartVertexId { get; set; }
-        [DataMember]
         public LinkedList<Edge<TEdge>> Path { get; private set; }
-        [DataMember]
         public double PathLength { get; private set; }
 
         public GraphPath(uint startVertexId)

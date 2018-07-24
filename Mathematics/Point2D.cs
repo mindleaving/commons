@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.Serialization;
 
 namespace Commons.Mathematics
 {
-    [DataContract]
     public class Point2D : IEquatable<Point2D>
     {
         public Point2D(double x, double y)
@@ -13,9 +11,7 @@ namespace Commons.Mathematics
             Y = y;
         }
 
-        [DataMember]
         public double X { get; set; }
-        [DataMember]
         public double Y { get; set; }
 
         public static Point2D operator +(Point2D point, Vector2D vector)
@@ -60,7 +56,7 @@ namespace Commons.Mathematics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Point2D) obj);
         }
 

@@ -1,42 +1,38 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using Commons.Extensions;
+using Newtonsoft.Json;
 
 namespace Commons.Physics
 {
-    [DataContract]
     public class UnitValue : IComparable
     {
-        private UnitValue() { }
-        public UnitValue(Unit unit, double value) : this()
+        [JsonConstructor]
+        private UnitValue(string stringValue)
+        {
+            var parsedValue = Parse(stringValue);
+            Value = parsedValue.Value;
+            Unit = parsedValue.Unit;
+        }
+        public UnitValue(Unit unit, double value)
         {
             Unit = unit.ToCompoundUnit();
             var conversionResult = value.ConvertToSI(unit);
             Value = conversionResult.Value;
         }
-        public UnitValue(CompoundUnit unit, double value) : this()
+        public UnitValue(CompoundUnit unit, double value)
         {
             Unit = unit;
             Value = value;
         }
 
-        [IgnoreDataMember]
-        public double Value { get; private set; }
-        [IgnoreDataMember]
-        public CompoundUnit Unit { get; private set; }
-        [DataMember]
-        public string StringValue
-        {
-            get => ToString();
-            private set
-            {
-                var parsedValue = Parse(value);
-                Value = parsedValue.Value;
-                Unit = parsedValue.Unit;
-            }
-        }
+        [JsonIgnore]
+        public double Value { get; }
+        [JsonIgnore]
+        public CompoundUnit Unit { get; }
+        [JsonProperty]
+        private string StringValue => ToString();
 
         public static bool operator <(UnitValue value1, UnitValue value2)
         {

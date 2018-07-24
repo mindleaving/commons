@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Commons.Extensions;
-using Commons.Physics;
 
 namespace Commons.DataProcessing
 {
@@ -10,7 +9,7 @@ namespace Commons.DataProcessing
     {
         public static T FindNearestNeighbor<T>(IEnumerable<T> points, Func<T, GeoCoordinate> coordinateSelector, GeoCoordinate position)
         {
-            return points.OrderBy<T, UnitValue>(x => coordinateSelector(x).GetDistanceTo(position)).FirstOrDefault();
+            return points.OrderBy(x => coordinateSelector(x).GetDistanceTo(position)).FirstOrDefault();
         }
     }
 }

@@ -117,7 +117,6 @@
     <Compile Include="Mathematics\StatisticalOperations.cs" />
     <Compile Include="Mathematics\StdDevAggregator.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="TaxiEdge.cs" />
     <Compile Include="DataProcessing\TrapLatch.cs" />
     <Compile Include="Physics\Unit.cs" />
     <Compile Include="Physics\UnitConverter.cs" />
@@ -144,8 +143,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Device" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

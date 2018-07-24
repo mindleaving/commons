@@ -1,15 +1,15 @@
 ﻿using System.IO;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Commons.IO
 {
     public class Serializer<T>
     {
-        private readonly DataContractSerializer serializer;
+        private readonly JsonSerializer serializer;
 
         public Serializer()
         {
-            serializer = new DataContractSerializer(typeof(T));
+            serializer = new JsonSerializer();
         }
 
         public T Load(string path)
@@ -22,7 +22,8 @@ namespace Commons.IO
 
         public T Load(Stream stream)
         {
-            return (T)serializer.ReadObject(stream);
+            var streamReader = new StreamReader(stream);
+            return serializer.Deserialize<T>(new JsonTextReader(streamReader));
         }
 
         public void Store(T obj, string path)
@@ -35,7 +36,9 @@ namespace Commons.IO
 
         public void Store(T obj, Stream stream)
         {
-            serializer.WriteObject(stream, obj);
+            var streamWriter = new StreamWriter(stream);
+            serializer.Serialize(streamWriter, obj);
+            streamWriter.Flush();
         }
     }
 }

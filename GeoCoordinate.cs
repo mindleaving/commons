@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using System.Runtime.Serialization;
 
 namespace Commons
 {
-    [DataContract]
     public class GeoCoordinate : IEquatable<GeoCoordinate>
     {
         public GeoCoordinate(double latitude, double longitude)
@@ -17,10 +15,8 @@ namespace Commons
             Longitude = longitude;
         }
 
-        [DataMember]
-        public double Latitude { get; set; }
-        [DataMember]
-        public double Longitude { get; set; }
+        public double Latitude { get; }
+        public double Longitude { get; }
 
         public bool Equals(GeoCoordinate other)
         {

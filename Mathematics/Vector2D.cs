@@ -1,4 +1,6 @@
-﻿namespace Commons.Mathematics
+﻿using System;
+
+namespace Commons.Mathematics
 {
     public class Vector2D : Vector
     {
@@ -14,7 +16,12 @@
         }
 
         public Vector2D() : base(2) { }
-        public Vector2D(params double[] data) : base(2, data) { }
+        public Vector2D(params double[] data) : base(data)
+        {
+            if (data.Length != 2)
+                throw new ArgumentException($"Wrong dimension of data. Expected 2 values, got {data.Length}");
+        }
+        public Vector2D(double x, double y) : base(x, y) { }
 
         public static implicit operator Point2D(Vector2D v)
         {
