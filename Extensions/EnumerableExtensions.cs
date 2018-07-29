@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Commons.Mathematics;
 
 namespace Commons.Extensions
 {
@@ -62,6 +63,11 @@ namespace Commons.Extensions
                 subArray[targetIdx] = array[sourceIdx];
             }
             return subArray;
+        }
+
+        public static IList<T> SubArray<T>(this IList<T> array, Range<int> range)
+        {
+            return SubArray(array, range.From, range.To - range.From + 1);
         }
     }
 }
