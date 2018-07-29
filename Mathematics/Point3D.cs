@@ -42,9 +42,9 @@ namespace Commons.Mathematics
 
         public override string ToString()
         {
-            return $"{X.ToString("F6", CultureInfo.InvariantCulture)};" +
-                   $"{Y.ToString("F6", CultureInfo.InvariantCulture)};" +
-                   $"{Z.ToString("F6", CultureInfo.InvariantCulture)}";
+            return $"{X.ToString("F4", CultureInfo.InvariantCulture)};" +
+                   $"{Y.ToString("F4", CultureInfo.InvariantCulture)};" +
+                   $"{Z.ToString("F4", CultureInfo.InvariantCulture)}";
         }
     }
 }
