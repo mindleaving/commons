@@ -35,3 +35,4 @@ packages*/
 .vs/
 #Nuget packages folder
 packages/
+*.nupkg
