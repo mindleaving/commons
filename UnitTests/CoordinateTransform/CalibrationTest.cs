@@ -2,8 +2,9 @@
 using Commons.CoordinateTransform;
 using Commons.IO;
 using Commons.Mathematics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests.CoordinateTransform
+namespace CommonsTest.CoordinateTransform
 {
     [TestFixture]
     public class CalibrationTest

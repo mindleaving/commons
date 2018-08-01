@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using Commons.IO;
 using Commons.Physics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests
+namespace CommonsTest
 {
     [TestFixture]
     public class UnitValueSerializationTest

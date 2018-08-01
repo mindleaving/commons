@@ -36,36 +36,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTests\CoordinateTransform\BasisShiftTransform2DTest.cs" />
-    <Compile Include="UnitTests\CoordinateTransform\CalibrationTest.cs" />
-    <Compile Include="UnitTests\CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
-    <Compile Include="UnitTests\DataProcessing\SlidingWindowTest.cs" />
-    <Compile Include="UnitTests\DeepClonerTest.cs" />
-    <Compile Include="UnitTests\Extensions\ComparableExtensionsTest.cs" />
-    <Compile Include="UnitTests\Extensions\StringSearchExtensions.cs" />
-    <Compile Include="UnitTests\FilterFuncsTest.cs" />
-    <Compile Include="UnitTests\GeometryTest.cs" />
-    <Compile Include="UnitTests\GraphAlgorithmsTest.cs" />
-    <Compile Include="UnitTests\GraphClassesTest.cs" />
-    <Compile Include="UnitTests\Mathematics\ContinuousLine2DTest.cs" />
-    <Compile Include="UnitTests\Mathematics\LineSegment2DTest.cs" />
-    <Compile Include="UnitTests\Optimization\GradientDescentOptimizerTest.cs" />
-    <Compile Include="UnitTests\Optimization\ParameterCyclingOptimizerTest.cs" />
-    <Compile Include="UnitTests\RangeTest.cs" />
-    <Compile Include="UnitTests\UnitValueParserTest.cs" />
-    <Compile Include="UnitTests\UnitValueSerializationTest.cs" />
-    <Compile Include="UnitTests\UnitValueTest.cs" />
+    <Compile Include="CoordinateTransform\BasisShiftTransform2DTest.cs" />
+    <Compile Include="CoordinateTransform\CalibrationTest.cs" />
+    <Compile Include="CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
+    <Compile Include="DataProcessing\SlidingWindowTest.cs" />
+    <Compile Include="DeepClonerTest.cs" />
+    <Compile Include="Extensions\ComparableExtensionsTest.cs" />
+    <Compile Include="Extensions\StringSearchExtensions.cs" />
+    <Compile Include="FilterFuncsTest.cs" />
+    <Compile Include="GeometryTest.cs" />
+    <Compile Include="GraphAlgorithmsTest.cs" />
+    <Compile Include="GraphClassesTest.cs" />
+    <Compile Include="Mathematics\ContinuousLine2DTest.cs" />
+    <Compile Include="Mathematics\LineSegment2DTest.cs" />
+    <Compile Include="Optimization\GradientDescentOptimizerTest.cs" />
+    <Compile Include="Optimization\ParameterCyclingOptimizerTest.cs" />
+    <Compile Include="RangeTest.cs" />
+    <Compile Include="UnitValueParserTest.cs" />
+    <Compile Include="UnitValueSerializationTest.cs" />
+    <Compile Include="UnitValueTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Commons.csproj">
+      <Project>{d0e6b038-c939-487d-bb5e-a6270a0d18f5}</Project>
+      <Name>Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit">
       <Version>3.10.1</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Commons.csproj">
-      <Project>{d0e6b038-c939-487d-bb5e-a6270a0d18f5}</Project>
-      <Name>Commons</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

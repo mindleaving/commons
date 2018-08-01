@@ -1,8 +1,9 @@
 ﻿using Commons.CoordinateTransform;
 using Commons.Extensions;
 using Commons.Mathematics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests.CoordinateTransform
+namespace CommonsTest.CoordinateTransform
 {
     [TestFixture]
     public class ImageCoordinateNormalizerTest

@@ -1,8 +1,9 @@
 ﻿using Commons;
 using Commons.Extensions;
 using Commons.Physics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests
+namespace CommonsTest
 {
     [TestFixture]
     public class UnitValueTest
@@ -61,7 +62,7 @@ namespace CommonsTest.UnitTests
 
             var product = mass*acceleration;
 
-            Assert.That(product.Unit == Unit.Newton);
+            Assert.That(product.Unit.ToUnit() == Unit.Newton);
             var expectedValue = mass.In(SIPrefix.Kilo, Unit.Gram)*acceleration.In(Unit.MetersPerSecondSquared);
             Assert.That(product.Value, Is.EqualTo(expectedValue).Within(1e-5));
         }

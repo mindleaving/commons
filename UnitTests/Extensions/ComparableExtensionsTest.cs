@@ -1,6 +1,7 @@
 ﻿using Commons.Extensions;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests.Extensions
+namespace CommonsTest.Extensions
 {
     [TestFixture]
     public class ComparableExtensionsTest

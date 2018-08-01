@@ -1,7 +1,8 @@
 ﻿using System;
 using Commons.Optimization;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests.Optimization
+namespace CommonsTest.Optimization
 {
     [TestFixture]
     public class ParameterCyclingOptimizerTest

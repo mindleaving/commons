@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Commons.Mathematics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests
+namespace CommonsTest
 {
     [TestFixture]
     public class GraphClassesTest

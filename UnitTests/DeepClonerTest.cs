@@ -4,7 +4,7 @@ using Commons.Mathematics;
 using Commons.Physics;
 using NUnit.Framework;
 
-namespace CommonsTest.UnitTests
+namespace CommonsTest
 {
     [TestFixture]
     public class DeepClonerTest

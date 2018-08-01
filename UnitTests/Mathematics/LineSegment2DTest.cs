@@ -1,6 +1,7 @@
 ﻿using Commons.Mathematics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests.Mathematics
+namespace CommonsTest.Mathematics
 {
     [TestFixture]
     public class LineSegment2DTest

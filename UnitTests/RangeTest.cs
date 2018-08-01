@@ -1,6 +1,7 @@
 ﻿using Commons.Mathematics;
+using NUnit.Framework;
 
-namespace CommonsTest.UnitTests
+namespace CommonsTest
 {
     [TestFixture]
     public class RangeTest

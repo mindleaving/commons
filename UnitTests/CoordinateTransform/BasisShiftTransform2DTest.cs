@@ -2,7 +2,7 @@
 using Commons.Mathematics;
 using NUnit.Framework;
 
-namespace CommonsTest.UnitTests.CoordinateTransform
+namespace CommonsTest.CoordinateTransform
 {
     [TestFixture]
     public class BasisShiftTransform2DTest
