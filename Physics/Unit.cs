@@ -43,7 +43,7 @@
         // Mass
         Kilogram = 801,
         Gram = 802,
-        GramPerMole = 803,
+        KilogramPerMole = 803,
 
         // Charge,
         Coulombs = 901,
@@ -58,6 +58,9 @@
 
         // Angles
         Radians = 1201,
-        Degree = 1202
+        Degree = 1202,
+
+        // Unitless
+        Mole = 1301
     }
 }

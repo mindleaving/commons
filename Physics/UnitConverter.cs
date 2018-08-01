@@ -7,6 +7,8 @@ namespace Commons.Physics
     {
         public static CompoundUnit ToCompoundUnit(this Unit unit)
         {
+            if(!unit.IsSIUnit())
+                throw new Exception("Can only convert SI unit");
             switch (unit.ToSIUnit())
             {
                 case Unit.Meter:
@@ -39,7 +41,7 @@ namespace Commons.Physics
                 case Unit.Kilogram:
                     return new CompoundUnit(
                         new[] { SIBaseUnit.Kilogram });
-                case Unit.GramPerMole:
+                case Unit.KilogramPerMole:
                     return new CompoundUnit(
                         new[] { SIBaseUnit.Kilogram },
                         new[] { SIBaseUnit.Mole });
@@ -57,6 +59,9 @@ namespace Commons.Physics
                 case Unit.Radians:
                     return new CompoundUnit(
                         new []{SIBaseUnit.Radians });
+                case Unit.Mole:
+                    return new CompoundUnit(
+                        new []{SIBaseUnit.Mole });
                 default:
                     throw new NotImplementedException();
             }
@@ -74,7 +79,8 @@ namespace Commons.Physics
                 Unit.SquareMeter,
                 Unit.CubicMeters,
                 Unit.Kilogram,
-                Unit.GramPerMole,
+                Unit.KilogramPerMole,
+                Unit.Mole,
                 Unit.Coulombs,
                 Unit.Joule,
                 Unit.Newton,
@@ -166,7 +172,8 @@ namespace Commons.Physics
                 case Unit.SquareMeter:
                 case Unit.CubicMeters:
                 case Unit.Kilogram:
-                case Unit.GramPerMole:
+                case Unit.KilogramPerMole:
+                case Unit.Mole:
                 case Unit.Coulombs:
                 case Unit.Joule:
                 case Unit.Newton:

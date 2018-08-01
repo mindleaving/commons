@@ -20,40 +20,44 @@ namespace Commons.Physics
             var valueGroup = match.Groups[1];
             var unitGroup = match.Groups[3];
             var value = double.Parse(valueGroup.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
-            ParseUnit(unitGroup.Value, out var unit, out var siPrefix);
-            var multiplier = siPrefix.GetMultiplier();
-            return new UnitValue(unit, multiplier * value);
-        }
-
-        public static void ParseUnit(string unitString, out CompoundUnit unit, out SIPrefix siPrefix)
-        {
+            var unitString = unitGroup.Value;
+            CompoundUnit unit;
             try
             {
-                ParseSimpleUnit(unitString, out var simpleUnit, out siPrefix);
-                unit = simpleUnit.ToCompoundUnit();
+                ParseSimpleUnit(unitString, out var simpleUnit, out var siPrefix);
+                var unitConversionResult = value.ConvertToSI(simpleUnit);
+                var multiplier = siPrefix.GetMultiplier();
+                unit = unitConversionResult.Unit.ToCompoundUnit();
+                value = multiplier * unitConversionResult.Value;
             }
             catch (FormatException)
             {
-                var match = Regex.Match(unitString, "([^/]+)(/([^/]+))?");
-                if(!match.Success)
-                    throw new FormatException();
-                var nominatorString = match.Groups[1].Value;
-                var hasDenominator = match.Groups[2].Success;
-                var denominatorString = hasDenominator ? match.Groups[3].Value : "";
-
-                nominatorString = Regex.Replace(nominatorString, "\\s+", " ").Trim();
-                denominatorString = Regex.Replace(denominatorString, "\\s+", " ").Trim();
-                denominatorString = denominatorString.Replace("(", "").Replace(")","");
-                var splittedNominator = nominatorString.Split();
-                var splittedDenominator = denominatorString.Split();
-
-                var nomniator = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
-                                ? new SIBaseUnit[0]
-                                : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
-                var denomniator = splittedDenominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
-                unit = new CompoundUnit(nomniator, denomniator);
-                siPrefix = SIPrefix.None;
+                unit = ParseCompoundUnit(unitString);
             }
+            return new UnitValue(unit, value);
+        }
+
+        private static CompoundUnit ParseCompoundUnit(string unitString)
+        {
+            var unitMatch = Regex.Match(unitString, "([^/]+)(/([^/]+))?");
+            if (!unitMatch.Success)
+                throw new FormatException();
+            var nominatorString = unitMatch.Groups[1].Value;
+            var hasDenominator = unitMatch.Groups[2].Success;
+            var denominatorString = hasDenominator ? unitMatch.Groups[3].Value : "";
+
+            nominatorString = Regex.Replace(nominatorString, "\\s+", " ").Trim();
+            denominatorString = Regex.Replace(denominatorString, "\\s+", " ").Trim();
+            denominatorString = denominatorString.Replace("(", "").Replace(")", "");
+            var splittedNominator = nominatorString.Split();
+            var splittedDenominator = denominatorString.Split();
+
+            var nomniator = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
+                ? new SIBaseUnit[0]
+                : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
+            var denomniator = splittedDenominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
+            var unit = new CompoundUnit(nomniator, denomniator);
+            return unit;
         }
 
         private static IEnumerable<SIBaseUnit> ParseSIBaseUnit(string unitString)

@@ -20,7 +20,7 @@ namespace Commons.Extensions
 
         public static double In(this UnitValue unitValue, Unit newUnit)
         {
-            if (!newUnit.ToCompoundUnit().Equals(unitValue.Unit))
+            if (!newUnit.ToSIUnit().ToCompoundUnit().Equals(unitValue.Unit))
                 throw new InvalidOperationException($"Cannot convert {unitValue.Unit} to {newUnit}");
 
             switch (newUnit)
@@ -40,7 +40,8 @@ namespace Commons.Extensions
                 case Unit.Coulombs:
                 case Unit.Joule:
                 case Unit.Newton:
-                case Unit.GramPerMole:
+                case Unit.KilogramPerMole:
+                case Unit.Mole:
                 case Unit.Radians:
                     return unitValue.Value;
                 case Unit.Gram:
@@ -145,7 +146,8 @@ namespace Commons.Extensions
             {Unit.Kilogram, "kg"},
             {Unit.Gram, "g"},
             {Unit.Liter, "L"},
-            {Unit.GramPerMole, "g/mol"},
+            {Unit.KilogramPerMole, "kg/mol"},
+            {Unit.Mole, "mol"},
             {Unit.Coulombs, "C"},
             {Unit.ElementaryCharge, "e"},
             {Unit.Joule, "J"},

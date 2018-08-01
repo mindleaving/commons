@@ -48,15 +48,7 @@ namespace Commons.Physics
         {
             return unit1?.Equals(unit2) ?? false;
         }
-        public static bool operator ==(CompoundUnit unit1, Unit unit2)
-        {
-            return unit1?.Equals(unit2.ToCompoundUnit()) ?? false;
-        }
         public static bool operator !=(CompoundUnit unit1, CompoundUnit unit2)
-        {
-            return !(unit1 == unit2);
-        }
-        public static bool operator !=(CompoundUnit unit1, Unit unit2)
         {
             return !(unit1 == unit2);
         }
@@ -64,7 +56,7 @@ namespace Commons.Physics
         public override bool Equals(object other)
         {
             if (other is Unit)
-                return Equals(((Unit) other).ToCompoundUnit());
+                return Equals(((Unit) other).ToSIUnit().ToCompoundUnit());
             return Equals(other as CompoundUnit);
         }
 

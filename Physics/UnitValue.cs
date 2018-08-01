@@ -17,8 +17,8 @@ namespace Commons.Physics
         }
         public UnitValue(Unit unit, double value)
         {
-            Unit = unit.ToCompoundUnit();
             var conversionResult = value.ConvertToSI(unit);
+            Unit = conversionResult.Unit.ToCompoundUnit();
             Value = conversionResult.Value;
         }
         public UnitValue(CompoundUnit unit, double value)
