@@ -181,6 +181,35 @@ namespace CommonsTest
             Assert.That(subGraph.Vertices[5].EdgeIds, Is.EquivalentTo(new ulong[] {4, 5}));
         }
 
+        [Test]
+        public void HasCyclesReturnsTrueForTestGraph()
+        {
+            var graph = CreateTestGraph();
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.True);
+        }
+
+        [Test]
+        public void HasCyclesReturnsFalseForModifiedTestGraph()
+        {
+            var graph = CreateTestGraph();
+            var edgeToRemove = graph.Edges.Values.Single(e => e.Vertex1Id == 1 && e.Vertex2Id == 2);
+            graph.RemoveEdge(edgeToRemove);
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.False);
+
+            graph = CreateTestGraph();
+            MakeEdgeBetweenVerticesDirected(graph, 1, 3);
+            MakeEdgeBetweenVerticesDirected(graph, 2, 3);
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.False);
+        }
+
+        private void MakeEdgeBetweenVerticesDirected(IGraph<object, object> graph, int vertex1, int vertex2)
+        {
+            var undirectedEdge = graph.Edges.Values.Single(e => e.Vertex1Id == vertex1 && e.Vertex2Id == vertex2);
+            graph.RemoveEdge(undirectedEdge);
+            var directedEdge = new Edge<object>(undirectedEdge.Id, undirectedEdge.Vertex1Id, undirectedEdge.Vertex2Id, isDirected: true);
+            graph.AddEdge(directedEdge);
+        }
+
         private Graph<object,object> CreateTestGraph()
         {
             var graph = new Graph<object, object>();

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    public class Edge<T> : IDisposable
+    public class Edge<T> : IDisposable, IEdge<T>
     {
         public ulong Id { get; private set; }
         /// <summary>

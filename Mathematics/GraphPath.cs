@@ -8,21 +8,21 @@ namespace Commons.Mathematics
     public class GraphPath<TVertex, TEdge>
     {
         public uint StartVertexId { get; set; }
-        public LinkedList<Edge<TEdge>> Path { get; private set; }
+        public LinkedList<IEdge<TEdge>> Path { get; private set; }
         public double PathLength { get; private set; }
 
         public GraphPath(uint startVertexId)
         {
             StartVertexId = startVertexId;
             PathLength = 0.0;
-            Path = new LinkedList<Edge<TEdge>>();
+            Path = new LinkedList<IEdge<TEdge>>();
         }
 
-        public GraphPath(uint startVertexId, IList<Edge<TEdge>> edges)
+        public GraphPath(uint startVertexId, IList<IEdge<TEdge>> edges)
             : this(startVertexId)
         {
             ValidateEdgeList(edges);
-            Path = new LinkedList<Edge<TEdge>>(edges);
+            Path = new LinkedList<IEdge<TEdge>>(edges);
             RecalculatePathLength();
         }
 
@@ -30,11 +30,11 @@ namespace Commons.Mathematics
             : this(startVertexId)
         {
             // No validation necessary
-            Path = new LinkedList<Edge<TEdge>>(path.Path);
+            Path = new LinkedList<IEdge<TEdge>>(path.Path);
             PathLength = path.PathLength;
         }
 
-        public void Append(Edge<TEdge> edge)
+        public void Append(IEdge<TEdge> edge)
         {
             if(Path.Any())
                 ValidateEdgePair(Path.Last.Value, edge);
@@ -47,7 +47,7 @@ namespace Commons.Mathematics
             PathLength = Path.Sum(e => e.Weight);
         }
 
-        private void ValidateEdgeList(IList<Edge<TEdge>> edges)
+        private void ValidateEdgeList(IList<IEdge<TEdge>> edges)
         {
             for (int edgeIdx = 0; edgeIdx < edges.Count - 1; edgeIdx++)
             {
@@ -57,7 +57,7 @@ namespace Commons.Mathematics
             }
         }
 
-        private static void ValidateEdgePair(Edge<TEdge> currentEdge, Edge<TEdge> nextEdge)
+        private static void ValidateEdgePair(IEdge<TEdge> currentEdge, IEdge<TEdge> nextEdge)
         {
             if (currentEdge.IsDirected)
             {

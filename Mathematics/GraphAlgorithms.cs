@@ -23,11 +23,11 @@ namespace Commons.Mathematics
             return adjacencyMatrix;
         }
 
-        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(Graph<TVertex,TEdge> graph, uint sourceVertexId)
+        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(IGraph<TVertex,TEdge> graph, uint sourceVertexId)
         {
             return ShortestPaths(graph, graph.Vertices[sourceVertexId]);
         }
-        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> source)
+        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> source)
         {
             if (!graph.Vertices.ContainsKey(source.Id))
                 throw new ArgumentException("GraphAlgorithms.ShortestPath: Source vertex not in graph");
@@ -94,7 +94,7 @@ namespace Commons.Mathematics
             return graph.Vertices.Count == connectedVertices.Count;
         }
 
-        public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex, Action<Vertex<TVertex>> action)
+        public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IVertex<TVertex> startVertex, Action<IVertex<TVertex>> action)
         {
             foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex).Vertices.Values)
             {
@@ -102,7 +102,7 @@ namespace Commons.Mathematics
             }
         }
 
-        public static Graph<TVertex, TEdge> GetConnectedSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> startVertex)
+        public static IGraph<TVertex, TEdge> GetConnectedSubgraph<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> startVertex)
         {
             // Use depth first search for traversing connected component
             // Initialize graph algorithm data
@@ -113,7 +113,7 @@ namespace Commons.Mathematics
             return GetSubgraph(graph, connectedVertices);
         }
 
-        private static IEnumerable<Vertex<TVertex>> GetConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> currentVertex)
+        private static IEnumerable<IVertex<TVertex>> GetConnectedVertices<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> currentVertex)
         {
             // Mark vertex as visited
             currentVertex.AlgorithmData = true;
@@ -136,7 +136,7 @@ namespace Commons.Mathematics
             yield return currentVertex;
         }
 
-        public static IEnumerable<Vertex<TVertex>> GetAdjacentVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, Vertex<TVertex> vertex)
+        public static IEnumerable<IVertex<TVertex>> GetAdjacentVertices<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> vertex)
         {
             return vertex.EdgeIds
                 .Select(edgeId => graph.Edges[edgeId])
@@ -145,11 +145,11 @@ namespace Commons.Mathematics
                 .Select(vId => graph.Vertices[vId]);
         }
 
-        public static Graph<TVertex, TEdge> GetSubgraph<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IList<uint> vertices)
+        public static IGraph<TVertex, TEdge> GetSubgraph<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IList<uint> vertices)
         {
             var subgraphVertices = vertices
                 .Distinct()
-                .Select(vertexId => graph.Vertices[vertexId].Clone())
+                .Select(vertexId => ((ICloneable)graph.Vertices[vertexId]).Clone() as IVertex<TVertex>)
                 .ToList();
             subgraphVertices.ForEach(v => v.EdgeIds.Clear());
             var vertexIdHashSet = new HashSet<uint>(vertices);
@@ -161,6 +161,39 @@ namespace Commons.Mathematics
                 vertex.EdgeIds.RemoveAll(edgeId => !subgraph.Edges.ContainsKey(edgeId));
             }
             return subgraph;
+        }
+
+        public static bool HasCycles<TVertex, TEdge>(IGraph<TVertex, TEdge> graph)
+        {
+            graph.Vertices.Values.ForEach(v => v.AlgorithmData = false);
+            graph.Edges.Values.ForEach(v => v.AlgorithmData = false);
+            var edgeStack = new Stack<IEdge<TEdge>>();
+            while (edgeStack.Any() || graph.Vertices.Values.Any(e => (bool)e.AlgorithmData == false))
+            {
+                if (!edgeStack.Any())
+                {
+                    var unvisitedVertex = graph.Vertices.Values.First(v => (bool)v.AlgorithmData == false);
+                    unvisitedVertex.AlgorithmData = true;
+                    unvisitedVertex.EdgeIds.Select(edgeId => graph.Edges[edgeId]).ForEach(edgeStack.Push);
+                }
+                var edge = edgeStack.Pop();
+                edge.AlgorithmData = true;
+                var vertex = graph.Vertices[edge.Vertex1Id];
+                var wasAlreadyVisited = (bool) vertex.AlgorithmData;
+                if (wasAlreadyVisited)
+                {
+                    vertex = graph.Vertices[edge.Vertex2Id];
+                    wasAlreadyVisited = (bool) vertex.AlgorithmData;
+                    if (wasAlreadyVisited) // If both ends of an edge have already been visited, we have a cycle
+                        return true;
+                }
+                vertex.AlgorithmData = true;
+                vertex.EdgeIds.Select(edgeId => graph.Edges[edgeId])
+                    .Where(e => !e.IsDirected || e.Vertex1Id == vertex.Id)
+                    .Where(e => (bool)e.AlgorithmData == false)
+                    .ForEach(edgeStack.Push);
+            }
+            return false;
         }
     }
 }

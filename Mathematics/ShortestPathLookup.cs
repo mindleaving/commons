@@ -6,12 +6,12 @@ namespace Commons.Mathematics
 {
     public class ShortestPathLookup<TVertex, TEdge>
     {
-        public Vertex<TVertex> Source { get; }
-        private readonly Graph<TVertex, TEdge> graph;
+        public IVertex<TVertex> Source { get; }
+        private readonly IGraph<TVertex, TEdge> graph;
         private readonly Dictionary<uint, uint> backtraceMap;
         private readonly Dictionary<uint, double> pathLengths;
 
-        public ShortestPathLookup(Graph<TVertex, TEdge> graph, Vertex<TVertex> source, 
+        public ShortestPathLookup(IGraph<TVertex, TEdge> graph, IVertex<TVertex> source, 
             Dictionary<uint, uint> backtraceMap,
             Dictionary<uint, double> pathLengths)
         {
@@ -21,14 +21,14 @@ namespace Commons.Mathematics
             this.pathLengths = pathLengths;
         }
 
-        public GraphPath<TVertex, TEdge> PathTo(Vertex<TVertex> target)
+        public GraphPath<TVertex, TEdge> PathTo(IVertex<TVertex> target)
         {
             if(target.Id == Source.Id)
                 return new GraphPath<TVertex, TEdge>(Source.Id);
             if (!backtraceMap.ContainsKey(target.Id))
                 throw new ArgumentException("Target is not in graph");
 
-            var path = new List<Edge<TEdge>>();
+            var path = new List<IEdge<TEdge>>();
             var currentVertexId = target.Id;
             while (currentVertexId != Source.Id)
             {
@@ -46,7 +46,7 @@ namespace Commons.Mathematics
             return new GraphPath<TVertex, TEdge>(Source.Id, path);
         }
 
-        public double PathLengthTo(Vertex<TVertex> target)
+        public double PathLengthTo(IVertex<TVertex> target)
         {
             return !pathLengths.ContainsKey(target.Id) ? double.PositiveInfinity : pathLengths[target.Id];
         }
