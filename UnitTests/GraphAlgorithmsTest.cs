@@ -230,7 +230,22 @@ namespace CommonsTest
         }
 
         [Test]
-        public void HasCyclesReturnsFalseForDiamonGraph()
+        public void HasCyclesReturnsTrueForCircleGraph()
+        {
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2, isDirected: true), 
+                    new Edge<object>(1, 2, 3, isDirected: true), 
+                    new Edge<object>(2, 3, 4, isDirected: true), 
+                    new Edge<object>(3, 4, 1, isDirected: true), 
+                });
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.True);
+        }
+
+        [Test]
+        public void HasCyclesReturnsFalseForDiamondGraph()
         {
             var graph = new Graph<object, object>(
                 Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
