@@ -24,11 +24,11 @@ namespace Commons.Mathematics
             return adjacencyMatrix;
         }
 
-        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(IGraph<TVertex,TEdge> graph, uint sourceVertexId)
+        public static ShortestPathLookup ShortestPaths(IGraph graph, uint sourceVertexId)
         {
             return ShortestPaths(graph, graph.GetVertexFromId(sourceVertexId));
         }
-        public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> source)
+        public static ShortestPathLookup ShortestPaths(IGraph graph, IVertex source)
         {
             if (!graph.HasVertex(source.Id))
                 throw new ArgumentException("GraphAlgorithms.ShortestPath: Source vertex not in graph");
@@ -80,7 +80,7 @@ namespace Commons.Mathematics
                     shortestPathLengths[adjacentVertex.Id] = currentVertexPathLength + adjacentEdge.Weight;
                 }
             }
-            return new ShortestPathLookup<TVertex, TEdge>(graph,
+            return new ShortestPathLookup(graph,
                 source,
                 backtraceMap,
                 shortestPathLengths);
@@ -95,7 +95,7 @@ namespace Commons.Mathematics
             return graph.Vertices.Count() == connectedVertices.Count();
         }
 
-        public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IVertex<TVertex> startVertex, Action<IVertex<TVertex>> action)
+        public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IVertex startVertex, Action<IVertex> action)
         {
             foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex).Vertices)
             {
@@ -103,7 +103,7 @@ namespace Commons.Mathematics
             }
         }
 
-        public static IGraph<TVertex, TEdge> GetConnectedSubgraph<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> startVertex)
+        public static IGraph<TVertex, TEdge> GetConnectedSubgraph<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex startVertex)
         {
             // Use depth first search for traversing connected component
             // Initialize graph algorithm data
@@ -114,7 +114,7 @@ namespace Commons.Mathematics
             return GetSubgraph(graph, connectedVertices);
         }
 
-        private static IEnumerable<IVertex<TVertex>> GetConnectedVertices<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> currentVertex)
+        private static IEnumerable<IVertex> GetConnectedVertices<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex currentVertex)
         {
             // Mark vertex as visited
             currentVertex.AlgorithmData = true;
@@ -137,10 +137,11 @@ namespace Commons.Mathematics
             yield return currentVertex;
         }
 
-        public static IEnumerable<IVertex<TVertex>> GetAdjacentVertices<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> vertex)
+        public static IEnumerable<IVertex> GetAdjacentVertices(IGraph graph, IVertex vertex)
         {
             return vertex.EdgeIds
                 .Select(graph.GetEdgeById)
+                .Where(edge => !edge.IsDirected || edge.Vertex1Id == vertex.Id)
                 .Select(edge => edge.Vertex1Id == vertex.Id ? edge.Vertex2Id : edge.Vertex1Id)
                 .Distinct()
                 .Select(graph.GetVertexFromId);
@@ -164,37 +165,118 @@ namespace Commons.Mathematics
             return subgraph;
         }
 
-        public static bool HasCycles<TVertex, TEdge>(IGraph<TVertex, TEdge> graph)
+        public static bool HasCycles(IGraph graph, bool treatAllEdgesAsUndirected = false)
         {
-            graph.Vertices.ForEach(v => v.AlgorithmData = false);
-            graph.Edges.ForEach(v => v.AlgorithmData = false);
-            var edgeStack = new Stack<IEdge<TEdge>>();
-            while (edgeStack.Any() || graph.Vertices.Any(e => (bool)e.AlgorithmData == false))
+            var isFullyDirected = graph.Edges.All(e => e.IsDirected);
+            if (isFullyDirected)
             {
-                if (!edgeStack.Any())
-                {
-                    var unvisitedVertex = graph.Vertices.First(v => (bool)v.AlgorithmData == false);
-                    unvisitedVertex.AlgorithmData = true;
-                    unvisitedVertex.EdgeIds.Select(graph.GetEdgeById).ForEach(edgeStack.Push);
-                }
-                var edge = edgeStack.Pop();
-                edge.AlgorithmData = true;
-                var vertex = graph.GetVertexFromId(edge.Vertex1Id);
-                var wasAlreadyVisited = (bool) vertex.AlgorithmData;
-                if (wasAlreadyVisited)
-                {
-                    vertex = graph.GetVertexFromId(edge.Vertex2Id);
-                    wasAlreadyVisited = (bool) vertex.AlgorithmData;
-                    if (wasAlreadyVisited) // If both ends of an edge have already been visited, we have a cycle
-                        return true;
-                }
-                vertex.AlgorithmData = true;
-                vertex.EdgeIds.Select(graph.GetEdgeById)
-                    .Where(e => !e.IsDirected || e.Vertex1Id == vertex.Id)
-                    .Where(e => (bool)e.AlgorithmData == false)
-                    .ForEach(edgeStack.Push);
+                var stronglyConnectedComponents = FindStronglyConnectedComponents(graph);
+                return stronglyConnectedComponents.Count != graph.Vertices.Count();
             }
-            return false;
+            var isFullyUndirected = graph.Edges.All(e => !e.IsDirected);
+            if (isFullyUndirected || treatAllEdgesAsUndirected)
+            {
+                graph.Vertices.ForEach(v => v.AlgorithmData = false);
+                graph.Edges.ForEach(v => v.AlgorithmData = false);
+                var edgeStack = new Stack<IEdge>();
+                while (edgeStack.Any() || graph.Vertices.Any(e => (bool)e.AlgorithmData == false))
+                {
+                    if (!edgeStack.Any())
+                    {
+                        var unvisitedVertex = graph.Vertices.First(v => (bool)v.AlgorithmData == false);
+                        unvisitedVertex.AlgorithmData = true;
+                        unvisitedVertex.EdgeIds.Select(graph.GetEdgeById).ForEach(edgeStack.Push);
+                    }
+                    var edge = edgeStack.Pop();
+                    edge.AlgorithmData = true;
+                    var vertex = graph.GetVertexFromId(edge.Vertex1Id);
+                    var wasAlreadyVisited = (bool) vertex.AlgorithmData;
+                    if (wasAlreadyVisited)
+                    {
+                        vertex = graph.GetVertexFromId(edge.Vertex2Id);
+                        wasAlreadyVisited = (bool) vertex.AlgorithmData;
+                        if (wasAlreadyVisited) // If both ends of an edge have already been visited, we have a cycle
+                            return true;
+                    }
+                    vertex.AlgorithmData = true;
+                    vertex.EdgeIds.Select(graph.GetEdgeById)
+                        //.Where(e => !e.IsDirected || e.Vertex1Id == vertex.Id) // treatAllEdgesAsUndirected
+                        .Where(e => (bool)e.AlgorithmData == false)
+                        .ForEach(edgeStack.Push);
+                }
+                return false;
+            }
+            else
+            {
+                throw new NotImplementedException("Finding cycles is only supported for graphs with all edges being directed or all being undirected");
+            }
+        }
+
+        public static List<StronglyConnectedComponent> FindStronglyConnectedComponents(IGraph graph)
+        {
+            graph.Vertices.ForEach(v => v.AlgorithmData = new TarjanStrongConnectedComponentAlgorithmData());
+            var index = 0u;
+            var vertexStack = new Stack<IVertex>();
+            var strongConnectedComponents = new List<StronglyConnectedComponent>();
+            foreach (var vertex in graph.Vertices)
+            {
+                var algorithmData = (TarjanStrongConnectedComponentAlgorithmData) vertex.AlgorithmData;
+                if (!algorithmData.Index.HasValue)
+                {
+                    StrongConnect(vertex, graph, vertexStack, strongConnectedComponents, ref index);
+                }
+            }
+
+            return strongConnectedComponents;
+        }
+
+        private static void StrongConnect(IVertex vertex, 
+            IGraph graph, 
+            Stack<IVertex> vertexStack,
+            List<StronglyConnectedComponent> strongConnectedComponents,
+            ref uint index)
+        {
+            var algorithmData = (TarjanStrongConnectedComponentAlgorithmData) vertex.AlgorithmData;
+            algorithmData.Index = index;
+            algorithmData.LowLink = index;
+            index++;
+            vertexStack.Push(vertex);
+            algorithmData.IsOnStack = true;
+
+            foreach (var adjacentVertex in GetAdjacentVertices(graph, vertex))
+            {
+                var adjacentAlgorithmData = (TarjanStrongConnectedComponentAlgorithmData) adjacentVertex.AlgorithmData;
+                if (!adjacentAlgorithmData.Index.HasValue)
+                {
+                    StrongConnect(adjacentVertex, graph, vertexStack, strongConnectedComponents, ref index);
+                    algorithmData.LowLink = Math.Min(algorithmData.LowLink.Value, adjacentAlgorithmData.LowLink.Value);
+                }
+                else if(adjacentAlgorithmData.IsOnStack)
+                {
+                    algorithmData.LowLink = Math.Min(algorithmData.LowLink.Value, adjacentAlgorithmData.Index.Value);
+                }
+            }
+
+            if (algorithmData.LowLink == algorithmData.Index)
+            {
+                IVertex stackVertex;
+                var strongConnectedComponent = new StronglyConnectedComponent();
+                do
+                {
+                    stackVertex = vertexStack.Pop();
+                    var stackVertexAlgorithmData = (TarjanStrongConnectedComponentAlgorithmData)stackVertex.AlgorithmData;
+                    stackVertexAlgorithmData.IsOnStack = false;
+                    strongConnectedComponent.Add(stackVertex);
+                } while (!stackVertex.Equals(vertex));
+                strongConnectedComponents.Add(strongConnectedComponent);
+            }
+        }
+
+        private class TarjanStrongConnectedComponentAlgorithmData
+        {
+            public bool IsOnStack { get; set; }
+            public uint? Index { get; set; }
+            public uint? LowLink { get; set; }
         }
     }
 }

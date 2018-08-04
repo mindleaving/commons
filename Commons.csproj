@@ -60,6 +60,7 @@
     <Compile Include="Mathematics\Point2DXYComparer.cs" />
     <Compile Include="Mathematics\SequenceGeneration.cs" />
     <Compile Include="Mathematics\PolarPoint.cs" />
+    <Compile Include="Mathematics\StronglyConnectedComponent.cs" />
     <Compile Include="Misc\Annotation.cs" />
     <Compile Include="Misc\AnnotationCollection.cs" />
     <Compile Include="Misc\AnnotationShapeType.cs" />

@@ -54,7 +54,7 @@ namespace CommonsTest
             var graph = CreateTestGraph();
             var timeout = TimeSpan.FromMilliseconds(3000);
 
-            ShortestPathLookup<object, object> distanceDictionary = null;
+            ShortestPathLookup distanceDictionary = null;
             var thread = new Thread(() =>
             {
                 distanceDictionary = GraphAlgorithms.ShortestPaths(graph, graph.GetVertexFromId(0));
@@ -74,7 +74,7 @@ namespace CommonsTest
 
             Assume.That(graph.GetVertexFromId(0).EdgeIds, Is.Empty);
 
-            ShortestPathLookup<object,object> shortestPathLookup = null;
+            ShortestPathLookup shortestPathLookup = null;
             try
             {
                 shortestPathLookup = GraphAlgorithms.ShortestPaths(graph, graph.GetVertexFromId(0));
@@ -183,6 +183,46 @@ namespace CommonsTest
         }
 
         [Test]
+        public void FindStrongConnectedComponentsFindsExpectedComponents()
+        {
+            // See https://upload.wikimedia.org/wikipedia/commons/6/60/Tarjan%27s_Algorithm_Animation.gif
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 8).Select(vertexId => new Vertex<object>((uint)vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2, isDirected: true),
+                    new Edge<object>(1, 2, 3, isDirected: true),
+                    new Edge<object>(2, 3, 1, isDirected: true),
+                    new Edge<object>(3, 4, 2, isDirected: true),
+                    new Edge<object>(4, 4, 3, isDirected: true),
+                    new Edge<object>(5, 4, 5, isDirected: true),
+                    new Edge<object>(6, 5, 4, isDirected: true),
+                    new Edge<object>(7, 5, 6, isDirected: true),
+                    new Edge<object>(8, 6, 3, isDirected: true),
+                    new Edge<object>(9, 6, 7, isDirected: true),
+                    new Edge<object>(10, 7, 6, isDirected: true),
+                    new Edge<object>(11, 8, 6, isDirected: true),
+                    new Edge<object>(12, 8, 7, isDirected: true),
+                    new Edge<object>(13, 8, 8, isDirected: true)
+                });
+            var expected = new List<IList<uint>>
+            {
+                new uint[]{ 1, 2, 3},
+                new uint[]{ 4, 5 },
+                new uint[]{ 6, 7 },
+                new uint[]{ 8 }
+            };
+            var actual = GraphAlgorithms.FindStronglyConnectedComponents(graph);
+            Assert.That(actual.Count, Is.EqualTo(expected.Count));
+            foreach (var vertexIds in expected)
+            {
+                var referenceVertex = graph.GetVertexFromId(vertexIds[0]);
+                var matchingActual = actual.Single(c => c.Contains(referenceVertex));
+                CollectionAssert.AreEquivalent(vertexIds, matchingActual.Select(c => c.Id));
+            }
+        }
+
+        [Test]
         public void HasCyclesReturnsTrueForTestGraph()
         {
             var graph = CreateTestGraph();
@@ -190,25 +230,33 @@ namespace CommonsTest
         }
 
         [Test]
-        public void HasCyclesReturnsFalseForModifiedTestGraph()
+        public void HasCyclesReturnsFalseForDiamonGraph()
         {
-            var graph = CreateTestGraph();
-            var edgeToRemove = graph.Edges.Single(e => e.Vertex1Id == 1 && e.Vertex2Id == 2);
-            graph.RemoveEdge(edgeToRemove);
-            Assert.That(GraphAlgorithms.HasCycles(graph), Is.False);
-
-            graph = CreateTestGraph();
-            MakeEdgeBetweenVerticesDirected(graph, 1, 3);
-            MakeEdgeBetweenVerticesDirected(graph, 2, 3);
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2, isDirected: true), 
+                    new Edge<object>(1, 1, 3, isDirected: true), 
+                    new Edge<object>(2, 2, 4, isDirected: true), 
+                    new Edge<object>(3, 3, 4, isDirected: true), 
+                });
             Assert.That(GraphAlgorithms.HasCycles(graph), Is.False);
         }
 
-        private void MakeEdgeBetweenVerticesDirected(IGraph<object, object> graph, int vertex1, int vertex2)
+        [Test]
+        public void HasCyclesThrowsExceptionForPartiallyUndirectedGraph()
         {
-            var undirectedEdge = graph.Edges.Single(e => e.Vertex1Id == vertex1 && e.Vertex2Id == vertex2);
-            graph.RemoveEdge(undirectedEdge);
-            var directedEdge = new Edge<object>(undirectedEdge.Id, undirectedEdge.Vertex1Id, undirectedEdge.Vertex2Id, isDirected: true);
-            graph.AddEdge(directedEdge);
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2), 
+                    new Edge<object>(1, 1, 3), 
+                    new Edge<object>(2, 2, 4, isDirected: true), 
+                    new Edge<object>(3, 3, 4, isDirected: true), 
+                });
+            Assert.That(() => GraphAlgorithms.HasCycles(graph), Throws.Exception);
         }
 
         private Graph<object,object> CreateTestGraph()
