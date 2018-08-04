@@ -14,18 +14,19 @@ namespace CommonsTest
         public void ComputeAdjacencyMatrixIsSymmetricForUndirectedGraph()
         {
             var graph = CreateTestGraph();
-            Assume.That(!graph.Edges.Values.Any(e => e.IsDirected));
+            Assume.That(!graph.Edges.Any(e => e.IsDirected));
 
             var sut = GraphAlgorithms.ComputeAdjacencyMatrix(graph);
 
             // Check the size
-            Assert.That(sut.GetLength(0), Is.EqualTo(graph.Vertices.Count));
-            Assert.That(sut.GetLength(1), Is.EqualTo(graph.Vertices.Count));
+            var vertexCount = graph.Vertices.Count();
+            Assert.That(sut.GetLength(0), Is.EqualTo(vertexCount));
+            Assert.That(sut.GetLength(1), Is.EqualTo(vertexCount));
 
             // Check for symmetry
-            for (int i = 0; i < graph.Vertices.Count; i++)
+            for (int i = 0; i < vertexCount; i++)
             {
-                for (int j = i + 1; j < graph.Vertices.Count; j++)
+                for (int j = i + 1; j < vertexCount; j++)
                 {
                     Assert.That(sut[i, j], Is.EqualTo(sut[j, i]));
                 }
@@ -39,9 +40,9 @@ namespace CommonsTest
             // negative weights has been implemented.
 
             var graph = CreateTestGraph();
-            graph.Edges.Values.First().Weight = -1;
+            graph.Edges.First().Weight = -1;
 
-            Assert.Throws<NotImplementedException>(() => GraphAlgorithms.ShortestPaths(graph, graph.Vertices[0]));
+            Assert.Throws<NotImplementedException>(() => GraphAlgorithms.ShortestPaths(graph, graph.GetVertexFromId(0)));
         }
 
         [Test]
@@ -53,10 +54,10 @@ namespace CommonsTest
             var graph = CreateTestGraph();
             var timeout = TimeSpan.FromMilliseconds(3000);
 
-            ShortestPathLookup<object, object> distanceDictionary = null;
+            ShortestPathLookup distanceDictionary = null;
             var thread = new Thread(() =>
             {
-                distanceDictionary = GraphAlgorithms.ShortestPaths(graph, graph.Vertices[0]);
+                distanceDictionary = GraphAlgorithms.ShortestPaths(graph, graph.GetVertexFromId(0));
             });
             thread.Start();
             thread.Join(timeout);
@@ -68,35 +69,35 @@ namespace CommonsTest
         public void ShortestPathDoesntThrowIfGraphNotConnected()
         {
             var graph = CreateTestGraph();
-            var v1v2Edge = graph.Edges.Values.Single(e => e.Vertex1Id == 0 && e.Vertex2Id == 1);
+            var v1v2Edge = graph.Edges.Single(e => e.Vertex1Id == 0 && e.Vertex2Id == 1);
             graph.RemoveEdge(v1v2Edge);
 
-            Assume.That(graph.Vertices[0].EdgeIds, Is.Empty);
+            Assume.That(graph.GetVertexFromId(0).EdgeIds, Is.Empty);
 
-            ShortestPathLookup<object,object> shortestPathLookup = null;
+            ShortestPathLookup shortestPathLookup = null;
             try
             {
-                shortestPathLookup = GraphAlgorithms.ShortestPaths(graph, graph.Vertices[0]);
+                shortestPathLookup = GraphAlgorithms.ShortestPaths(graph, graph.GetVertexFromId(0));
             }
             catch (Exception)
             {
                 Assert.Fail("GraphAlgorithm.ShortestPath should not throw exception for not connected test graph");
             }
-            Assert.That(shortestPathLookup.PathLengthTo(graph.Vertices[1]), Is.EqualTo(double.PositiveInfinity));
+            Assert.That(shortestPathLookup.PathLengthTo(graph.GetVertexFromId(1)), Is.EqualTo(double.PositiveInfinity));
         }
 
         [Test]
         public void ShortestPathFindsExpectedPathLengts()
         {
             var graph = CreateTestGraph();
-            graph.Edges.Values.Single(e => e.Vertex1Id == 1 && e.Vertex2Id == 3).Weight = 0.5;
+            graph.Edges.Single(e => e.Vertex1Id == 1 && e.Vertex2Id == 3).Weight = 0.5;
 
-            var shortestPathLookup = GraphAlgorithms.ShortestPaths(graph, graph.Vertices[0]);
+            var shortestPathLookup = GraphAlgorithms.ShortestPaths(graph, graph.GetVertexFromId(0));
 
-            Assert.That(shortestPathLookup.PathLengthTo(graph.Vertices[0]), Is.EqualTo(0));
-            Assert.That(shortestPathLookup.PathLengthTo(graph.Vertices[1]), Is.EqualTo(1));
-            Assert.That(shortestPathLookup.PathLengthTo(graph.Vertices[2]), Is.EqualTo(2));
-            Assert.That(shortestPathLookup.PathLengthTo(graph.Vertices[3]), Is.EqualTo(1.5));
+            Assert.That(shortestPathLookup.PathLengthTo(graph.GetVertexFromId(0)), Is.EqualTo(0));
+            Assert.That(shortestPathLookup.PathLengthTo(graph.GetVertexFromId(1)), Is.EqualTo(1));
+            Assert.That(shortestPathLookup.PathLengthTo(graph.GetVertexFromId(2)), Is.EqualTo(2));
+            Assert.That(shortestPathLookup.PathLengthTo(graph.GetVertexFromId(3)), Is.EqualTo(1.5));
         }
 
         [Test]
@@ -130,9 +131,9 @@ namespace CommonsTest
         public void GetConnectedVerticesReturnsAllVertices()
         {
             var graph = CreateTestGraph();
-            var connectedVertices = GraphAlgorithms.GetConnectedSubgraph(graph, graph.Vertices.First().Value).Vertices.Values;
+            var connectedVertices = GraphAlgorithms.GetConnectedSubgraph(graph, graph.Vertices.First()).Vertices;
 
-            Assert.That(connectedVertices, Is.EquivalentTo(graph.Vertices.Values));
+            Assert.That(connectedVertices, Is.EquivalentTo(graph.Vertices));
         }
 
         [Test]
@@ -142,9 +143,9 @@ namespace CommonsTest
             var nonConnectedVertex = new Vertex<object>(99);
             graph.AddVertex(nonConnectedVertex);
 
-            var connectedVertices = GraphAlgorithms.GetConnectedSubgraph(graph, graph.Vertices.First().Value).Vertices.Values;
+            var connectedVertices = GraphAlgorithms.GetConnectedSubgraph(graph, graph.Vertices.First()).Vertices;
 
-            Assert.That(connectedVertices, Is.EquivalentTo(graph.Vertices.Values.Except(new[] { nonConnectedVertex })));
+            Assert.That(connectedVertices, Is.EquivalentTo(graph.Vertices.Except(new[] { nonConnectedVertex })));
         }
 
         [Test]
@@ -174,11 +175,103 @@ namespace CommonsTest
             var subgraphVertices = new uint[] {3, 4, 5};
             var subGraph = GraphAlgorithms.GetSubgraph(testGraph, subgraphVertices);
 
-            Assert.That(subGraph.Vertices.Keys, Is.EquivalentTo(subgraphVertices));
-            Assert.That(subGraph.Edges.Keys, Is.EquivalentTo(new ulong[] {3, 4, 5}));
-            Assert.That(subGraph.Vertices[3].EdgeIds, Is.EquivalentTo(new ulong[] {3, 4}));
-            Assert.That(subGraph.Vertices[4].EdgeIds, Is.EquivalentTo(new ulong[] {3, 5}));
-            Assert.That(subGraph.Vertices[5].EdgeIds, Is.EquivalentTo(new ulong[] {4, 5}));
+            Assert.That(subGraph.Vertices.Select(v => v.Id), Is.EquivalentTo(subgraphVertices));
+            Assert.That(subGraph.Edges.Select(v => v.Id), Is.EquivalentTo(new ulong[] {3, 4, 5}));
+            Assert.That(subGraph.GetVertexFromId(3).EdgeIds, Is.EquivalentTo(new ulong[] {3, 4}));
+            Assert.That(subGraph.GetVertexFromId(4).EdgeIds, Is.EquivalentTo(new ulong[] {3, 5}));
+            Assert.That(subGraph.GetVertexFromId(5).EdgeIds, Is.EquivalentTo(new ulong[] {4, 5}));
+        }
+
+        [Test]
+        public void FindStrongConnectedComponentsFindsExpectedComponents()
+        {
+            // See https://upload.wikimedia.org/wikipedia/commons/6/60/Tarjan%27s_Algorithm_Animation.gif
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 8).Select(vertexId => new Vertex<object>((uint)vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2, isDirected: true),
+                    new Edge<object>(1, 2, 3, isDirected: true),
+                    new Edge<object>(2, 3, 1, isDirected: true),
+                    new Edge<object>(3, 4, 2, isDirected: true),
+                    new Edge<object>(4, 4, 3, isDirected: true),
+                    new Edge<object>(5, 4, 5, isDirected: true),
+                    new Edge<object>(6, 5, 4, isDirected: true),
+                    new Edge<object>(7, 5, 6, isDirected: true),
+                    new Edge<object>(8, 6, 3, isDirected: true),
+                    new Edge<object>(9, 6, 7, isDirected: true),
+                    new Edge<object>(10, 7, 6, isDirected: true),
+                    new Edge<object>(11, 8, 6, isDirected: true),
+                    new Edge<object>(12, 8, 7, isDirected: true),
+                    new Edge<object>(13, 8, 8, isDirected: true)
+                });
+            var expected = new List<IList<uint>>
+            {
+                new uint[]{ 1, 2, 3},
+                new uint[]{ 4, 5 },
+                new uint[]{ 6, 7 },
+                new uint[]{ 8 }
+            };
+            var actual = GraphAlgorithms.FindStronglyConnectedComponents(graph);
+            Assert.That(actual.Count, Is.EqualTo(expected.Count));
+            foreach (var vertexIds in expected)
+            {
+                var referenceVertex = graph.GetVertexFromId(vertexIds[0]);
+                var matchingActual = actual.Single(c => c.Contains(referenceVertex));
+                CollectionAssert.AreEquivalent(vertexIds, matchingActual.Select(c => c.Id));
+            }
+        }
+
+        [Test]
+        public void HasCyclesReturnsTrueForTestGraph()
+        {
+            var graph = CreateTestGraph();
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.True);
+        }
+
+        [Test]
+        public void HasCyclesReturnsTrueForCircleGraph()
+        {
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2, isDirected: true), 
+                    new Edge<object>(1, 2, 3, isDirected: true), 
+                    new Edge<object>(2, 3, 4, isDirected: true), 
+                    new Edge<object>(3, 4, 1, isDirected: true), 
+                });
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.True);
+        }
+
+        [Test]
+        public void HasCyclesReturnsFalseForDiamondGraph()
+        {
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2, isDirected: true), 
+                    new Edge<object>(1, 1, 3, isDirected: true), 
+                    new Edge<object>(2, 2, 4, isDirected: true), 
+                    new Edge<object>(3, 3, 4, isDirected: true), 
+                });
+            Assert.That(GraphAlgorithms.HasCycles(graph), Is.False);
+        }
+
+        [Test]
+        public void HasCyclesThrowsExceptionForPartiallyUndirectedGraph()
+        {
+            var graph = new Graph<object, object>(
+                Enumerable.Range(1, 4).Select(vertexId => new Vertex<object>((uint) vertexId)),
+                new []
+                {
+                    new Edge<object>(0, 1, 2), 
+                    new Edge<object>(1, 1, 3), 
+                    new Edge<object>(2, 2, 4, isDirected: true), 
+                    new Edge<object>(3, 3, 4, isDirected: true), 
+                });
+            Assert.That(() => GraphAlgorithms.HasCycles(graph), Throws.Exception);
         }
 
         private Graph<object,object> CreateTestGraph()

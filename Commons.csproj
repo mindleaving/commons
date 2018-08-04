@@ -53,10 +53,14 @@
     <Compile Include="Mathematics\Combinatorics.cs" />
     <Compile Include="Extensions\ComparableExtensions.cs" />
     <Compile Include="Mathematics\ContinuousLine2D.cs" />
+    <Compile Include="Mathematics\IEdge.cs" />
+    <Compile Include="Mathematics\IGraph.cs" />
+    <Compile Include="Mathematics\IVertex.cs" />
     <Compile Include="Mathematics\LineSegment2D.cs" />
     <Compile Include="Mathematics\Point2DXYComparer.cs" />
     <Compile Include="Mathematics\SequenceGeneration.cs" />
     <Compile Include="Mathematics\PolarPoint.cs" />
+    <Compile Include="Mathematics\StronglyConnectedComponent.cs" />
     <Compile Include="Misc\Annotation.cs" />
     <Compile Include="Misc\AnnotationCollection.cs" />
     <Compile Include="Misc\AnnotationShapeType.cs" />

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Commons.Mathematics
 {
-    public class Vertex<T> : IDisposable
+    public class Vertex<T> : IDisposable, IVertex<T>, ICloneable
     {
         /// <summary>
         /// Property for holding an object which is represented by this vertex.
@@ -30,12 +30,12 @@ namespace Commons.Mathematics
             Weight = weight;
         }
 
-        internal void AddEdge(ulong edgeId)
+        public void AddEdge(ulong edgeId)
         {
             EdgeIds.Add(edgeId);
         }
 
-        internal bool RemoveEdge(ulong edgeId)
+        public bool RemoveEdge(ulong edgeId)
         {
             return EdgeIds.Remove(edgeId);
         }
@@ -77,7 +77,7 @@ namespace Commons.Mathematics
             return $"V{Id}, #Edges: {EdgeIds.Count}";
         }
 
-        public Vertex<T> Clone()
+        public object Clone()
         {
             return new Vertex<T>(Id, Weight)
             {

@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Commons.Mathematics
 {
-    public class ShortestPathLookup<TVertex, TEdge>
+    public class ShortestPathLookup
     {
-        public Vertex<TVertex> Source { get; }
-        private readonly Graph<TVertex, TEdge> graph;
+        public IVertex Source { get; }
+        private readonly IGraph graph;
         private readonly Dictionary<uint, uint> backtraceMap;
         private readonly Dictionary<uint, double> pathLengths;
 
-        public ShortestPathLookup(Graph<TVertex, TEdge> graph, Vertex<TVertex> source, 
+        public ShortestPathLookup(IGraph graph, IVertex source, 
             Dictionary<uint, uint> backtraceMap,
             Dictionary<uint, double> pathLengths)
         {
@@ -21,20 +21,20 @@ namespace Commons.Mathematics
             this.pathLengths = pathLengths;
         }
 
-        public GraphPath<TVertex, TEdge> PathTo(Vertex<TVertex> target)
+        public GraphPath PathTo(IVertex target)
         {
             if(target.Id == Source.Id)
-                return new GraphPath<TVertex, TEdge>(Source.Id);
+                return new GraphPath(Source.Id);
             if (!backtraceMap.ContainsKey(target.Id))
                 throw new ArgumentException("Target is not in graph");
 
-            var path = new List<Edge<TEdge>>();
+            var path = new List<IEdge>();
             var currentVertexId = target.Id;
             while (currentVertexId != Source.Id)
             {
                 var nextVertexId = backtraceMap[currentVertexId];
-                var shortestEdge = graph.Vertices[currentVertexId].EdgeIds
-                    .Select(edgeId => graph.Edges[edgeId])
+                var shortestEdge = graph.GetVertexFromId(currentVertexId).EdgeIds
+                    .Select(edgeId => graph.GetEdgeById(edgeId))
                     .Where(edge => edge.HasVertex(nextVertexId))
                     .OrderBy(edge => edge.Weight)
                     .First();
@@ -43,10 +43,10 @@ namespace Commons.Mathematics
             }
             path.Reverse();
 
-            return new GraphPath<TVertex, TEdge>(Source.Id, path);
+            return new GraphPath(Source.Id, path);
         }
 
-        public double PathLengthTo(Vertex<TVertex> target)
+        public double PathLengthTo(IVertex target)
         {
             return !pathLengths.ContainsKey(target.Id) ? double.PositiveInfinity : pathLengths[target.Id];
         }
