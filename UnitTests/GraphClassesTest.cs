@@ -36,10 +36,10 @@ namespace CommonsTest
             var vertex0 = new Vertex<object>(0);
             sut.AddVertex(vertex0);
 
-            Assume.That(sut.Vertices.ContainsKey(vertex0.Id));
+            Assume.That(sut.HasVertex(vertex0.Id));
 
             sut.RemoveVertex(vertex0);
-            Assert.That(sut.Vertices.ContainsKey(vertex0.Id), Is.False);
+            Assert.That(sut.HasVertex(vertex0.Id), Is.False);
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace CommonsTest
 
             sut.RemoveVertex(vertices[0]);
 
-            CollectionAssert.AreEquivalent(vertices.Skip(1), sut.Vertices.Values);
-            CollectionAssert.AreEquivalent(new[] { edges[1] }, sut.Edges.Values);
+            CollectionAssert.AreEquivalent(vertices.Skip(1), sut.Vertices);
+            CollectionAssert.AreEquivalent(new[] { edges[1] }, sut.Edges);
         }
 
         [Test]
@@ -93,12 +93,12 @@ namespace CommonsTest
             var sut = new Graph<object,object>(vertices, edges);
 
             // Check that the data was stored
-            Assert.That(sut.Vertices.Values, Is.EquivalentTo(vertices));
-            Assert.That(sut.Edges.Values, Is.EquivalentTo(edges));
+            Assert.That(sut.Vertices, Is.EquivalentTo(vertices));
+            Assert.That(sut.Edges, Is.EquivalentTo(edges));
 
             // Check that the references were stored
-            Assert.That(sut.Vertices[0].EdgeIds.Contains(edges[0].Id), "Expected that vertex 0 would receive references to adjacent edges");
-            Assert.That(sut.Vertices[1].EdgeIds.Contains(edges[0].Id), "Expected that vertex 1 would receive references to adjacent edges");
+            Assert.That(sut.GetVertexFromId(0).EdgeIds.Contains(edges[0].Id), "Expected that vertex 0 would receive references to adjacent edges");
+            Assert.That(sut.GetVertexFromId(1).EdgeIds.Contains(edges[0].Id), "Expected that vertex 1 would receive references to adjacent edges");
         }
 
         [Test]

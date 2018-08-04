@@ -12,6 +12,7 @@ namespace Commons.Mathematics
         private bool idsAreInitialized;
         [JsonIgnore]
         private ulong nextEdgeId;
+
         public ulong GetUnusedEdgeId()
         {
             if (!idsAreInitialized)
@@ -31,19 +32,34 @@ namespace Commons.Mathematics
         private void InitializeIds()
         {
             if(Edges.Any())
-                nextEdgeId = Edges.Keys.Max() + 1;
+                nextEdgeId = edges.Keys.Max() + 1;
             if(Vertices.Any())
-                nextVertexId = Vertices.Keys.Max() + 1;
+                nextVertexId = vertices.Keys.Max() + 1;
             idsAreInitialized = true;
         }
 
-        public Dictionary<ulong, IEdge<TEdge>> Edges { get; private set; }
-        public Dictionary<uint, IVertex<TVertex>> Vertices { get; private set; }
+        
+        [JsonProperty]
+        private Dictionary<ulong, IEdge<TEdge>> edges { get; set; }
+        [JsonProperty]
+        private Dictionary<uint, IVertex<TVertex>> vertices { get; set; }
 
+        public IEnumerable<IVertex<TVertex>> Vertices => vertices.Values;
+        IEnumerable<IVertex> IGraph.Vertices => Vertices;
+
+        public IEnumerable<IEdge<TEdge>> Edges => edges.Values;
+        IEnumerable<IEdge> IGraph.Edges => Edges;
+
+        [JsonConstructor]
+        private Graph(Dictionary<ulong, IEdge<TEdge>> edges, Dictionary<uint, IVertex<TVertex>> vertices)
+        {
+            this.edges = edges;
+            this.vertices = vertices;
+        }
         public Graph()
         {
-            Edges = new Dictionary<ulong, IEdge<TEdge>>();
-            Vertices = new Dictionary<uint, IVertex<TVertex>>();
+            edges = new Dictionary<ulong, IEdge<TEdge>>();
+            vertices = new Dictionary<uint, IVertex<TVertex>>();
         }
         public Graph(IEnumerable<IVertex<TVertex>> vertices, IEnumerable<IEdge<TEdge>> edges)
             : this()
@@ -52,68 +68,98 @@ namespace Commons.Mathematics
             AddEdges(edges);
         }
 
-        public void AddVertex(IVertex<TVertex> newVertex)
+        public IVertex<TVertex> GetVertexFromId(uint id)
         {
-            if (Vertices.ContainsKey(newVertex.Id))
+            return vertices[id];
+        }
+
+        IEdge IGraph.GetEdgeById(ulong id)
+        {
+            return GetEdgeById(id);
+        }
+
+        IVertex IGraph.GetVertexFromId(uint id)
+        {
+            return GetVertexFromId(id);
+        }
+
+        public IEdge<TEdge> GetEdgeById(ulong id)
+        {
+            return edges[id];
+        }
+
+        public bool HasVertex(uint id)
+        {
+            return vertices.ContainsKey(id);
+        }
+
+        public bool HasEdge(ulong id)
+        {
+            return edges.ContainsKey(id);
+        }
+
+        public void AddVertex(IVertex newVertex)
+        {
+            if (HasVertex(newVertex.Id))
                 throw new ArgumentException($"Vertex with ID '{newVertex.Id}' already exists.");
 
-            Vertices.Add(newVertex.Id, newVertex);
+            vertices.Add(newVertex.Id, (IVertex<TVertex>)newVertex);
             if (newVertex.Id >= nextVertexId)
                 nextVertexId = newVertex.Id + 1;
         }
 
-        public void AddVertices(IEnumerable<IVertex<TVertex>> newVertices)
+        public void AddVertices(IEnumerable<IVertex> newVertices)
         {
             newVertices.ForEach(AddVertex);
         }
 
-        public bool RemoveVertex(IVertex<TVertex> vertex)
+        public bool RemoveVertex(IVertex vertex)
         {
-            vertex.EdgeIds.ForEach(e => Edges.Remove(e));
-            return Vertices.Remove(vertex.Id);
+            vertex.EdgeIds.ForEach(e => edges.Remove(e));
+            return vertices.Remove(vertex.Id);
         }
 
         public bool RemoveVertex(uint vertexId)
         {
-            if (Vertices.ContainsKey(vertexId))
+            if (HasVertex(vertexId))
                 return false;
-            var vertex = Vertices[vertexId];
+            var vertex = GetVertexFromId(vertexId);
             return RemoveVertex(vertex);
         }
 
-        public void AddEdge(IEdge<TEdge> newEdge)
+        public void AddEdge(IEdge newEdge)
         {
-            if (!Vertices.ContainsKey(newEdge.Vertex1Id) || !Vertices.ContainsKey(newEdge.Vertex2Id))
+            if (!HasVertex(newEdge.Vertex1Id) || !HasVertex(newEdge.Vertex2Id))
                 throw new Exception("Cannot add edge because one or both of its vertices are not in the graph");
 
             // Add edge to vertices
-            Vertices[newEdge.Vertex1Id].EdgeIds.Add(newEdge.Id);
-            Vertices[newEdge.Vertex2Id].EdgeIds.Add(newEdge.Id);
+            vertices[newEdge.Vertex1Id].EdgeIds.Add(newEdge.Id);
+            vertices[newEdge.Vertex2Id].EdgeIds.Add(newEdge.Id);
 
-            Edges.Add(newEdge.Id, newEdge);
+            edges.Add(newEdge.Id, (IEdge<TEdge>)newEdge);
             if (newEdge.Id >= nextEdgeId)
                 nextEdgeId = newEdge.Id + 1;
         }
 
-        public void AddEdges(IEnumerable<IEdge<TEdge>> edges)
+        public void AddEdges(IEnumerable<IEdge> edges)
         {
             edges.ForEach(AddEdge);
         }
 
-        public bool RemoveEdge(IEdge<TEdge> edge)
+        public bool RemoveEdge(IEdge edge)
         {
-            if (!Edges.ContainsKey(edge.Id))
+            if (!HasEdge(edge.Id))
                 return false;
 
-            Vertices[edge.Vertex1Id].RemoveEdge(edge.Id);
-            Vertices[edge.Vertex2Id].RemoveEdge(edge.Id);
+            GetVertexFromId(edge.Vertex1Id).RemoveEdge(edge.Id);
+            GetVertexFromId(edge.Vertex2Id).RemoveEdge(edge.Id);
 
-            return Edges.Remove(edge.Id);
+            return edges.Remove(edge.Id);
         }
 
-        public Edge<TEdge> ConnectVertices(IVertex<TVertex> vertex1, IVertex<TVertex> vertex2)
+        public IEdge ConnectVertices(IVertex vertex1, IVertex vertex2)
         {
-            if (!Vertices.ContainsKey(vertex1.Id) || !Vertices.ContainsKey(vertex2.Id))
+            if (!HasVertex(vertex1.Id) || !HasVertex(vertex2.Id))
                 throw new Exception("Cannot add edge because one or both of its vertices are not in the graph");
 
             var edge = new Edge<TEdge>(GetUnusedEdgeId(), vertex1.Id, vertex2.Id);
@@ -121,18 +167,21 @@ namespace Commons.Mathematics
             return edge;
         }
 
-        public Edge<TEdge> ConnectVertices(uint vertex1Id, uint vertex2Id)
+        public IEdge ConnectVertices(uint vertex1Id, uint vertex2Id)
         {
-            var vertex1 = Vertices[vertex1Id];
-            var vertex2 = Vertices[vertex2Id];
+            var vertex1 = GetVertexFromId(vertex1Id);
+            var vertex2 = GetVertexFromId(vertex2Id);
 
             return ConnectVertices(vertex1, vertex2);
         }
 
-        public GraphMergeInfo AddGraph(IGraph<TVertex, TEdge> otherGraph)
+        public GraphMergeInfo AddGraph(IGraph otherGraphGeneric)
         {
+            if(!(otherGraphGeneric is IGraph<TVertex, TEdge> otherGraph))
+                throw new InvalidOperationException("Can only merge graphs of same type");
+
             var vertexIdMap = new Dictionary<uint, uint>();
-            foreach (var vertex in otherGraph.Vertices.Values)
+            foreach (var vertex in otherGraph.Vertices)
             {
                 var newVertexId = GetUnusedVertexId();
                 AddVertex(new Vertex<TVertex>(newVertexId, vertex.Weight)
@@ -142,7 +191,7 @@ namespace Commons.Mathematics
                 vertexIdMap.Add(vertex.Id, newVertexId);
             }
             var edgeIdMap = new Dictionary<ulong, ulong>();
-            foreach (var edge in otherGraph.Edges.Values)
+            foreach (var edge in otherGraph.Edges)
             {
                 var newEdgeId = GetUnusedEdgeId();
                 AddEdge(new Edge<TEdge>(newEdgeId,
@@ -160,11 +209,9 @@ namespace Commons.Mathematics
 
         public void Dispose()
         {
-            var vertices = Vertices.Values.ToList();
-            var edges = Edges.Values.ToList();
-            vertices.ForEach(v => RemoveVertex(v));
-            vertices.OfType<IDisposable>().ForEach(v => v.Dispose());
-            edges.OfType<IDisposable>().ForEach(e => e.Dispose());
+            Vertices.ForEach(v => RemoveVertex(v));
+            Vertices.OfType<IDisposable>().ForEach(v => v.Dispose());
+            Edges.OfType<IDisposable>().ForEach(e => e.Dispose());
         }
     }
 }

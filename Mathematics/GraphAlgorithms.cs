@@ -7,12 +7,13 @@ namespace Commons.Mathematics
 {
     public static class GraphAlgorithms
     {
-        public static double[,] ComputeAdjacencyMatrix<TVertex, TEdge>(Graph<TVertex, TEdge> graph)
+        public static double[,] ComputeAdjacencyMatrix(IGraph graph)
         {
-            var adjacencyMatrix = new double[graph.Vertices.Count, graph.Vertices.Count];
+            var vertexCount = graph.Vertices.Count();
+            var adjacencyMatrix = new double[vertexCount, vertexCount];
 
-            var sortedVertexIds = graph.Vertices.Values.Select(v => v.Id).OrderBy(x => x).ToList();
-            foreach (var edge in graph.Edges.Values)
+            var sortedVertexIds = graph.Vertices.Select(v => v.Id).OrderBy(x => x).ToList();
+            foreach (var edge in graph.Edges)
             {
                 var vertex1Index = sortedVertexIds.IndexOf(edge.Vertex1Id);
                 var vertex2Index = sortedVertexIds.IndexOf(edge.Vertex2Id);
@@ -25,17 +26,17 @@ namespace Commons.Mathematics
 
         public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(IGraph<TVertex,TEdge> graph, uint sourceVertexId)
         {
-            return ShortestPaths(graph, graph.Vertices[sourceVertexId]);
+            return ShortestPaths(graph, graph.GetVertexFromId(sourceVertexId));
         }
         public static ShortestPathLookup<TVertex, TEdge> ShortestPaths<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> source)
         {
-            if (!graph.Vertices.ContainsKey(source.Id))
+            if (!graph.HasVertex(source.Id))
                 throw new ArgumentException("GraphAlgorithms.ShortestPath: Source vertex not in graph");
-            if (graph.Edges.Values.Any(e => e.Weight < 0))
+            if (graph.Edges.Any(e => e.Weight < 0))
                 throw new NotImplementedException("GraphAlgorithms.ShortestPath: No shortest path algorithm is implemented for graphs with negative edge-weights");
 
             // Dijkstra's algorithm
-            var unVisitedVertexDictionary = graph.Vertices.ToDictionary(v => v.Key, v => true);
+            var unVisitedVertexDictionary = graph.Vertices.ToDictionary(v => v.Id, v => true);
             var unvisitedVertexCount = unVisitedVertexDictionary.Count;
             var shortestPathLengths = new Dictionary<uint, double> { { source.Id, 0} };
             var backtraceMap = new Dictionary<uint, uint>();
@@ -52,20 +53,20 @@ namespace Commons.Mathematics
                 var unvisitedWithShortestPathLength = unvisitedVertices
                     .OrderBy(kvp => kvp.Value)
                     .First().Key;
-                var currentVertex = graph.Vertices[unvisitedWithShortestPathLength];
+                var currentVertex = graph.GetVertexFromId(unvisitedWithShortestPathLength);
 
                 unVisitedVertexDictionary[currentVertex.Id] = false;
                 unvisitedVertexCount--;
 
                 // Update adjacent vertices
                 var adjacentEdgeVertexDictionary = currentVertex.EdgeIds
-                    .Select(e => graph.Edges[e])
+                    .Select(graph.GetEdgeById)
                     .Where(e => !e.IsDirected || e.Vertex1Id == currentVertex.Id)
                     .Select(e => new { VertexId = e.Vertex1Id != currentVertex.Id ? e.Vertex1Id : e.Vertex2Id, Edge = e });
                 var currentVertexPathLength = shortestPathLengths[currentVertex.Id];
                 foreach (var vertexEdgePair in adjacentEdgeVertexDictionary)
                 {
-                    var adjacentVertex = graph.Vertices[vertexEdgePair.VertexId];
+                    var adjacentVertex = graph.GetVertexFromId(vertexEdgePair.VertexId);
                     var adjacentEdge = vertexEdgePair.Edge;
                     // Skip already visited vertices
                     if (!unVisitedVertexDictionary[adjacentVertex.Id])
@@ -89,14 +90,14 @@ namespace Commons.Mathematics
         {
             if (!graph.Vertices.Any())
                 return true;
-            var startVertex = graph.Vertices.Values.First();
+            var startVertex = graph.Vertices.First();
             var connectedVertices = GetConnectedSubgraph(graph, startVertex).Vertices;
-            return graph.Vertices.Count == connectedVertices.Count;
+            return graph.Vertices.Count() == connectedVertices.Count();
         }
 
         public static void ApplyMethodToAllConnectedVertices<TVertex, TEdge>(Graph<TVertex, TEdge> graph, IVertex<TVertex> startVertex, Action<IVertex<TVertex>> action)
         {
-            foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex).Vertices.Values)
+            foreach (var connectedVertex in GetConnectedSubgraph(graph, startVertex).Vertices)
             {
                 action(connectedVertex);
             }
@@ -106,8 +107,8 @@ namespace Commons.Mathematics
         {
             // Use depth first search for traversing connected component
             // Initialize graph algorithm data
-            graph.Vertices.ForEach(v => v.Value.AlgorithmData = false);
-            graph.Edges.Values.ForEach(e => e.AlgorithmData = false);
+            graph.Vertices.ForEach(v => v.AlgorithmData = false);
+            graph.Edges.ForEach(e => e.AlgorithmData = false);
 
             var connectedVertices = GetConnectedVertices(graph, startVertex).Select(v => v.Id).ToList();
             return GetSubgraph(graph, connectedVertices);
@@ -119,12 +120,12 @@ namespace Commons.Mathematics
             currentVertex.AlgorithmData = true;
 
             var unvisitedAdjacentVertices = currentVertex.EdgeIds
-                .Select(edgeId => graph.Edges[edgeId])
+                .Select(graph.GetEdgeById)
                 .Select(edge => edge.Vertex1Id == currentVertex.Id ? edge.Vertex2Id : edge.Vertex1Id);
 
             foreach (var adjacentVertexId in unvisitedAdjacentVertices)
             {
-                var adjacentVertex = graph.Vertices[adjacentVertexId];
+                var adjacentVertex = graph.GetVertexFromId(adjacentVertexId);
                 if (adjacentVertex.AlgorithmData.Equals(true))
                     continue;
 
@@ -139,56 +140,56 @@ namespace Commons.Mathematics
         public static IEnumerable<IVertex<TVertex>> GetAdjacentVertices<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IVertex<TVertex> vertex)
         {
             return vertex.EdgeIds
-                .Select(edgeId => graph.Edges[edgeId])
+                .Select(graph.GetEdgeById)
                 .Select(edge => edge.Vertex1Id == vertex.Id ? edge.Vertex2Id : edge.Vertex1Id)
                 .Distinct()
-                .Select(vId => graph.Vertices[vId]);
+                .Select(graph.GetVertexFromId);
         }
 
         public static IGraph<TVertex, TEdge> GetSubgraph<TVertex, TEdge>(IGraph<TVertex, TEdge> graph, IList<uint> vertices)
         {
             var subgraphVertices = vertices
                 .Distinct()
-                .Select(vertexId => ((ICloneable)graph.Vertices[vertexId]).Clone() as IVertex<TVertex>)
+                .Select(vertexId => ((ICloneable)graph.GetVertexFromId(vertexId)).Clone() as IVertex<TVertex>)
                 .ToList();
             subgraphVertices.ForEach(v => v.EdgeIds.Clear());
             var vertexIdHashSet = new HashSet<uint>(vertices);
-            var subgraphEdges = graph.Edges.Values
+            var subgraphEdges = graph.Edges
                 .Where(e => vertexIdHashSet.Contains(e.Vertex1Id) && vertexIdHashSet.Contains(e.Vertex2Id));
             var subgraph = new Graph<TVertex, TEdge>(subgraphVertices, subgraphEdges);
-            foreach (var vertex in subgraph.Vertices.Values)
+            foreach (var vertex in subgraph.Vertices)
             {
-                vertex.EdgeIds.RemoveAll(edgeId => !subgraph.Edges.ContainsKey(edgeId));
+                vertex.EdgeIds.RemoveAll(edgeId => !subgraph.HasEdge(edgeId));
             }
             return subgraph;
         }
 
         public static bool HasCycles<TVertex, TEdge>(IGraph<TVertex, TEdge> graph)
         {
-            graph.Vertices.Values.ForEach(v => v.AlgorithmData = false);
-            graph.Edges.Values.ForEach(v => v.AlgorithmData = false);
+            graph.Vertices.ForEach(v => v.AlgorithmData = false);
+            graph.Edges.ForEach(v => v.AlgorithmData = false);
             var edgeStack = new Stack<IEdge<TEdge>>();
-            while (edgeStack.Any() || graph.Vertices.Values.Any(e => (bool)e.AlgorithmData == false))
+            while (edgeStack.Any() || graph.Vertices.Any(e => (bool)e.AlgorithmData == false))
             {
                 if (!edgeStack.Any())
                 {
-                    var unvisitedVertex = graph.Vertices.Values.First(v => (bool)v.AlgorithmData == false);
+                    var unvisitedVertex = graph.Vertices.First(v => (bool)v.AlgorithmData == false);
                     unvisitedVertex.AlgorithmData = true;
-                    unvisitedVertex.EdgeIds.Select(edgeId => graph.Edges[edgeId]).ForEach(edgeStack.Push);
+                    unvisitedVertex.EdgeIds.Select(graph.GetEdgeById).ForEach(edgeStack.Push);
                 }
                 var edge = edgeStack.Pop();
                 edge.AlgorithmData = true;
-                var vertex = graph.Vertices[edge.Vertex1Id];
+                var vertex = graph.GetVertexFromId(edge.Vertex1Id);
                 var wasAlreadyVisited = (bool) vertex.AlgorithmData;
                 if (wasAlreadyVisited)
                 {
-                    vertex = graph.Vertices[edge.Vertex2Id];
+                    vertex = graph.GetVertexFromId(edge.Vertex2Id);
                     wasAlreadyVisited = (bool) vertex.AlgorithmData;
                     if (wasAlreadyVisited) // If both ends of an edge have already been visited, we have a cycle
                         return true;
                 }
                 vertex.AlgorithmData = true;
-                vertex.EdgeIds.Select(edgeId => graph.Edges[edgeId])
+                vertex.EdgeIds.Select(graph.GetEdgeById)
                     .Where(e => !e.IsDirected || e.Vertex1Id == vertex.Id)
                     .Where(e => (bool)e.AlgorithmData == false)
                     .ForEach(edgeStack.Push);

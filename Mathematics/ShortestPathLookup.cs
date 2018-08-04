@@ -33,8 +33,8 @@ namespace Commons.Mathematics
             while (currentVertexId != Source.Id)
             {
                 var nextVertexId = backtraceMap[currentVertexId];
-                var shortestEdge = graph.Vertices[currentVertexId].EdgeIds
-                    .Select(edgeId => graph.Edges[edgeId])
+                var shortestEdge = graph.GetVertexFromId(currentVertexId).EdgeIds
+                    .Select(edgeId => graph.GetEdgeById(edgeId))
                     .Where(edge => edge.HasVertex(nextVertexId))
                     .OrderBy(edge => edge.Weight)
                     .First();
