@@ -157,7 +157,7 @@ namespace Commons.Physics
                 var gramValue = Value * 1000;
                 var appropriateSIPrefix = SelectSIPrefix(gramValue);
                 var multiplier = appropriateSIPrefix.GetMultiplier();
-                var valueString = (gramValue/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
+                var valueString = (gramValue/multiplier).ToString("G4", CultureInfo.InvariantCulture) 
                               + " "
                               + appropriateSIPrefix.StringRepresentation();
                 return valueString + Physics.Unit.Gram.StringRepresentation();
@@ -166,7 +166,7 @@ namespace Commons.Physics
             {
                 var appropriateSIPrefix = SelectSIPrefix(Value);
                 var multiplier = appropriateSIPrefix.GetMultiplier();
-                var valueString = (Value/multiplier).ToString("F2", CultureInfo.InvariantCulture) 
+                var valueString = (Value/multiplier).ToString("G4", CultureInfo.InvariantCulture) 
                                   + " "
                                   + appropriateSIPrefix.StringRepresentation();
                 return valueString + simpleUnit.StringRepresentation();
