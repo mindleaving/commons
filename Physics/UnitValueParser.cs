@@ -26,9 +26,7 @@ namespace Commons.Physics
             {
                 ParseSimpleUnit(unitString, out var simpleUnit, out var siPrefix);
                 var unitConversionResult = value.ConvertToSI(simpleUnit);
-                var multiplier = siPrefix.GetMultiplier();
-                unit = unitConversionResult.Unit.ToCompoundUnit();
-                value = multiplier * unitConversionResult.Value;
+                return unitConversionResult.Value.To(siPrefix, unitConversionResult.Unit);
             }
             catch (FormatException)
             {
