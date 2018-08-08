@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Commons.Extensions;
 using Commons.IO;
+using Commons.Mathematics;
 using Commons.Physics;
 using NUnit.Framework;
 
@@ -72,6 +76,25 @@ namespace CommonsTest
                 stream.Seek(0, SeekOrigin.Begin);
                 var deserializedUnitValue = serializer.Load(stream);
                 Assert.That(deserializedUnitValue, Is.EqualTo(unitValue));
+            }
+        }
+
+        [Test]
+        public void SerializationRoundtripBatchTest()
+        {
+            var allValidUnits = EnumExtensions.GetValues<Unit>()
+                .Except(new[] {Unit.Compound});
+            var exponentsToTest = SequenceGeneration.FixedStep(-12, 12, 3).ToList();
+            foreach (var unit in allValidUnits)
+            {
+                foreach (var exponent in exponentsToTest)
+                {
+                    var value = 1.3 * Math.Pow(10, (int)exponent);
+                    var unitValue = new UnitValue(unit, value);
+                    var roundTripUnitValue = UnitValue.Parse(unitValue.ToString());
+                    Assert.That(roundTripUnitValue.Unit, Is.EqualTo(unitValue.Unit));
+                    Assert.That(roundTripUnitValue.Value, Is.EqualTo(unitValue.Value).Within(1e-3*unitValue.Value));
+                }
             }
         }
     }

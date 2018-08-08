@@ -7,6 +7,13 @@ namespace Commons.Extensions
 {
     public static class UnitValueExtensions
     {
+        static UnitValueExtensions()
+        {
+            InverseSIPrefixStringRepresentation = SIPrefixStringRepresentation
+                .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+            InverseSIPrefixStringRepresentation.Add("u", SIPrefix.Micro);
+        }
+
         public static UnitValue Abs(this UnitValue unitValue)
         {
             return new UnitValue(unitValue.Unit, Math.Abs(unitValue.Value));
@@ -207,8 +214,7 @@ namespace Commons.Extensions
             {SIPrefix.Peta, "P"},
             {SIPrefix.Exa, "E"}
         };
-        public static readonly Dictionary<string, SIPrefix> InverseSIPrefixStringRepresentation = SIPrefixStringRepresentation
-            .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+        public static Dictionary<string, SIPrefix> InverseSIPrefixStringRepresentation { get; }
 
         public static string StringRepresentation(this SIPrefix prefix)
         {

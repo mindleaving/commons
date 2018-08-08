@@ -14,11 +14,11 @@ namespace Commons.Physics
             if(unitValueString == null)
                 throw new ArgumentNullException();
             var preprocessedString = unitValueString.Trim();
-            var match = Regex.Match(preprocessedString, @"(-?[0-9]+(\.[0-9]+)?)\s*(([a-zA-Z]|1/).*)");
+            var match = Regex.Match(preprocessedString, @"(-?[0-9]+(\.[0-9]+)?([eE][-0-9]+)?)\s*(([fpnμumkMGTZE]|1/)?.*)");
             if(!match.Success)
                 throw new FormatException();
             var valueGroup = match.Groups[1];
-            var unitGroup = match.Groups[3];
+            var unitGroup = match.Groups[4];
             var value = double.Parse(valueGroup.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
             var unitString = unitGroup.Value;
             CompoundUnit unit;
