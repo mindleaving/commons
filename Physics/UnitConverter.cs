@@ -69,6 +69,7 @@ namespace Commons.Physics
 
         public static bool IsSIUnit(this Unit unit)
         {
+            // Units that are directly representable by compound unit without value conversion
             return unit.InSet(
                 Unit.Meter,
                 Unit.MetersPerSecond,
@@ -163,6 +164,8 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.CubicMeters, value * 0.001);
                 case Unit.Gram:
                     return new UnitConversionResult(Unit.Kilogram, value * 0.001);
+
+                // SI-units. Needs to match .IsSIUnit()-list
                 case Unit.Meter:
                 case Unit.MetersPerSecond:
                 case Unit.MetersPerSecondSquared:

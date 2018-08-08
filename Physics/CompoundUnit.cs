@@ -55,8 +55,12 @@ namespace Commons.Physics
 
         public override bool Equals(object other)
         {
-            if (other is Unit)
-                return Equals(((Unit) other).ToSIUnit().ToCompoundUnit());
+            if (other is Unit unit)
+            {
+                if (!unit.IsSIUnit())
+                    return false;
+                return Equals(unit.ToSIUnit().ToCompoundUnit());
+            }
             return Equals(other as CompoundUnit);
         }
 
