@@ -44,10 +44,14 @@ namespace Commons.Mathematics
         [JsonProperty]
         private Dictionary<uint, IVertex<TVertex>> vertices { get; set; }
 
+        [JsonIgnore]
         public IEnumerable<IVertex<TVertex>> Vertices => vertices.Values;
+        [JsonIgnore]
         IEnumerable<IVertex> IGraph.Vertices => Vertices;
 
+        [JsonIgnore]
         public IEnumerable<IEdge<TEdge>> Edges => edges.Values;
+        [JsonIgnore]
         IEnumerable<IEdge> IGraph.Edges => Edges;
 
         [JsonConstructor]
