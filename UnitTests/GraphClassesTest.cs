@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Commons.Mathematics;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommonsTest
@@ -121,6 +122,23 @@ namespace CommonsTest
 
             Graph<object,object> sut = null;
             Assert.That(() => sut = new Graph<object,object>(vertices, edges), Throws.Exception);
+        }
+
+        [Test]
+        public void GraphSerializationRoundTrip()
+        {
+            var graph = new Graph<object, object>(
+                new []{ new Vertex<object>(0), new Vertex<object>(1)  },
+                new []
+                {
+                    new Edge<object>(0, 0, 1), 
+                });
+            string json = null;
+            Assert.That(() => json = JsonConvert.SerializeObject(graph), Throws.Nothing);
+            Graph<object, object> reconstructedGraph = null;
+            Assert.That(() => reconstructedGraph = JsonConvert.DeserializeObject<Graph<object, object>>(json), Throws.Nothing);
+            Assert.That(reconstructedGraph.Vertices.Count(), Is.EqualTo(2));
+            Assert.That(reconstructedGraph.Edges.Count(), Is.EqualTo(1));
         }
     }
 }

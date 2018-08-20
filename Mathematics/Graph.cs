@@ -55,10 +55,10 @@ namespace Commons.Mathematics
         IEnumerable<IEdge> IGraph.Edges => Edges;
 
         [JsonConstructor]
-        private Graph(Dictionary<ulong, IEdge<TEdge>> edges, Dictionary<uint, IVertex<TVertex>> vertices)
+        private Graph(Dictionary<ulong, Edge<TEdge>> edges, Dictionary<uint, Vertex<TVertex>> vertices)
         {
-            this.edges = edges;
-            this.vertices = vertices;
+            this.edges = edges.ToDictionary(kvp => kvp.Key, kvp => (IEdge<TEdge>)kvp.Value);
+            this.vertices = vertices.ToDictionary(kvp => kvp.Key, kvp => (IVertex<TVertex>)kvp.Value);
         }
         public Graph()
         {
