@@ -121,13 +121,13 @@ namespace Commons.Mathematics
 
         public bool RemoveVertex(IVertex vertex)
         {
-            vertex.EdgeIds.ForEach(e => edges.Remove(e));
+            vertex.EdgeIds.Select(GetEdgeById).ToList().ForEach(e => RemoveEdge(e));
             return vertices.Remove(vertex.Id);
         }
 
         public bool RemoveVertex(uint vertexId)
         {
-            if (HasVertex(vertexId))
+            if (!HasVertex(vertexId))
                 return false;
             var vertex = GetVertexFromId(vertexId);
             return RemoveVertex(vertex);

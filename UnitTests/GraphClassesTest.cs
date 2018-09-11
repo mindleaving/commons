@@ -45,6 +45,18 @@ namespace CommonsTest
         }
 
         [Test]
+        public void RemovingVertexRemovesEdgeIdsFromAdjacentVertices()
+        {
+            var sut = new Graph<object, object>(
+                new[] {new Vertex<object>(0), new Vertex<object>(1)},
+                new[] {new Edge<object>(0, 0, 1),});
+            Assume.That(sut.GetVertexFromId(0).EdgeIds, Contains.Item(0));
+            Assume.That(sut.GetVertexFromId(1).EdgeIds, Contains.Item(0));
+            sut.RemoveVertex(0);
+            Assert.That(sut.GetVertexFromId(1).EdgeIds, Is.Empty);
+        }
+
+        [Test]
         public void CreatingEdgeMustNotAddThisEdgeToVertices()
         {
             // It's the responsibility of the 'Graph' class to add and remove
