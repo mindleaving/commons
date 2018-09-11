@@ -3,6 +3,7 @@ using System.Linq;
 using Commons.Mathematics;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace CommonsTest
 {
@@ -139,6 +140,22 @@ namespace CommonsTest
             Assert.That(() => reconstructedGraph = JsonConvert.DeserializeObject<Graph<object, object>>(json), Throws.Nothing);
             Assert.That(reconstructedGraph.Vertices.Count(), Is.EqualTo(2));
             Assert.That(reconstructedGraph.Edges.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void GraphConstructedFromVerticesAndEdgesDoesntHaveDuplicateEdgeIds()
+        {
+            var edge = new Edge<object>(0, 0, 1);
+            var vertex0 = new Vertex<object>(0) { EdgeIds = { edge.Id }};
+            var vertex1 = new Vertex<object>(1) { EdgeIds = { edge.Id }};
+
+            var graph = new Graph<object, object>(
+                new []{ vertex0, vertex1  },
+                new [] { edge });
+            foreach (var vertex in graph.Vertices)
+            {
+                Assert.That(vertex.EdgeIds.Count, Is.EqualTo(1));
+            }
         }
     }
 }

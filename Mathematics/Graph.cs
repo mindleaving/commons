@@ -110,6 +110,8 @@ namespace Commons.Mathematics
             vertices.Add(newVertex.Id, (IVertex<TVertex>)newVertex);
             if (newVertex.Id >= nextVertexId)
                 nextVertexId = newVertex.Id + 1;
+            // Remove edges not in this graph
+            newVertex.EdgeIds.RemoveAll(edgeId => !edges.ContainsKey(edgeId));
         }
 
         public void AddVertices(IEnumerable<IVertex> newVertices)
@@ -133,12 +135,19 @@ namespace Commons.Mathematics
 
         public void AddEdge(IEdge newEdge)
         {
+            if(edges.ContainsKey(newEdge.Id))
+                throw new ArgumentException($"Edge with ID '{newEdge.Id}' already in graph");
             if (!HasVertex(newEdge.Vertex1Id) || !HasVertex(newEdge.Vertex2Id))
                 throw new Exception("Cannot add edge because one or both of its vertices are not in the graph");
 
             // Add edge to vertices
-            vertices[newEdge.Vertex1Id].EdgeIds.Add(newEdge.Id);
-            vertices[newEdge.Vertex2Id].EdgeIds.Add(newEdge.Id);
+            var vertex1 = vertices[newEdge.Vertex1Id];
+            if(!vertex1.EdgeIds.Contains(newEdge.Id))
+                vertex1.EdgeIds.Add(newEdge.Id);
+
+            var vertex2 = vertices[newEdge.Vertex2Id];
+            if(!vertex2.EdgeIds.Contains(newEdge.Id))
+                vertex2.EdgeIds.Add(newEdge.Id);
 
             edges.Add(newEdge.Id, (IEdge<TEdge>)newEdge);
             if (newEdge.Id >= nextEdgeId)
