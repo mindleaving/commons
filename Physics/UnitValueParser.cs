@@ -53,14 +53,16 @@ namespace Commons.Physics
             var nomniator = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
                 ? new SIBaseUnit[0]
                 : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
-            var denomniator = splittedDenominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
+            var denomniator = splittedDenominator
+                .Where(str => !string.IsNullOrEmpty(str))
+                .SelectMany(ParseSIBaseUnit);
             var unit = new CompoundUnit(nomniator, denomniator);
             return unit;
         }
 
         private static IEnumerable<SIBaseUnit> ParseSIBaseUnit(string unitString)
         {
-            var match = Regex.Match(unitString, "([a-zA-Z]+)(^([0-9]+))?");
+            var match = Regex.Match(unitString, "([a-zA-Z]+)(\\^([0-9]+))?");
             if(!match.Success)
                 throw new FormatException($"Could not parse SI base unit '{unitString}'");
             var unitName = match.Groups[1].Value;

@@ -83,6 +83,11 @@ namespace Commons.Mathematics
             var distanceToLine = Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
             return distanceToLine;
         }
+
+        public static double DistanceToLineSegment(this Point2D point, LineSegment2D lineSegment)
+        {
+            return DistanceToLineSegment(point, lineSegment.Point, lineSegment.Point + lineSegment.Vector);
+        }
         public static double DistanceToLineSegment(this Point2D point, Point2D linePoint1, Point2D linePoint2)
         {
             var distanceToLinePoint1 = point.DistanceTo(linePoint1);

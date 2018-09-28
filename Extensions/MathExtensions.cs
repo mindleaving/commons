@@ -10,6 +10,10 @@ namespace Commons.Extensions
         {
             return x * x;
         }
+        public static double Sqrt(this double x)
+        {
+            return Math.Sqrt(x);
+        }
         public static int Modulus(this int n, int modulus)
         {
             var residual = n % modulus;
@@ -39,6 +43,13 @@ namespace Commons.Extensions
             return !i.IsEven();
         }
 
+        public static bool IsBetween(this int x, int a, int b)
+        {
+            var min = Math.Min(a, b);
+            var max = Math.Max(a, b);
+
+            return x >= min && x <= max;
+        }
         public static bool IsBetween(this double x, double a, double b)
         {
             var min = Math.Min(a, b);
