@@ -15,6 +15,17 @@ namespace CommonsTest
         [TestCase("5.1 ft", 1.55448, Unit.Meter)]
         [TestCase("-3.4 s", -3.4, Unit.Second)]
         [TestCase("-5.3 km", -5300, Unit.Meter)]
+        [TestCase("∞ kg", double.PositiveInfinity, Unit.Kilogram)]
+        [TestCase("Inf m", double.PositiveInfinity, Unit.Meter)]
+        [TestCase("inf m", double.PositiveInfinity, Unit.Meter)]
+        [TestCase("Infinity m", double.PositiveInfinity, Unit.Meter)]
+        [TestCase("infinity m", double.PositiveInfinity, Unit.Meter)]
+        [TestCase("-∞ kg", double.NegativeInfinity, Unit.Kilogram)]
+        [TestCase("-Inf m", double.NegativeInfinity, Unit.Meter)]
+        [TestCase("-inf m", double.NegativeInfinity, Unit.Meter)]
+        [TestCase("-Infinity m", double.NegativeInfinity, Unit.Meter)]
+        [TestCase("-infinity m", double.NegativeInfinity, Unit.Meter)]
+        [TestCase("NaN m", double.NaN, Unit.Meter)]
         public void CanParseUnitValue(string s, double expectedValue, Unit expectedUnit)
         {
             UnitValue unitValue = null;

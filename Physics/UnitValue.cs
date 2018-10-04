@@ -122,6 +122,10 @@ namespace Commons.Physics
                 return false;
             if (!Unit.Equals(otherUnitValue.Unit))
                 return false;
+            if (Value.IsNaN() && otherUnitValue.Value.IsNaN())
+                return true;
+            if (Value == otherUnitValue.Value)
+                return true;
             return (Value - otherUnitValue.Value).Abs() < 1e-15;
         }
 

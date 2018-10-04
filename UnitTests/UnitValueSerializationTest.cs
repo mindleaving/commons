@@ -43,6 +43,25 @@ namespace CommonsTest
         }
 
         [Test]
+        [TestCase(double.PositiveInfinity, Unit.Second)]
+        [TestCase(double.NegativeInfinity, Unit.Second)]
+        [TestCase(double.NaN, Unit.Second)]
+        public void SerializationRoundtripDoubleSpecialValues(double value, Unit unit)
+        {
+            var unitValue = new UnitValue(unit, value);
+            var serializer = new Serializer<UnitValue>();
+
+            UnitValue deserializedUnitValue;
+            using (var stream = new MemoryStream())
+            {
+                serializer.Store(unitValue, stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                deserializedUnitValue = serializer.Load(stream);
+            }
+            Assert.That(deserializedUnitValue, Is.EqualTo(unitValue));
+        }
+
+        [Test]
         public void CompoundUnitStringAsSpecified()
         {
             var unitValue = new UnitValue(new CompoundUnit(
