@@ -13,6 +13,16 @@ namespace CommonsTest
     public class UnitValueSerializationTest
     {
         [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void NullOrEmptyIsDeserializedToNull(string str)
+        {
+            UnitValue unitValue = null;
+            Assert.That(() => unitValue = UnitValue.Parse(str), Throws.Nothing);
+            Assert.That(unitValue, Is.Null);
+        }
+
+        [Test]
         [TestCase(1.3, Unit.Second)]
         [TestCase(0.013, Unit.Second)]
         [TestCase(1030, Unit.Second)]

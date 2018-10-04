@@ -11,8 +11,8 @@ namespace Commons.Physics
     {
         public static UnitValue Parse(string unitValueString)
         {
-            if(unitValueString == null)
-                throw new ArgumentNullException();
+            if (string.IsNullOrEmpty(unitValueString))
+                return null;
             var preprocessedString = unitValueString.Trim();
             var match = Regex.Match(preprocessedString, @"(-?[0-9]+(\.[0-9]+)?([eE][-0-9]+)?)\s*(([fpnμumkMGTZE]|1/)?.*)");
             if(!match.Success)
