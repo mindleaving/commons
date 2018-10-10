@@ -75,5 +75,29 @@ namespace CommonsTest
             var density = weight / volume;
             Assert.That(density.Value, Is.EqualTo(500).Within(1e-5));
         }
+
+        [Test]
+        [TestCase(Unit.CubicMeters, Unit.Liter)]
+        [TestCase(Unit.Kilogram, Unit.Gram)]
+        [TestCase(Unit.ElectronVolts, Unit.Joule)]
+        [TestCase(Unit.Fahrenheit, Unit.Celcius)]
+        [TestCase(Unit.Fahrenheit, Unit.Kelvin)]
+        [TestCase(Unit.Meter, Unit.Feet)]
+        [TestCase(Unit.MetersPerSecond, Unit.Knots)]
+        public void CanConvertToTrueForCompatibleUnits(Unit originalUnit, Unit targetUnit)
+        {
+            var unitValue = 1.To(originalUnit);
+            Assert.That(unitValue.CanConvertTo(targetUnit), Is.True);
+        }
+
+        [Test]
+        [TestCase(Unit.CubicMeters, Unit.Kilogram)]
+        [TestCase(Unit.Bar, Unit.Celcius)]
+        [TestCase(Unit.Knots, Unit.Feet)]
+        public void CanConvertToFalseForIncompatibleUnits(Unit originalUnit, Unit targetUnit)
+        {
+            var unitValue = 1.To(originalUnit);
+            Assert.That(unitValue.CanConvertTo(targetUnit), Is.False);
+        }
     }
 }

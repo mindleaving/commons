@@ -5,6 +5,16 @@ namespace Commons.Physics
 {
     public static class UnitConverter
     {
+        public static bool CanConvertTo(this UnitValue unitValue, Unit unit)
+        {
+            return unitValue.Unit == unit.ToSIUnit().ToCompoundUnit();
+        }
+
+        public static bool CanConvertTo(this UnitValue unitValue, CompoundUnit unit)
+        {
+            return unitValue.Unit == unit;
+        }
+
         public static CompoundUnit ToCompoundUnit(this Unit unit)
         {
             if(!unit.IsSIUnit())

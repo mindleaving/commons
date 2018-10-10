@@ -197,7 +197,7 @@ namespace Commons.Extensions
 
         public static readonly Dictionary<SIPrefix, string> SIPrefixStringRepresentation = new Dictionary<SIPrefix, string>
         {
-            {SIPrefix.None, string.Empty},
+            {SIPrefix.None, String.Empty},
             {SIPrefix.Femto, "f"},
             {SIPrefix.Pico, "p"},
             {SIPrefix.Nano, "n"},
@@ -221,6 +221,20 @@ namespace Commons.Extensions
             if (!SIPrefixStringRepresentation.ContainsKey(prefix))
                 throw new ArgumentOutOfRangeException(nameof(prefix), prefix, null);
             return SIPrefixStringRepresentation[prefix];
+        }
+
+        public static SIPrefix SelectSIPrefix(this double value)
+        {
+            if (value.IsNaN() || value == 0 || value.IsInfinity())
+                return SIPrefix.None;
+            var absValue = Math.Abs(value);
+            var allPrefixes = ((SIPrefix[]) Enum.GetValues(typeof(SIPrefix)))
+                .Except(new []{SIPrefix.Deca, SIPrefix.Deci, SIPrefix.Hecto, SIPrefix.Centi })
+                .ToDictionary(x => x, GetMultiplier);
+            var multipliersSmallerThanValue = allPrefixes.Where(kvp => kvp.Value < absValue).ToList();
+            if (!multipliersSmallerThanValue.Any())
+                return allPrefixes.MinimumItem(kvp => kvp.Value).Key;
+            return multipliersSmallerThanValue.MaximumItem(kvp => kvp.Value).Key;
         }
 
         public static double GetMultiplier(this SIPrefix prefix)
