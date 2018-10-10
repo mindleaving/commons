@@ -231,10 +231,10 @@ namespace Commons.Extensions
             var allPrefixes = ((SIPrefix[]) Enum.GetValues(typeof(SIPrefix)))
                 .Except(new []{SIPrefix.Deca, SIPrefix.Deci, SIPrefix.Hecto, SIPrefix.Centi })
                 .ToDictionary(x => x, GetMultiplier);
-            var multipliersSmallerThanValue = allPrefixes.Where(kvp => kvp.Value < absValue).ToList();
-            if (!multipliersSmallerThanValue.Any())
+            var multipliersSmallerThanOrEqualToValue = allPrefixes.Where(kvp => kvp.Value <= absValue).ToList();
+            if (!multipliersSmallerThanOrEqualToValue.Any())
                 return allPrefixes.MinimumItem(kvp => kvp.Value).Key;
-            return multipliersSmallerThanValue.MaximumItem(kvp => kvp.Value).Key;
+            return multipliersSmallerThanOrEqualToValue.MaximumItem(kvp => kvp.Value).Key;
         }
 
         public static double GetMultiplier(this SIPrefix prefix)

@@ -99,5 +99,22 @@ namespace CommonsTest
             var unitValue = 1.To(originalUnit);
             Assert.That(unitValue.CanConvertTo(targetUnit), Is.False);
         }
+
+        [Test]
+        [TestCase(1, SIPrefix.None)]
+        [TestCase(3, SIPrefix.None)]
+        [TestCase(-4, SIPrefix.None)]
+        [TestCase(1e-1, SIPrefix.Milli)] // Deci-prefix is excluded
+        [TestCase(1e-2, SIPrefix.Milli)] // Centi-prefix is excluded
+        [TestCase(1e-3, SIPrefix.Milli)]
+        [TestCase(-1e-3, SIPrefix.Milli)]
+        [TestCase(-5e-3, SIPrefix.Milli)]
+        [TestCase(-5e-2, SIPrefix.Milli)]
+        [TestCase(1e-6, SIPrefix.Micro)]
+        public void SelectSIPrefixAsExpected(double value, SIPrefix expected)
+        {
+            var actual = value.SelectSIPrefix();
+            Assert.That(actual, Is.EqualTo(expected));
+        }
     }
 }
