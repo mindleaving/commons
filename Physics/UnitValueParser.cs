@@ -34,6 +34,10 @@ namespace Commons.Physics
                 value = double.Parse(valueGroup.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
             }
             var unitString = unitGroup.Value;
+            if (string.IsNullOrEmpty(unitString))
+            {
+                return new UnitValue(new CompoundUnit(new SIBaseUnit[0]), value);
+            }
             CompoundUnit unit;
             try
             {
@@ -89,6 +93,8 @@ namespace Commons.Physics
 
         private static void ParseSimpleUnit(string unitString, out Unit unit, out SIPrefix siPrefix)
         {
+            if(string.IsNullOrEmpty(unitString))
+                throw new FormatException();
             if (UnitValueExtensions.InverseUnitStringRepresentation.ContainsKey(unitString))
             {
                 siPrefix = SIPrefix.None;

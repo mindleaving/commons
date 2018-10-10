@@ -1,4 +1,5 @@
-﻿using Commons.Extensions;
+﻿using System;
+using Commons.Extensions;
 using Commons.Physics;
 using NUnit.Framework;
 
@@ -32,6 +33,15 @@ namespace CommonsTest
             Assert.That(() => unitValue = UnitValue.Parse(s), Throws.Nothing);
             Assert.That(unitValue.Value, Is.EqualTo(expectedValue).Within(1e-15));
             Assert.That(unitValue.Unit.ToUnit(), Is.EqualTo(expectedUnit));
+        }
+
+        [Test]
+        [TestCase("5.3 not a value")]
+        [TestCase("not a value")]
+        [TestCase("m")]
+        public void UnparsableUnitValueThrowsFormatException(string str)
+        {
+            Assert.That(() => UnitValue.Parse(str), Throws.TypeOf<FormatException>());
         }
     }
 }
