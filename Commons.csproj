@@ -44,6 +44,7 @@
     <Compile Include="Extensions\BitExtensions.cs" />
     <Compile Include="DataProcessing\CappedFrequencyCounter.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\StringSearchExtensions.cs" />
     <Compile Include="Extensions\VectorExtensions.cs" />
     <Compile Include="IO\DeepCloner.cs" />
