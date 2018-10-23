@@ -163,6 +163,30 @@ namespace Commons.Mathematics
             return differenceArray;
         }
 
+        public static double[] Multiply(this double[,] A, double[] b)
+        {
+            var rowsA = A.GetLength(0);
+            var colsA = A.GetLength(1);
+            var rowsB = b.Length;
+            if (colsA != rowsB)
+            {
+                throw new ArgumentException("Length of vector must match number of columns in matrix");
+            }
+            var multiplyArray = new double[rowsA];
+
+            //for (int r = 0; r < rowsA; r++)
+            Parallel.For(0, rowsA, r =>
+            {
+                double sum = 0;
+                for (int i = 0; i < colsA; i++)
+                {
+                    sum += A[r, i] * b[i];
+                }
+                multiplyArray[r] = sum;
+            });
+            return multiplyArray;
+        }
+
         public static double[,] Multiply(this double[,] A, double[,] B)
         {
             var rowsA = A.GetLength(0);
@@ -171,7 +195,7 @@ namespace Commons.Mathematics
             var colsB = B.GetLength(1);
             if (colsA != rowsB)
             {
-                return null;
+                throw new ArgumentException("Matrix B must have as many rows as matrix A has columns");
             }
             var multiplyArray = new double[rowsA, colsB];
 

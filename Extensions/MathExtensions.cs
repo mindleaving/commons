@@ -34,6 +34,22 @@ namespace Commons.Extensions
             return Math.Abs(value);
         }
 
+        public static double IntegerPower(this double x, int n)
+        {
+            if (n == 0)
+                return 1;
+            if (n == 1)
+                return x;
+            if (n < 0)
+                return 1.0 / x.IntegerPower(-n);
+            return x * x.IntegerPower(n - 1);
+        }
+
+        public static double Pow(this double x, double exponent)
+        {
+            return Math.Pow(x, exponent);
+        }
+
         public static bool IsEven(this int i)
         {
             return i%2 == 0;

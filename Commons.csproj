@@ -45,6 +45,7 @@
     <Compile Include="DataProcessing\CappedFrequencyCounter.cs" />
     <Compile Include="Collections\CircularBuffer.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Extensions\FittingExtensions.cs" />
     <Compile Include="Extensions\StringSearchExtensions.cs" />
     <Compile Include="Extensions\VectorExtensions.cs" />
     <Compile Include="IO\DeepCloner.cs" />
@@ -57,8 +58,10 @@
     <Compile Include="Mathematics\IEdge.cs" />
     <Compile Include="Mathematics\IGraph.cs" />
     <Compile Include="Mathematics\IVertex.cs" />
+    <Compile Include="Mathematics\LinearFittingResult2D.cs" />
     <Compile Include="Mathematics\LineSegment2D.cs" />
     <Compile Include="Mathematics\Point2DXYComparer.cs" />
+    <Compile Include="Mathematics\PolynomialFittingResult2D.cs" />
     <Compile Include="Mathematics\SequenceGeneration.cs" />
     <Compile Include="Mathematics\PolarPoint.cs" />
     <Compile Include="Mathematics\StronglyConnectedComponent.cs" />
