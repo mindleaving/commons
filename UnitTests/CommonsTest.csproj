@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\FittinExtensionsTest.cs" />
+    <Compile Include="Extensions\MathExtensionsTest.cs" />
     <Compile Include="Extensions\VectorExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoordinateTransform\BasisShiftTransform2DTest.cs" />
