@@ -21,7 +21,7 @@ namespace Commons.Extensions
         {
             if(v1.Dimension != v2.Dimension)
                 throw new InvalidOperationException("Cannot project vector onto vector with other dimension");
-            return v1.DotProduct(v2) * v2;
+            return (v1.DotProduct(v2)/(v2.DotProduct(v2))) * v2;
         }
 
         public static Vector Divide(this Vector vector, double scalar)
