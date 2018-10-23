@@ -6,6 +6,7 @@
         Rectangle = 2,
         Polygon = 3,
         Point = 4,
-        Line = 5
+        Line = 5,
+        PolyLine = 6
     }
 }
