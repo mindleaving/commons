@@ -9,6 +9,7 @@
         Feet = 2,
         StatuteMile = 3,
         NauticalMile = 4,
+        Inches = 5,
 
         // Velocities
         MetersPerSecond = 101,

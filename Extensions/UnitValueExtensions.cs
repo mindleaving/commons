@@ -59,6 +59,8 @@ namespace Commons.Extensions
                     return 0.000621371192 * unitValue.Value;
                 case Unit.NauticalMile:
                     return 0.000539956803*unitValue.Value;
+                case Unit.Inches:
+                    return 39.3700787*unitValue.Value;
                 case Unit.FeetPerMinute:
                     return 60*3.2808399*unitValue.Value;
                 case Unit.Knots:

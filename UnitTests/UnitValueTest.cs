@@ -83,6 +83,7 @@ namespace CommonsTest
         [TestCase(Unit.Fahrenheit, Unit.Celcius)]
         [TestCase(Unit.Fahrenheit, Unit.Kelvin)]
         [TestCase(Unit.Meter, Unit.Feet)]
+        [TestCase(Unit.Meter, Unit.Inches)]
         [TestCase(Unit.MetersPerSecond, Unit.Knots)]
         public void CanConvertToTrueForCompatibleUnits(Unit originalUnit, Unit targetUnit)
         {
@@ -98,6 +99,17 @@ namespace CommonsTest
         {
             var unitValue = 1.To(originalUnit);
             Assert.That(unitValue.CanConvertTo(targetUnit), Is.False);
+        }
+
+        [Test]
+        [TestCase(Unit.Meter, Unit.Inches, 39.3700787)]
+        [TestCase(Unit.Inches, Unit.Meter, 0.0254)]
+        [TestCase(Unit.Meter, Unit.NauticalMile, 0.000539956803)]
+        [TestCase(Unit.NauticalMile, Unit.Meter, 1852)]
+        [TestCase(Unit.Feet, Unit.Inches, 12)]
+        public void UnitConversionAsExpected(Unit originalUnit, Unit targetUnit, double expectedValue)
+        {
+            Assert.That(1.To(originalUnit).In(targetUnit), Is.EqualTo(expectedValue).Within(1e-3*expectedValue));
         }
 
         [Test]

@@ -108,6 +108,7 @@ namespace Commons.Physics
                 case Unit.Feet:
                 case Unit.StatuteMile:
                 case Unit.NauticalMile:
+                case Unit.Inches:
                     return Unit.Meter;
                 case Unit.FeetPerMinute:
                 case Unit.Knots:
@@ -146,6 +147,8 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.Meter, value * 0.3048);
                 case Unit.NauticalMile:
                     return new UnitConversionResult(Unit.Meter, value * 1852);
+                case Unit.Inches:
+                    return new UnitConversionResult(Unit.Meter, value * 0.0254);
                 case Unit.StatuteMile:
                     return new UnitConversionResult(Unit.Meter, value * 1609.344);
                 case Unit.FeetPerMinute:
