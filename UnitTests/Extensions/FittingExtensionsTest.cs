@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Commons.Extensions;
 using Commons.Mathematics;
 using NUnit.Framework;
@@ -6,7 +7,7 @@ using NUnit.Framework;
 namespace CommonsTest.Extensions
 {
     [TestFixture]
-    public class FittinExtensionsTest
+    public class FittingExtensionsTest
     {
         private const double Tolerance = 1e-12;
 
@@ -70,6 +71,80 @@ namespace CommonsTest.Extensions
             for (int order = 0; order < expectedBeta.Length; order++)
             {
                 Assert.That(actual.Beta[order], Is.EqualTo(expectedBeta[order]).Within(Tolerance));
+            }
+        }
+
+        [Test]
+        public void PolynomialFitFindsBestSolution()
+        {
+            var points = new List<Point2D>
+            {
+                new Point2D(67.14, 6.63),
+                new Point2D(67.69, 6.58),
+                new Point2D(73.33, 6.56),
+                new Point2D(73.85, 6.51),
+                new Point2D(76.22, 6.46),
+                new Point2D(77.65, 6.38),
+                new Point2D(82.94, 6.33),
+                new Point2D(84.37, 6.27),
+                new Point2D(90.97, 6.22),
+                new Point2D(97.78, 6.20),
+                new Point2D(110.40, 6.13),
+                new Point2D(120.00, 6.05),
+                new Point2D(138.62, 6.02),
+                new Point2D(139.29, 5.95),
+                new Point2D(150.00, 5.86),
+                new Point2D(162.86, 5.84),
+                new Point2D(170.27, 5.70),
+                new Point2D(171.89, 5.51),
+                new Point2D(173.51, 5.37),
+                new Point2D(173.68, 5.20),
+                new Point2D(175.50, 5.01),
+                new Point2D(177.00, 4.90),
+                new Point2D(178.54, 4.58),
+                new Point2D(180.00, 4.44),
+                new Point2D(183.91, 4.29),
+                new Point2D(186.25, 4.20),
+                new Point2D(185.00, 4.10),
+                new Point2D(184.71, 4.02),
+                new Point2D(186.79, 4.00),
+                new Point2D(189.82, 3.98),
+                new Point2D(189.64, 3.78),
+                new Point2D(190.53, 3.80)
+            };
+            var benchmark = new PolynomialFittingResult2D(new[]
+            {
+                -12.62,
+                9.1118e-1,
+                -1.6117e-2,
+                1.3185e-4,
+                -5.0090e-7,
+                7.0052e-10
+            }, double.NaN);
+
+            var benchmarkMse = points.Average(p => (benchmark.Apply(p.X) - p.Y).Square());
+            var actual = points.FitPolynomial(5);
+            var actualValues = points.Select(p => actual.Apply(p.X)).ToList();
+            var fullRange = Enumerable.Range(0, 360).Select(x => actual.Apply(x)).ToList();
+            Assert.That(actual.MeanSquareError, Is.LessThanOrEqualTo(benchmarkMse));
+        }
+
+        [Test]
+        public void PolynomialFitThroughAllPoints()
+        {
+            var points = new List<Point2D>
+            {
+                new Point2D(0, 1),
+                new Point2D(1, 3),
+                new Point2D(2, 3),
+                new Point2D(4, 1)
+            };
+            var actual = points.FitPolynomial(3);
+            foreach (var point in points)
+            {
+                var expectedY = point.Y;
+                var actualY = actual.Apply(point.X);
+                Assert.That(actualY, Is.EqualTo(expectedY).Within(Tolerance));
             }
         }
     }

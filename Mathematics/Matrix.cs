@@ -23,6 +23,11 @@ namespace Commons.Mathematics
             Columns = columns;
             Data = flattenedData.Reshape(Rows, Columns);
         }
+        public Matrix(double[,] data)
+            : this(data.GetLength(0), data.GetLength(1))
+        {
+            Set(data);
+        }
         public Matrix(int rows, int columns)
         {
             if (rows < 1 || columns < 1)

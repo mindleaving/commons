@@ -35,9 +35,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\FittinExtensionsTest.cs" />
+    <Compile Include="Extensions\FittingExtensionsTest.cs" />
     <Compile Include="Extensions\MathExtensionsTest.cs" />
     <Compile Include="Extensions\VectorExtensionsTest.cs" />
+    <Compile Include="Mathematics\MatrixOperationsTest.cs" />
+    <Compile Include="Mathematics\MatrixTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoordinateTransform\BasisShiftTransform2DTest.cs" />
     <Compile Include="CoordinateTransform\CalibrationTest.cs" />

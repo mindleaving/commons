@@ -215,6 +215,10 @@ namespace Commons.Mathematics
             return multiplyArray;
         }
 
+        /// <summary>
+        /// Vectorizes a matrix along its columns, i.e. reading direction is 1st column, 2nd column, etc.
+        /// </summary>
+        /// <returns>Vector of stacked columns</returns>
         public static double[] Vectorize(this double[,] A)
         {
             if (A == null) return null;
@@ -272,6 +276,9 @@ namespace Commons.Mathematics
             return array;
         }
 
+        /// <summary>
+        /// Reshapes matrix from vector by assuming column-stacked data.
+        /// </summary>
         public static double[,] Reshape(this double[] vector, int rows, int columns)
         {
             if (vector == null)
@@ -284,7 +291,7 @@ namespace Commons.Mathematics
             {
                 for (int column = 0; column < columns; column++)
                 {
-                    array[row, column] = vector[row*columns+column];
+                    array[row, column] = vector[column*rows+row];
                 }
             }
             return array;

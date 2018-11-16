@@ -34,7 +34,7 @@ namespace Commons.Extensions
             var beta = (X.Transpose().Multiply(X)).Inverse()
                 .Multiply(X.Transpose().Multiply(y));
             var fullBeta = beta.Concat(Enumerable.Repeat(0.0, order - effectiveOrder)).ToArray();
-            var mse = X.Multiply(beta).Subtract(y).Sum(x => x * x);
+            var mse = X.Multiply(beta).Subtract(y).Average(x => x * x);
             return new PolynomialFittingResult2D(fullBeta, mse);
         }
     }
