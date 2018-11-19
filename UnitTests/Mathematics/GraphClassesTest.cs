@@ -3,9 +3,8 @@ using System.Linq;
 using Commons.Mathematics;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
-namespace CommonsTest
+namespace CommonsTest.Mathematics
 {
     [TestFixture]
     public class GraphClassesTest

@@ -40,26 +40,28 @@
     <Compile Include="Extensions\VectorExtensionsTest.cs" />
     <Compile Include="Mathematics\MatrixOperationsTest.cs" />
     <Compile Include="Mathematics\MatrixTest.cs" />
+    <Compile Include="Physics\CompoundUnitTest.cs" />
+    <Compile Include="Physics\UnitPoint2DTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoordinateTransform\BasisShiftTransform2DTest.cs" />
     <Compile Include="CoordinateTransform\CalibrationTest.cs" />
     <Compile Include="CoordinateTransform\ImageCoordinateNormalizerTest.cs" />
     <Compile Include="DataProcessing\SlidingWindowTest.cs" />
-    <Compile Include="DeepClonerTest.cs" />
+    <Compile Include="IO\DeepClonerTest.cs" />
     <Compile Include="Extensions\ComparableExtensionsTest.cs" />
     <Compile Include="Extensions\StringSearchExtensions.cs" />
-    <Compile Include="FilterFuncsTest.cs" />
-    <Compile Include="GeometryTest.cs" />
-    <Compile Include="GraphAlgorithmsTest.cs" />
-    <Compile Include="GraphClassesTest.cs" />
+    <Compile Include="Mathematics\FilterFuncsTest.cs" />
+    <Compile Include="Mathematics\GeometryTest.cs" />
+    <Compile Include="Mathematics\GraphAlgorithmsTest.cs" />
+    <Compile Include="Mathematics\GraphClassesTest.cs" />
     <Compile Include="Mathematics\ContinuousLine2DTest.cs" />
     <Compile Include="Mathematics\LineSegment2DTest.cs" />
     <Compile Include="Optimization\GradientDescentOptimizerTest.cs" />
     <Compile Include="Optimization\ParameterCyclingOptimizerTest.cs" />
-    <Compile Include="RangeTest.cs" />
-    <Compile Include="UnitValueParserTest.cs" />
-    <Compile Include="UnitValueSerializationTest.cs" />
-    <Compile Include="UnitValueTest.cs" />
+    <Compile Include="Mathematics\RangeTest.cs" />
+    <Compile Include="Physics\UnitValueParserTest.cs" />
+    <Compile Include="Physics\UnitValueSerializationTest.cs" />
+    <Compile Include="Physics\UnitValueTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Commons.csproj">

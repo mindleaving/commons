@@ -3,7 +3,7 @@ using Commons.Extensions;
 using Commons.Physics;
 using NUnit.Framework;
 
-namespace CommonsTest
+namespace CommonsTest.Physics
 {
     [TestFixture]
     public class UnitValueParserTest

@@ -5,7 +5,7 @@ using System.Threading;
 using Commons.Mathematics;
 using NUnit.Framework;
 
-namespace CommonsTest
+namespace CommonsTest.Mathematics
 {
     [TestFixture]
     public class GraphAlgorithmsTest

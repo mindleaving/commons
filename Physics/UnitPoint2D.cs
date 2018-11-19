@@ -1,6 +1,7 @@
 ﻿using System;
 using Commons.Extensions;
 using Commons.Mathematics;
+using Newtonsoft.Json;
 
 namespace Commons.Physics
 {
@@ -19,6 +20,7 @@ namespace Commons.Physics
             Unit = unit.ToCompoundUnit();
         }
 
+        [JsonConstructor]
         public UnitPoint2D(CompoundUnit unit, double x, double y)
             : base(x, y)
         {

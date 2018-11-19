@@ -82,6 +82,7 @@
     <Compile Include="Mathematics\Edge.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Physics\CompoundUnitParser.cs" />
     <Compile Include="Physics\FilterFuncs.cs" />
     <Compile Include="GeoCoordinate.cs" />
     <Compile Include="Extensions\GeoCoordinateExtensions.cs" />
