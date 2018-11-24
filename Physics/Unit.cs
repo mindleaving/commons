@@ -33,6 +33,8 @@
         Pascal = 501,
         Bar = 502,
         InchesOfMercury = 503,
+        MillimeterOfMercury = 504,
+        Torr = 505,
 
         // Area
         SquareMeter = 601,

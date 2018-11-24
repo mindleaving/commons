@@ -77,6 +77,10 @@ namespace Commons.Extensions
                     return 1e-5*unitValue.Value;
                 case Unit.InchesOfMercury:
                     return 2.952998749e-4*unitValue.Value;
+                case Unit.MillimeterOfMercury:
+                    return 7.5006158e-3 * unitValue.Value;
+                case Unit.Torr:
+                    return (760.0 / 101325.0) * unitValue.Value;
                 case Unit.ElementaryCharge:
                     return unitValue.Value/(1.60217662*1e-19);
                 case Unit.ElectronVolts:
@@ -150,6 +154,8 @@ namespace Commons.Extensions
             {Unit.Pascal, "Pa"},
             {Unit.Bar, "bar"},
             {Unit.InchesOfMercury, "inHg"},
+            {Unit.MillimeterOfMercury, "mmHg"},
+            {Unit.Torr, "Torr"},
             {Unit.SquareMeter, "m^2"},
             {Unit.CubicMeters, "m^3"},
             {Unit.Kilogram, "kg"},

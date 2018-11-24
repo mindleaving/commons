@@ -121,6 +121,8 @@ namespace Commons.Physics
                     return Unit.Kelvin;
                 case Unit.Bar:
                 case Unit.InchesOfMercury:
+                case Unit.MillimeterOfMercury:
+                case Unit.Torr:
                     return Unit.Pascal;
                 case Unit.ElementaryCharge:
                     return Unit.Coulombs;
@@ -167,6 +169,10 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.Pascal, value * 1e5);
                 case Unit.InchesOfMercury:
                     return new UnitConversionResult(Unit.Pascal, value * 3386.38816);
+                case Unit.MillimeterOfMercury:
+                    return new UnitConversionResult(Unit.Pascal, value * 133.322387415);
+                case Unit.Torr:
+                    return new UnitConversionResult(Unit.Pascal, value * (101325.0/760));
                 case Unit.ElementaryCharge:
                     return new UnitConversionResult(Unit.Coulombs, value * 1.60217662 * 1e-19);
                 case Unit.ElectronVolts:
