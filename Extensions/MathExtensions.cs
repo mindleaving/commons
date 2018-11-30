@@ -45,6 +45,11 @@ namespace Commons.Extensions
             return x * x.IntegerPower(n - 1);
         }
 
+        public static double Pow(this int x, double exponent)
+        {
+            return Math.Pow(x, exponent);
+        }
+
         public static double Pow(this double x, double exponent)
         {
             return Math.Pow(x, exponent);

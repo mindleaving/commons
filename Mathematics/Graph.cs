@@ -114,9 +114,28 @@ namespace Commons.Mathematics
             newVertex.EdgeIds.RemoveAll(edgeId => !edges.ContainsKey(edgeId));
         }
 
+        public IVertex<TVertex> AddVertex(TVertex vertexObject)
+        {
+            var vertex = new Vertex<TVertex>(GetUnusedVertexId()) { Object = vertexObject};
+            AddVertex(vertex);
+            return vertex;
+        }
+
         public void AddVertices(IEnumerable<IVertex> newVertices)
         {
             newVertices.ForEach(AddVertex);
+        }
+
+        public List<IVertex<TVertex>> AddVertices(IEnumerable<TVertex> vertexObjects)
+        {
+            var vertices = new List<IVertex<TVertex>>();
+            foreach (var vertexObject in vertexObjects)
+            {
+                var vertex = new Vertex<TVertex>(GetUnusedVertexId()) { Object = vertexObject};
+                AddVertex(vertex);
+                vertices.Add(vertex);
+            }
+            return vertices;
         }
 
         public bool RemoveVertex(IVertex vertex)

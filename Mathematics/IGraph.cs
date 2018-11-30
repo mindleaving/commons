@@ -2,12 +2,15 @@
 
 namespace Commons.Mathematics
 {
-    public interface IGraph<out TVertex, out TEdge> : IGraph
+    public interface IGraph<TVertex, out TEdge> : IGraph
     {
         new IEnumerable<IVertex<TVertex>> Vertices { get; }
         new IEnumerable<IEdge<TEdge>> Edges { get; }
         new IVertex<TVertex> GetVertexFromId(uint id);
         new IEdge<TEdge> GetEdgeById(ulong id);
+
+        IVertex<TVertex> AddVertex(TVertex vertexObject);
+        List<IVertex<TVertex>> AddVertices(IEnumerable<TVertex> newVertices);
     }
 
     public interface IGraph

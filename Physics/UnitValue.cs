@@ -94,6 +94,14 @@ namespace Commons.Physics
         {
             return new UnitValue(unitValue.Unit, scalar * unitValue.Value);
         }
+        public static UnitValue operator *(UnitValue unitValue, double scalar)
+        {
+            return scalar * unitValue;
+        }
+        public static UnitValue operator *(UnitValue unitValue, int scalar)
+        {
+            return scalar * unitValue;
+        }
         public static UnitValue operator /(UnitValue unitValue, double scalar)
         {
             return new UnitValue(unitValue.Unit, unitValue.Value / scalar);
