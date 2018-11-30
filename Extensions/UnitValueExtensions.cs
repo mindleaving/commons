@@ -168,7 +168,9 @@ namespace Commons.Extensions
             {Unit.Joule, "J"},
             {Unit.ElectronVolts, "eV"},
             {Unit.Newton, "N"},
-            {Unit.Radians, "rad"}
+            {Unit.Radians, "rad"},
+            {Unit.Inches, "in"},
+            {Unit.Degree, "°"}
         };
         public static readonly Dictionary<string, Unit> InverseUnitStringRepresentation =
             UnitStringRepresentation.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);

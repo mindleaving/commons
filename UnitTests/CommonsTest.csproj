@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Extensions\FittingExtensionsTest.cs" />
     <Compile Include="Extensions\MathExtensionsTest.cs" />
+    <Compile Include="Extensions\UnitValueExtensionsTest.cs" />
     <Compile Include="Extensions\VectorExtensionsTest.cs" />
     <Compile Include="Mathematics\MatrixOperationsTest.cs" />
     <Compile Include="Mathematics\MatrixTest.cs" />
