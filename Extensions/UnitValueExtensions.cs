@@ -315,6 +315,10 @@ namespace Commons.Extensions
         {
             return items.Select(valueSelector).Average(siPrefix, unit);
         }
+        public static UnitValue Average(this IEnumerable<UnitValue> items, Unit unit)
+        {
+            return items.Average(SIPrefix.None, unit);
+        }
         public static UnitValue Average(this IEnumerable<UnitValue> items, SIPrefix siPrefix, Unit unit)
         {
             return items.Select(uv => uv.In(siPrefix, unit)).Average().To(siPrefix, unit);
