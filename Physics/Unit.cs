@@ -26,7 +26,7 @@
 
         // Temperature
         Kelvin = 401,
-        Celcius = 402,
+        Celsius = 402,
         Fahrenheit = 403,
 
         // Pressure

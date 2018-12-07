@@ -159,26 +159,35 @@ namespace Commons.Physics
 
         public override string ToString()
         {
+            return ToString("G6", CultureInfo.InvariantCulture);
+        }
+        public string ToString(string format)
+        {
+            return ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        public string ToString(string format, CultureInfo cultureInfo)
+        {
             var simpleUnit = Unit.ToUnit();
             if (simpleUnit == Physics.Unit.Compound || Unit.UnitExponents.Any(exp => exp > 1 || exp < 0))
             {
-                return $"{Value} {Unit}";
+                return $"{Value.ToString(format, cultureInfo)} {Unit}";
             }
             if (simpleUnit == Physics.Unit.Kilogram)
             {
                 var gramValue = Value * 1000;
                 var appropriateSIPrefix = gramValue.SelectSIPrefix();
                 var multiplier = appropriateSIPrefix.GetMultiplier();
-                var valueString = (gramValue/multiplier).ToString("G4", CultureInfo.InvariantCulture) 
-                              + " "
-                              + appropriateSIPrefix.StringRepresentation();
+                var valueString = (gramValue/multiplier).ToString(format, cultureInfo) 
+                                  + " "
+                                  + appropriateSIPrefix.StringRepresentation();
                 return valueString + Physics.Unit.Gram.StringRepresentation();
             }
             else
             {
                 var appropriateSIPrefix = Value.SelectSIPrefix();
                 var multiplier = appropriateSIPrefix.GetMultiplier();
-                var valueString = (Value/multiplier).ToString("G4", CultureInfo.InvariantCulture) 
+                var valueString = (Value/multiplier).ToString(format, cultureInfo) 
                                   + " "
                                   + appropriateSIPrefix.StringRepresentation();
                 return valueString + simpleUnit.StringRepresentation();

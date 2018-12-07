@@ -69,7 +69,7 @@ namespace Commons.Extensions
                     return 0.002938669957977*unitValue.Value;
                 case Unit.KnotsPerSeond:
                     return 1.94384449244 * unitValue.Value;
-                case Unit.Celcius:
+                case Unit.Celsius:
                     return unitValue.Value - 273.15;
                 case Unit.Fahrenheit:
                     return unitValue.Value*(9.0/5.0) - 459.67;
@@ -149,7 +149,7 @@ namespace Commons.Extensions
             {Unit.KnotsPerSeond, "kn/s"},
             {Unit.Second, "s"},
             {Unit.Kelvin, "°K"},
-            {Unit.Celcius, "°C"},
+            {Unit.Celsius, "°C"},
             {Unit.Fahrenheit, "°F"},
             {Unit.Pascal, "Pa"},
             {Unit.Bar, "bar"},

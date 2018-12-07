@@ -116,7 +116,7 @@ namespace Commons.Physics
                     return Unit.MetersPerSecond;
                 case Unit.KnotsPerSeond:
                     return Unit.MetersPerSecondSquared;
-                case Unit.Celcius:
+                case Unit.Celsius:
                 case Unit.Fahrenheit:
                     return Unit.Kelvin;
                 case Unit.Bar:
@@ -161,7 +161,7 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.MetersPerSecond, value * 340.29);
                 case Unit.KnotsPerSeond:
                     return new UnitConversionResult(Unit.MetersPerSecondSquared, value * 0.514444444);
-                case Unit.Celcius:
+                case Unit.Celsius:
                     return new UnitConversionResult(Unit.Kelvin, value + 273.15);
                 case Unit.Fahrenheit:
                     return new UnitConversionResult(Unit.Kelvin, (value + 459.67) * (5.0 / 9.0));

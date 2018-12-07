@@ -12,6 +12,7 @@ namespace CommonsTest.Physics
         [TestCase(Unit.Meter)]
         [TestCase(Unit.Feet)]
         [TestCase(Unit.FeetPerMinute)]
+        [TestCase(Unit.Celsius)]
         [TestCase(Unit.Kilogram)]
         [TestCase(Unit.InchesOfMercury)]
         [TestCase(Unit.Fahrenheit)]
@@ -80,7 +81,7 @@ namespace CommonsTest.Physics
         [TestCase(Unit.CubicMeters, Unit.Liter)]
         [TestCase(Unit.Kilogram, Unit.Gram)]
         [TestCase(Unit.ElectronVolts, Unit.Joule)]
-        [TestCase(Unit.Fahrenheit, Unit.Celcius)]
+        [TestCase(Unit.Fahrenheit, Unit.Celsius)]
         [TestCase(Unit.Fahrenheit, Unit.Kelvin)]
         [TestCase(Unit.Meter, Unit.Feet)]
         [TestCase(Unit.Meter, Unit.Inches)]
@@ -93,7 +94,7 @@ namespace CommonsTest.Physics
 
         [Test]
         [TestCase(Unit.CubicMeters, Unit.Kilogram)]
-        [TestCase(Unit.Bar, Unit.Celcius)]
+        [TestCase(Unit.Bar, Unit.Celsius)]
         [TestCase(Unit.Knots, Unit.Feet)]
         public void CanConvertToFalseForIncompatibleUnits(Unit originalUnit, Unit targetUnit)
         {
