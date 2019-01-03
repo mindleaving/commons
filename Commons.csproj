@@ -34,6 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Collections\Cluster.cs" />
+    <Compile Include="Collections\Column.cs" />
+    <Compile Include="Collections\ColumnCollection.cs" />
+    <Compile Include="Collections\Row.cs" />
+    <Compile Include="Collections\Table.cs" />
     <Compile Include="DataProcessing\SlidingWindow.cs" />
     <Compile Include="CoordinateTransform\BasisShiftTransform2D.cs" />
     <Compile Include="CoordinateTransform\Calibration.cs" />
