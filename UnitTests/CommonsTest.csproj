@@ -39,6 +39,7 @@
     <Compile Include="Extensions\MathExtensionsTest.cs" />
     <Compile Include="Extensions\UnitValueExtensionsTest.cs" />
     <Compile Include="Extensions\VectorExtensionsTest.cs" />
+    <Compile Include="IO\CsvReaderTest.cs" />
     <Compile Include="Mathematics\MatrixOperationsTest.cs" />
     <Compile Include="Mathematics\MatrixTest.cs" />
     <Compile Include="Physics\CompoundUnitTest.cs" />

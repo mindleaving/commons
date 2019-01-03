@@ -1,19 +1,55 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using Commons.Collections;
 
 namespace Commons.IO
 {
     public static class CsvWriter
     {
-        private const string Delimiter = ";";
+        private static string DefaultToString<T>(T x) => x.ToString();
 
-        public static void Write(double[,] array, string filename)
+        public static void Write<T>(
+            Table<T> table,
+            string filename,
+            char delimiter = ';',
+            Func<T, string> toStringFunc = null)
+        {
+            Write(table, () => new StreamWriter(filename, false), delimiter, toStringFunc);
+        }
+
+        public static void Write<T>(
+            Table<T> table, 
+            Func<TextWriter> textWriterFunc,
+            char delimiter = ';',
+            Func<T, string> toStringFunc = null)
+        {
+            if (toStringFunc == null)
+                toStringFunc = DefaultToString;
+            using (var textWriter = textWriterFunc())
+            {
+                var header = table.Columns.Select(c => c.Name).Aggregate((a, b) => a + delimiter + b);
+                textWriter.WriteLine(header);
+                foreach (var row in table.Rows)
+                {
+                    var line = row.Select(toStringFunc).Aggregate((a, b) => a + delimiter + b);
+                    textWriter.WriteLine(line);
+                }
+            }
+        }
+
+        public static void Write(double[,] array, string filename, char delimiter = ';')
+        {
+            Write(array, () => new StreamWriter(filename, false), delimiter);
+        }
+
+        public static void Write(double[,] array, Func<TextWriter> textWriterFactory, char delimiter = ';')
         {
             var rowCount = array.GetLength(0);
             var columnCount = array.GetLength(1);
 
-            using (var fileStream = File.Open(filename, FileMode.Create))
-            using (var streamWriter = new StreamWriter(fileStream))
+            using (var textWriter = textWriterFactory())
             {
                 for (int rowIdx = 0; rowIdx < rowCount; rowIdx++)
                 {
@@ -21,10 +57,10 @@ namespace Commons.IO
                     for (int columnIdx = 0; columnIdx < columnCount; columnIdx++)
                     {
                         if (columnIdx > 0)
-                            line += Delimiter;
+                            line += delimiter;
                         line += array[rowIdx, columnIdx].ToString("G4", CultureInfo.InvariantCulture);
                     }
-                    streamWriter.WriteLine(line);
+                    textWriter.WriteLine(line);
                 }
             }
         }

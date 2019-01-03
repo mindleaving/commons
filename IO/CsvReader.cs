@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Commons.Annotations;
+using Commons.Collections;
 
 namespace Commons.IO
 {
     public static class CsvReader
     {
-        private const char Delimiter = ';';
-
-        public static double[,] ReadDoubleArray(string filename)
+        public static double[,] ReadDoubleArray(string filename, char delimiter = ';')
         {
             // Count rows and columns
             var rowCount = 0;
@@ -23,7 +23,7 @@ namespace Commons.IO
                 {
                     if(string.IsNullOrWhiteSpace(line))
                         break;
-                    var splittedLine = line.Split(Delimiter);
+                    var splittedLine = line.Split(delimiter);
                     if (splittedLine.Length > columnCount)
                         columnCount = splittedLine.Length;
                     rowCount++;
@@ -36,7 +36,7 @@ namespace Commons.IO
                 {
                     if (string.IsNullOrWhiteSpace(line))
                         break;
-                    var splittedLine = line.Split(Delimiter);
+                    var splittedLine = line.Split(delimiter);
                     for (int columnIdx = 0; columnIdx < splittedLine.Length; columnIdx++)
                     {
                         array[rowIdx, columnIdx] = double.Parse(splittedLine[columnIdx], NumberStyles.Any, CultureInfo.InvariantCulture);
@@ -51,47 +51,59 @@ namespace Commons.IO
             return array;
         }
 
-        public static Dictionary<string, List<string>> ReadColumns(string filename, bool hasHeader = true)
+        public static Table<T> ReadTable<T>(
+            [NotNull] string filename,
+            [NotNull] Func<string, T> parseFunc,
+            bool hasHeader = true,
+            char delimiter = ';')
         {
-            Dictionary<string, List<string>> columns = null;
-            Dictionary<int, string> columnIdxToHeaderMap = null;
-            using (var streamReader = new StreamReader(filename))
+            if (filename == null) throw new ArgumentNullException(nameof(filename));
+            if (parseFunc == null) throw new ArgumentNullException(nameof(parseFunc));
+
+            return ReadTable(() => new StreamReader(filename), parseFunc, hasHeader, delimiter);
+        }
+
+        public static Table<T> ReadTable<T>(
+            [NotNull] Func<TextReader> textReaderFactory,
+            [NotNull] Func<string, T> parseFunc,
+            bool hasHeader = true, 
+            char delimiter = ';')
+        {
+            if (textReaderFactory == null) throw new ArgumentNullException(nameof(textReaderFactory));
+            if (parseFunc == null) throw new ArgumentNullException(nameof(parseFunc));
+
+            var table = new Table<T>();
+            using (var textReader = textReaderFactory())
             {
                 var isFirstLine = true;
                 string line;
-                while ((line = streamReader.ReadLine()) != null)
+                while ((line = textReader.ReadLine()) != null)
                 {
-                    var splittedLine = line.Split(Delimiter);
+                    var splittedLine = line.Split(delimiter);
                     if (isFirstLine)
                     {
                         isFirstLine = false;
                         if (hasHeader)
                         {
-                            columns = splittedLine.ToDictionary(x => x, x => new List<string>());
-                            columnIdxToHeaderMap = Enumerable.Range(0, splittedLine.Length)
-                                .ToDictionary(x => x, x => splittedLine[x]);
-                            continue;
-                        }
-
-                        columns = Enumerable.Range(0, splittedLine.Length)
-                            .ToDictionary(x => x.ToString(), x => new List<string>());
-                    }
-
-                    for (int columnIdx = 0; columnIdx < splittedLine.Length; columnIdx++)
-                    {
-                        if (hasHeader)
-                        {
-                            var header = columnIdxToHeaderMap[columnIdx];
-                            columns[header].Add(splittedLine[columnIdx]);
+                            foreach (var columnName in splittedLine)
+                            {
+                                table.AddColumn(columnName);
+                            }
                         }
                         else
                         {
-                            columns[columnIdx.ToString()].Add(splittedLine[columnIdx]);
+                            for (int columnIndex = 0; columnIndex < splittedLine.Length; columnIndex++)
+                            {
+                                table.AddColumn(columnIndex.ToString());
+                            }
                         }
+                        if(hasHeader)
+                            continue;
                     }
+                    table.AddRow(splittedLine.Select(parseFunc).ToList());
                 }
             }
-            return columns;
+            return table;
         }
     }
 }
