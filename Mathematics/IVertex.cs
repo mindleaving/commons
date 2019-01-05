@@ -18,8 +18,8 @@ namespace Commons.Mathematics
         bool RemoveEdge(ulong edgeId);
     }
 
-    public interface IVertex<out TVertex> : IVertex
+    public interface IVertex<TVertex> : IVertex
     {
-        TVertex Object { get; }
+        TVertex Object { get; set; }
     }
 }
