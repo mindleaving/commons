@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Commons.Extensions;
 using Commons.IO;
 using Commons.Mathematics;
 using Commons.Physics;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CommonsTest.Physics
@@ -125,6 +127,44 @@ namespace CommonsTest.Physics
                     Assert.That(roundTripUnitValue.Value, Is.EqualTo(unitValue.Value).Within(1e-3*unitValue.Value));
                 }
             }
+        }
+
+        [Test]
+        public void DeserializationIsBackwardCompatible()
+        {
+            // Generate
+            //var json = JsonConvert.SerializeObject(new ClassWithUnitValue("Test", 11.3.To(SIPrefix.Milli, Unit.Meter)));
+            //File.WriteAllText($@"C:\Temp\{nameof(ClassWithUnitValue)}.json", json);
+            var oldVersionSerializations = new Dictionary<string, string>
+            {
+                {"1.1.25", "{\"Name\":\"Test\",\"Value\":{\"StringValue\":\"11.3 mm\"}}"}
+            };
+
+            foreach (var kvp in oldVersionSerializations)
+            {
+                var version = kvp.Key;
+                var json = kvp.Value;
+                ClassWithUnitValue reconstructed = null;
+                Assert.That(
+                    () => reconstructed = JsonConvert.DeserializeObject<ClassWithUnitValue>(json),
+                    Throws.Nothing,
+                    $"Failing version: {version}");
+                Assert.That(reconstructed.Name, Is.EqualTo("Test"));
+                Assert.That(reconstructed.Value.In(SIPrefix.Milli, Unit.Meter), Is.EqualTo(11.3).Within(1e-6));
+            }
+        }
+
+        private class ClassWithUnitValue
+        {
+            [JsonConstructor]
+            public ClassWithUnitValue(string name, UnitValue value)
+            {
+                Name = name;
+                Value = value;
+            }
+
+            public string Name { get; }
+            public UnitValue Value { get; }
         }
     }
 }
