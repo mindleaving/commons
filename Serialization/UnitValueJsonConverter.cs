@@ -1,6 +1,7 @@
 ﻿using System;
 using Commons.Physics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Commons.Serialization
 {
@@ -19,7 +20,15 @@ namespace Commons.Serialization
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return UnitValueParser.Parse(reader.Value as string);
+            var jToken = JToken.ReadFrom(reader);
+            string valueString;
+            if (jToken.Type == JTokenType.String)
+                valueString = jToken.Value<string>();
+            else if (jToken is JObject jObject && jObject.ContainsKey("StringValue"))
+                valueString = jObject["StringValue"].Value<string>();
+            else
+                throw new JsonReaderException("Invalid format of UnitValue");
+            return UnitValueParser.Parse(valueString);
         }
     }
 }

@@ -130,28 +130,21 @@ namespace CommonsTest.Physics
         }
 
         [Test]
-        public void DeserializationIsBackwardCompatible()
+        [TestCase("1.1.25", "{\"Name\":\"Test\",\"Value\":{\"StringValue\":\"11.3 mm\"}}")]
+        [TestCase("1.1.26", "{\"Name\":\"Test\",\"Value\":\"11.3 mm\"}")]
+        public void DeserializationIsBackwardCompatible(string version, string json)
         {
             // Generate
             //var json = JsonConvert.SerializeObject(new ClassWithUnitValue("Test", 11.3.To(SIPrefix.Milli, Unit.Meter)));
             //File.WriteAllText($@"C:\Temp\{nameof(ClassWithUnitValue)}.json", json);
-            var oldVersionSerializations = new Dictionary<string, string>
-            {
-                {"1.1.25", "{\"Name\":\"Test\",\"Value\":{\"StringValue\":\"11.3 mm\"}}"}
-            };
 
-            foreach (var kvp in oldVersionSerializations)
-            {
-                var version = kvp.Key;
-                var json = kvp.Value;
-                ClassWithUnitValue reconstructed = null;
-                Assert.That(
-                    () => reconstructed = JsonConvert.DeserializeObject<ClassWithUnitValue>(json),
-                    Throws.Nothing,
-                    $"Failing version: {version}");
-                Assert.That(reconstructed.Name, Is.EqualTo("Test"));
-                Assert.That(reconstructed.Value.In(SIPrefix.Milli, Unit.Meter), Is.EqualTo(11.3).Within(1e-6));
-            }
+            ClassWithUnitValue reconstructed = null;
+            Assert.That(
+                () => reconstructed = JsonConvert.DeserializeObject<ClassWithUnitValue>(json),
+                Throws.Nothing,
+                $"Failing version: {version}");
+            Assert.That(reconstructed.Name, Is.EqualTo("Test"));
+            Assert.That(reconstructed.Value.In(SIPrefix.Milli, Unit.Meter), Is.EqualTo(11.3).Within(1e-6));
         }
 
         private class ClassWithUnitValue
