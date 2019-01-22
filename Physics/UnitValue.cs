@@ -2,10 +2,12 @@
 using System.Globalization;
 using System.Linq;
 using Commons.Extensions;
+using Commons.Serialization;
 using Newtonsoft.Json;
 
 namespace Commons.Physics
 {
+    [JsonConverter(typeof(UnitValueJsonConverter))]
     public class UnitValue : IComparable
     {
         [JsonConstructor]
@@ -27,12 +29,8 @@ namespace Commons.Physics
             Value = value;
         }
 
-        [JsonIgnore]
         public double Value { get; }
-        [JsonIgnore]
         public CompoundUnit Unit { get; }
-        [JsonProperty]
-        private string StringValue => ToString();
 
         public static bool operator <(UnitValue value1, UnitValue value2)
         {

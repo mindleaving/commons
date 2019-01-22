@@ -12,7 +12,7 @@ namespace Commons.Physics
             if (string.IsNullOrEmpty(unitValueString))
                 return null;
             var preprocessedString = unitValueString.Trim();
-            var match = Regex.Match(preprocessedString, @"(-?[0-9]+(\.[0-9]+)?([eE][-0-9]+)?|NaN|-?∞|-?Inf |-?Infinity |-?inf |-?infinity )\s*(([fpnμumkMGTZE]|1/)?.*)");
+            var match = Regex.Match(preprocessedString, @"(-?[0-9]+(\.[0-9]+)?([eE][-+0-9]+)?|NaN|-?∞|-?Inf |-?Infinity |-?inf |-?infinity )\s*(([fpnμumkMGTZE]|1/)?.*)");
             if(!match.Success)
                 throw new FormatException();
             var valueGroup = match.Groups[1];

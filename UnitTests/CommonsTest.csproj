@@ -35,6 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EnumerableExtensionsTest.cs" />
     <Compile Include="Extensions\FittingExtensionsTest.cs" />
     <Compile Include="Extensions\MathExtensionsTest.cs" />
     <Compile Include="Extensions\UnitValueExtensionsTest.cs" />

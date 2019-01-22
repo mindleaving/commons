@@ -69,5 +69,14 @@ namespace Commons.Extensions
         {
             return SubArray(array, range.From, range.To - range.From + 1);
         }
+
+        public static bool IsEquivalent<T>(this IList<T> list1, IList<T> list2)
+        {
+            if (list1.Count != list2.Count)
+                return false;
+            var intersect = list1.Intersect(list2);
+
+            return intersect.Count() == list1.Distinct().Count();
+        }
     }
 }
