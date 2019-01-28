@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Commons.Annotations;
 using Commons.Collections;
 
 namespace Commons.IO
@@ -52,8 +51,8 @@ namespace Commons.IO
         }
 
         public static Table<T> ReadTable<T>(
-            [NotNull] string filename,
-            [NotNull] Func<string, T> parseFunc,
+            string filename,
+            Func<string, T> parseFunc,
             bool hasHeader = true,
             char delimiter = ';')
         {
@@ -64,8 +63,8 @@ namespace Commons.IO
         }
 
         public static Table<T> ReadTable<T>(
-            [NotNull] Func<TextReader> textReaderFactory,
-            [NotNull] Func<string, T> parseFunc,
+            Func<TextReader> textReaderFactory,
+            Func<string, T> parseFunc,
             bool hasHeader = true, 
             char delimiter = ';')
         {

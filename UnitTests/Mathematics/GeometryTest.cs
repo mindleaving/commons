@@ -1,5 +1,4 @@
 ﻿using Commons;
-using Commons.Extensions;
 using Commons.Mathematics;
 using Commons.Physics;
 using NUnit.Framework;
@@ -61,54 +60,6 @@ namespace CommonsTest.Mathematics
             var heading = coordinate1.HeadingTo(coordinate2);
 
             Assert.That(heading, Is.EqualTo(expectedHeading).Within(1));
-        }
-
-        [Test]
-        public void DistanceToLineReturnsDistanceToLine()
-        {
-            var position = new GeoCoordinate(0.1, 0.1);
-            var linePoint1 = new GeoCoordinate(0, 0);
-            var linePoint2 = new GeoCoordinate(0, 0.2);
-
-            var actual = position.DistanceToLine(linePoint1, linePoint2);
-            var expected = position.GetDistanceTo(new GeoCoordinate(0, 0.1));
-            Assert.That(actual.In(Unit.Meter), Is.EqualTo(expected.In(Unit.Meter)).Within(0.01 * expected.In(Unit.Meter)));
-        }
-
-        [Test]
-        public void DistanceToLineSegmentReturnsDistanceToLine()
-        {
-            var position = new GeoCoordinate(0.1,0.1);
-            var linePoint1 = new GeoCoordinate(0,0);
-            var linePoint2 = new GeoCoordinate(0,0.2);
-
-            var actual = position.DistanceToLineSegment(linePoint1, linePoint2);
-            var expected = position.GetDistanceTo(new GeoCoordinate(0, 0.1));
-            Assert.That(actual.In(Unit.Meter), Is.EqualTo(expected.In(Unit.Meter)).Within(0.01*expected.In(Unit.Meter)));
-        }
-
-        [Test]
-        public void DistanceToLineSegmentReturnsDistanceToFirstLinePoint()
-        {
-            var position = new GeoCoordinate(0.1, -0.1);
-            var linePoint1 = new GeoCoordinate(0, 0);
-            var linePoint2 = new GeoCoordinate(0, 0.2);
-
-            var actual = position.DistanceToLineSegment(linePoint1, linePoint2);
-            var expected = position.GetDistanceTo(linePoint1);
-            Assert.That(actual.In(Unit.Meter), Is.EqualTo(expected.In(Unit.Meter)).Within(0.01 * expected.In(Unit.Meter)));
-        }
-
-        [Test]
-        public void DistanceToLineSegmentReturnsDistanceToSecondLinePoint()
-        {
-            var position = new GeoCoordinate(0.1, 0.3);
-            var linePoint1 = new GeoCoordinate(0, 0);
-            var linePoint2 = new GeoCoordinate(0, 0.2);
-
-            var actual = position.DistanceToLineSegment(linePoint1, linePoint2);
-            var expected = position.GetDistanceTo(linePoint2);
-            Assert.That(actual.In(Unit.Meter), Is.EqualTo(expected.In(Unit.Meter)).Within(0.01 * expected.In(Unit.Meter)));
         }
     }
 }

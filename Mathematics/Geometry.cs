@@ -6,24 +6,6 @@ namespace Commons.Mathematics
 {
     public static class Geometry
     {
-        public static UnitValue DistanceToLine(this GeoCoordinate point, GeoCoordinate linePoint1, GeoCoordinate linePoint2)
-        {
-            // Assume short distances, such that euclidean coordinate system is a good approximation
-            var distanceToLinePoint1 = point.GetDistanceTo(linePoint1).In(Unit.Meter);
-            var distanceToLinePoint2 = point.GetDistanceTo(linePoint2).In(Unit.Meter);
-            if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
-                return 0.To(Unit.Meter);
-            var lineLength = linePoint1.GetDistanceTo(linePoint2).In(Unit.Meter);
-            if (lineLength == 0)
-                return distanceToLinePoint1.To(Unit.Meter);
-
-            var cosAngle = (lineLength*lineLength + distanceToLinePoint1*distanceToLinePoint1 - distanceToLinePoint2*distanceToLinePoint2)
-                / (2*lineLength*distanceToLinePoint1);
-            var angle = Math.Acos(cosAngle);
-            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
-            return distanceToLine;
-        }
-
         public static double DistanceToLine(this Point2D point, Point2D linePoint1, Point2D linePoint2)
         {
             var distanceToLinePoint1 = point.DistanceTo(linePoint1);
@@ -55,32 +37,6 @@ namespace Commons.Mathematics
                 / (2 * lineLength * distanceToLinePoint1);
             var angle = Math.Acos(cosAngle);
             var distanceToLine = Math.Sin(angle) * distanceToLinePoint1;
-            return distanceToLine;
-        }
-
-        public static UnitValue DistanceToLineSegment(this GeoCoordinate point, GeoCoordinate linePoint1, GeoCoordinate linePoint2)
-        {
-            // Assume short distances, such that euclidean coordinate system is a good approximation
-            var distanceToLinePoint1 = point.GetDistanceTo(linePoint1).In(Unit.Meter);
-            var distanceToLinePoint2 = point.GetDistanceTo(linePoint2).In(Unit.Meter);
-            if (distanceToLinePoint1 == 0 || distanceToLinePoint2 == 0)
-                return 0.To(Unit.Meter);
-            var lineLength = linePoint1.GetDistanceTo(linePoint2).In(Unit.Meter);
-            if (lineLength == 0)
-                return distanceToLinePoint1.To(Unit.Meter);
-
-            var cosAngle1 = (lineLength * lineLength + distanceToLinePoint1 * distanceToLinePoint1 - distanceToLinePoint2 * distanceToLinePoint2)
-                / (2 * lineLength * distanceToLinePoint1);
-            if (cosAngle1 < 0)
-                return distanceToLinePoint1.To(Unit.Meter);
-
-            var cosAngle2 = (lineLength * lineLength + distanceToLinePoint2 * distanceToLinePoint2 - distanceToLinePoint1 * distanceToLinePoint1)
-                / (2 * lineLength * distanceToLinePoint2);
-            if (cosAngle2 < 0)
-                return distanceToLinePoint2.To(Unit.Meter);
-
-            var angle = Math.Acos(cosAngle1);
-            var distanceToLine = Math.Sin(angle) * distanceToLinePoint1.To(Unit.Meter);
             return distanceToLine;
         }
 
@@ -178,17 +134,6 @@ namespace Commons.Mathematics
             return extendDistance.Value < 0
                 ? startCoordinate.MoveAlongRadial((runwayHeading + 180).Modulus(360), -extendDistance)
                 : endCoordinate.MoveAlongRadial(runwayHeading, extendDistance);
-        }
-
-        public static UnitValue DistanceToRadial(this GeoCoordinate position, GeoCoordinate navaidCoordinate, double radial)
-        {
-            var distanceToNavaid = position.GetDistanceTo(navaidCoordinate);
-            var headingToNavaid = position.HeadingTo(navaidCoordinate);
-            var radialExtensionCoordinate = radial.CircularDifference(headingToNavaid) < 90
-                ? navaidCoordinate.MoveAlongRadial(radial, -distanceToNavaid)
-                : navaidCoordinate.MoveAlongRadial(radial, distanceToNavaid);
-            var distanceFromRadial = position.DistanceToLine(navaidCoordinate, radialExtensionCoordinate);
-            return distanceFromRadial;
         }
     }
 }

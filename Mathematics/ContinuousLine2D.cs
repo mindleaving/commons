@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Commons.Annotations;
 using Commons.Extensions;
 
 namespace Commons.Mathematics
@@ -15,12 +14,12 @@ namespace Commons.Mathematics
         private readonly List<Point2D> points;
         private readonly Point2DXYComparer pointComparer = new Point2DXYComparer();
 
-        public ContinuousLine2D([NotNull] IEnumerable<Point2D> points)
+        public ContinuousLine2D(IEnumerable<Point2D> points)
         {
             if (points == null) throw new ArgumentNullException(nameof(points));
             this.points = points.ToList();
         }
-        public ContinuousLine2D([NotNull] IEnumerable<PolarPoint> points)
+        public ContinuousLine2D(IEnumerable<PolarPoint> points)
         {
             if (points == null) throw new ArgumentNullException(nameof(points));
             this.points = points.Select(p => new Point2D(p.Angle, p.DistanceFromCenter)).ToList();
