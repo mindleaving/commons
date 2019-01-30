@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Commons.Extensions;
+using Commons.Serialization;
 using Newtonsoft.Json;
 
 namespace Commons.Physics
 {
+    [JsonConverter(typeof(CompoundUnitJsonConverter))]
     public class CompoundUnit : IEquatable<CompoundUnit>
     {
-        [JsonConstructor]
-        private CompoundUnit(string unitString)
-        {
-            UnitExponents = CompoundUnitParser.Parse(unitString).UnitExponents;
-        }
         public CompoundUnit()
         { }
         public CompoundUnit(IEnumerable<SIBaseUnit> nominatorUnits)
@@ -38,11 +35,7 @@ namespace Commons.Physics
             UnitExponents = unitExponents.ToArray();
         }
 
-        [JsonIgnore]
         public int[] UnitExponents { get; }
-
-        [JsonProperty]
-        private string UnitString => ToString();
 
         public static CompoundUnit operator *(CompoundUnit unit1, CompoundUnit unit2)
         {

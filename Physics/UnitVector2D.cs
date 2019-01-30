@@ -1,5 +1,4 @@
-﻿using System;
-using Commons.Extensions;
+﻿using Commons.Extensions;
 using Commons.Mathematics;
 
 namespace Commons.Physics
@@ -14,9 +13,11 @@ namespace Commons.Physics
             Unit = x.Unit;
         }
         public UnitVector2D(SIPrefix prefix, Unit unit, double x, double y)
-            : base(prefix.GetMultiplier() * x, prefix.GetMultiplier() * y)
+            : base(
+                prefix.GetMultiplier() * x.ConvertToSI(unit).Value, 
+                prefix.GetMultiplier() * y.ConvertToSI(unit).Value)
         {
-            Unit = unit.ToCompoundUnit();
+            Unit = unit.ToSIUnit().ToCompoundUnit();
         }
 
         public UnitVector2D(CompoundUnit unit, double x, double y)

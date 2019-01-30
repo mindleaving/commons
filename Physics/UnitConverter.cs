@@ -146,43 +146,43 @@ namespace Commons.Physics
                 case Unit.Compound:
                     throw new NotSupportedException("Cannot convert compound unit");
                 case Unit.Feet:
-                    return new UnitConversionResult(Unit.Meter, value * 0.3048);
+                    return new UnitConversionResult(Unit.Meter.ToCompoundUnit(), value * 0.3048);
                 case Unit.NauticalMile:
-                    return new UnitConversionResult(Unit.Meter, value * 1852);
+                    return new UnitConversionResult(Unit.Meter.ToCompoundUnit(), value * 1852);
                 case Unit.Inches:
-                    return new UnitConversionResult(Unit.Meter, value * 0.0254);
+                    return new UnitConversionResult(Unit.Meter.ToCompoundUnit(), value * 0.0254);
                 case Unit.StatuteMile:
-                    return new UnitConversionResult(Unit.Meter, value * 1609.344);
+                    return new UnitConversionResult(Unit.Meter.ToCompoundUnit(), value * 1609.344);
                 case Unit.FeetPerMinute:
-                    return new UnitConversionResult(Unit.MetersPerSecond, value * 0.00508);
+                    return new UnitConversionResult(Unit.MetersPerSecond.ToCompoundUnit(), value * 0.00508);
                 case Unit.Knots:
-                    return new UnitConversionResult(Unit.MetersPerSecond, value * 0.514444444);
+                    return new UnitConversionResult(Unit.MetersPerSecond.ToCompoundUnit(), value * 0.514444444);
                 case Unit.Mach:
-                    return new UnitConversionResult(Unit.MetersPerSecond, value * 340.29);
+                    return new UnitConversionResult(Unit.MetersPerSecond.ToCompoundUnit(), value * 340.29);
                 case Unit.KnotsPerSeond:
-                    return new UnitConversionResult(Unit.MetersPerSecondSquared, value * 0.514444444);
+                    return new UnitConversionResult(Unit.MetersPerSecondSquared.ToCompoundUnit(), value * 0.514444444);
                 case Unit.Celsius:
-                    return new UnitConversionResult(Unit.Kelvin, value + 273.15);
+                    return new UnitConversionResult(Unit.Kelvin.ToCompoundUnit(), value + 273.15);
                 case Unit.Fahrenheit:
-                    return new UnitConversionResult(Unit.Kelvin, (value + 459.67) * (5.0 / 9.0));
+                    return new UnitConversionResult(Unit.Kelvin.ToCompoundUnit(), (value + 459.67) * (5.0 / 9.0));
                 case Unit.Bar:
-                    return new UnitConversionResult(Unit.Pascal, value * 1e5);
+                    return new UnitConversionResult(Unit.Pascal.ToCompoundUnit(), value * 1e5);
                 case Unit.InchesOfMercury:
-                    return new UnitConversionResult(Unit.Pascal, value * 3386.38816);
+                    return new UnitConversionResult(Unit.Pascal.ToCompoundUnit(), value * 3386.38816);
                 case Unit.MillimeterOfMercury:
-                    return new UnitConversionResult(Unit.Pascal, value * 133.322387415);
+                    return new UnitConversionResult(Unit.Pascal.ToCompoundUnit(), value * 133.322387415);
                 case Unit.Torr:
-                    return new UnitConversionResult(Unit.Pascal, value * (101325.0/760));
+                    return new UnitConversionResult(Unit.Pascal.ToCompoundUnit(), value * (101325.0/760));
                 case Unit.ElementaryCharge:
-                    return new UnitConversionResult(Unit.Coulombs, value * 1.60217662 * 1e-19);
+                    return new UnitConversionResult(Unit.Coulombs.ToCompoundUnit(), value * 1.60217662 * 1e-19);
                 case Unit.ElectronVolts:
-                    return new UnitConversionResult(Unit.Joule, value * 1.60217662 * 1e-19);
+                    return new UnitConversionResult(Unit.Joule.ToCompoundUnit(), value * 1.60217662 * 1e-19);
                 case Unit.Degree:
-                    return new UnitConversionResult(Unit.Radians, value * Math.PI / 180);
+                    return new UnitConversionResult(Unit.Radians.ToCompoundUnit(), value * Math.PI / 180);
                 case Unit.Liter:
-                    return new UnitConversionResult(Unit.CubicMeters, value * 0.001);
+                    return new UnitConversionResult(Unit.CubicMeters.ToCompoundUnit(), value * 0.001);
                 case Unit.Gram:
-                    return new UnitConversionResult(Unit.Kilogram, value * 0.001);
+                    return new UnitConversionResult(Unit.Kilogram.ToCompoundUnit(), value * 0.001);
 
                 // SI-units. Needs to match .IsSIUnit()-list
                 case Unit.Meter:
@@ -200,7 +200,7 @@ namespace Commons.Physics
                 case Unit.Joule:
                 case Unit.Newton:
                 case Unit.Radians:
-                    return new UnitConversionResult(unit, value);
+                    return new UnitConversionResult(unit.ToCompoundUnit(), value);
                 default:
                     throw new NotSupportedException($"Conversion of {unit} to standard is not implemented");
             }
@@ -209,13 +209,13 @@ namespace Commons.Physics
 
     public class UnitConversionResult
     {
-        public UnitConversionResult(Unit unit, double value)
+        public UnitConversionResult(CompoundUnit unit, double value)
         {
             Unit = unit;
             Value = value;
         }
 
-        public Unit Unit { get; }
+        public CompoundUnit Unit { get; }
         public double Value { get; }
     }
 }

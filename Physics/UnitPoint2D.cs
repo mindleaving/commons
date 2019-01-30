@@ -15,9 +15,11 @@ namespace Commons.Physics
             Unit = x.Unit;
         }
         public UnitPoint2D(SIPrefix prefix, Unit unit, double x, double y)
-            : base(prefix.GetMultiplier() *  x, prefix.GetMultiplier() * y)
+            : base(
+                prefix.GetMultiplier() * x.ConvertToSI(unit).Value, 
+                prefix.GetMultiplier() * y.ConvertToSI(unit).Value)
         {
-            Unit = unit.ToCompoundUnit();
+            Unit = unit.ToSIUnit().ToCompoundUnit();
         }
 
         [JsonConstructor]

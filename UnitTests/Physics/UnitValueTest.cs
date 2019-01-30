@@ -1,4 +1,5 @@
-﻿using Commons;
+﻿using System.Linq;
+using Commons;
 using Commons.Extensions;
 using Commons.Physics;
 using NUnit.Framework;
@@ -128,6 +129,27 @@ namespace CommonsTest.Physics
         {
             var actual = value.SelectSIPrefix();
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void CanCreateAllPrefixUnitCombinations()
+        {
+            var prefixes = EnumExtensions.GetValues<SIPrefix>();
+            var units = EnumExtensions.GetValues<Unit>().Except(new []{ Unit.Compound }).ToList();
+            foreach (var prefix in prefixes)
+            {
+                foreach (var unit in units)
+                {
+                    UnitValue unitValue = null;
+                    Assert.That(() => unitValue = 4.2.To(prefix, unit), Throws.Nothing);
+                    Assert.That(unitValue, Is.Not.Null);
+                    if(unit.InSet(Unit.Celsius, Unit.Fahrenheit)) // Because celsius/fahrenheit has a fixed offset,
+                                     // very small values are lost because of insignificance compared to offset
+                        continue;
+
+                    Assert.That(unitValue.In(prefix, unit), Is.EqualTo(4.2).Within(1e-6));
+                }
+            }
         }
     }
 }

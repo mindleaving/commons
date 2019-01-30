@@ -125,6 +125,12 @@ namespace Commons.Extensions
             return new UnitValue(unit, multiplier * value);
         }
 
+        public static UnitValue To(this double value, SIPrefix prefix, CompoundUnit unit)
+        {
+            var multiplier = GetMultiplier(prefix);
+            return new UnitValue(unit, multiplier * value);
+        }
+
         public static UnitValue To(this float value, SIPrefix prefix, Unit unit)
         {
             return To((double)value, prefix, unit);
