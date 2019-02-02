@@ -22,10 +22,16 @@ namespace Commons.Serialization
         {
             var jToken = JToken.ReadFrom(reader);
             string valueString;
+            if (jToken.Type == JTokenType.Null)
+                return null;
             if (jToken.Type == JTokenType.String)
                 valueString = jToken.Value<string>();
             else if (jToken is JObject jObject && jObject.ContainsKey("StringValue"))
+            {
+                if (jObject["StringValue"].Type == JTokenType.Null)
+                    return null;
                 valueString = jObject["StringValue"].Value<string>();
+            }
             else
                 throw new JsonReaderException("Invalid format of UnitValue");
             return UnitValueParser.Parse(valueString);

@@ -147,6 +147,20 @@ namespace CommonsTest.Physics
             Assert.That(reconstructed.Value.In(SIPrefix.Milli, Unit.Meter), Is.EqualTo(11.3).Within(1e-6));
         }
 
+        [Test]
+        [TestCase("1.1.25", "{\"Name\":\"Test\",\"Value\":{\"StringValue\":null}}")]
+        [TestCase("1.1.26", "{\"Name\":\"Test\",\"Value\": null }")]
+        public void DeserializationOfNullIsBackwardCompatible(string version, string json)
+        {
+            ClassWithUnitValue reconstructed = null;
+            Assert.That(
+                () => reconstructed = JsonConvert.DeserializeObject<ClassWithUnitValue>(json),
+                Throws.Nothing,
+                $"Failing version: {version}");
+            Assert.That(reconstructed.Name, Is.EqualTo("Test"));
+            Assert.That(reconstructed.Value, Is.Null);
+        }
+
         private class ClassWithUnitValue
         {
             [JsonConstructor]
