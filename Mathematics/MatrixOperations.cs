@@ -718,59 +718,8 @@ namespace Commons.Mathematics
         }
 
         public static double[,] ReducedRowEchelonForm(this double[,] array)
-        { // With a little cheating for zeros in the diagonal!!!
-            if (array == null)
-            {
-                return null;
-            }
-            var rows = array.GetLength(0);
-            var cols = array.GetLength(1);
-            double[,] rrefArray = new double[rows, cols];
-
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    rrefArray[r, c] = array[r, c];
-                }
-            }
-
-            for (int operationRow = 0; operationRow < rows; operationRow++)
-            {
-                for (int r = 0; r < rows; r++)
-                {
-                    for (int c = cols - 1; c >= 0; c--)
-                    {
-                        if (Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
-                        {
-                            operationRow++;
-                            if (operationRow == rows)
-                            {
-                                return rrefArray;
-                            }
-                        }
-                        if (r == operationRow)
-                        {
-                            if (Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
-                            {
-                                rrefArray[operationRow, operationRow] = double.Epsilon;
-                            }
-                            rrefArray[r, c] /= rrefArray[operationRow, operationRow];
-                        }
-                        else
-                        {
-                            if (Math.Abs(rrefArray[operationRow, operationRow]) < double.Epsilon)
-                            {
-                                rrefArray[operationRow, operationRow] = double.Epsilon;
-                            }
-                            rrefArray[r, c] -= rrefArray[r, operationRow] * rrefArray[operationRow, c] / rrefArray[operationRow, operationRow];
-
-                        }
-                    }
-                }
-            }
-
-            return rrefArray;
+        {
+            return ReducedRowEcholonFormCalculator.Calculate(array);
         }
 
         public static double[] GetColumn(this double[,] array, int columnIndex)
