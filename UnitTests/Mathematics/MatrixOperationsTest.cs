@@ -34,7 +34,7 @@ namespace CommonsTest.Mathematics
         {
             var matrix = new double[,]
             {
-                {8, 1, 0, 6},
+                {8, 0, 0, 6},
                 {3, 5, 0, 7},
                 {4, 9, 0, 2}
             };

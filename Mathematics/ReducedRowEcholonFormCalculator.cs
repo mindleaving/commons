@@ -18,17 +18,15 @@ namespace Commons.Mathematics
 
             var operationColumn = 0;
             var operationRow = 0;
-            while (operationColumn < cols)
+            while (operationColumn < cols && operationRow < rows)
             {
-                if (rrefArray[operationRow, operationColumn] == 0)
+                if (!TryFindLargestNonZeroValueInColumnStartingFromRow(rrefArray, operationColumn, operationRow, out var nonZeroRowIndex))
                 {
-                    if (!TryFindLargestNonZeroValueInColumnStartingFromRow(rrefArray, operationColumn, operationRow, out var nonZeroRowIndex))
-                    {
-                        operationColumn++;
-                        continue;
-                    }
-                    AddRow1ToRow2(rrefArray, nonZeroRowIndex, operationRow);
+                    operationColumn++;
+                    continue;
                 }
+                if(nonZeroRowIndex != operationRow)
+                    AddRow1ToRow2(rrefArray, nonZeroRowIndex, operationRow);
                 DivideRowWith(rrefArray, operationRow, rrefArray[operationRow, operationColumn], operationColumn);
                 SubtractOperationRowFromOtherRows(rrefArray, operationRow, operationColumn);
                 operationRow++;
