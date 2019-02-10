@@ -1,4 +1,5 @@
 ﻿using Commons;
+using Commons.Extensions;
 using Commons.Mathematics;
 using Commons.Physics;
 using NUnit.Framework;
@@ -16,10 +17,10 @@ namespace CommonsTest.Mathematics
             // Check that our implementation return the same results
 
             var laxCoordinate = new GeoCoordinate(33 + 57.0 / 60, -(118 + 24.0 / 60));
-            var headingInDegrees = 66;
+            var heading = 66.To(Unit.Degree);
             var distance = new UnitValue(Unit.NauticalMile, 100);
 
-            var actual = laxCoordinate.MoveAlongRadial(headingInDegrees, distance);
+            var actual = laxCoordinate.MoveAlongRadial(heading, distance);
 
             Assert.That(actual.Latitude, Is.EqualTo(34 + 37.0 / 60).Within(0.02));
             Assert.That(actual.Longitude, Is.EqualTo(-(116 + 33.0 / 60)).Within(0.02));
@@ -35,8 +36,8 @@ namespace CommonsTest.Mathematics
             var headingNorthPole = northPole.HeadingTo(D);
             var headingSouthPole = southhPole.HeadingTo(D);
 
-            Assert.That(headingNorthPole, Is.EqualTo(180).Within(0.01));
-            Assert.That(headingSouthPole, Is.EqualTo(0).Within(0.01));
+            Assert.That(headingNorthPole.In(Unit.Degree), Is.EqualTo(180).Within(0.01));
+            Assert.That(headingSouthPole.In(Unit.Degree), Is.EqualTo(0).Within(0.01));
         }
 
         [Test]
@@ -47,7 +48,7 @@ namespace CommonsTest.Mathematics
             var D = new GeoCoordinate(34.5, -116.5);
             var heading = laxCoordinate.HeadingTo(D);
 
-            Assert.That(heading, Is.EqualTo(70.17).Within(0.01));
+            Assert.That(heading.In(Unit.Degree), Is.EqualTo(70.17).Within(0.01));
         }
 
         [Test]
@@ -59,7 +60,7 @@ namespace CommonsTest.Mathematics
             var coordinate2 = new GeoCoordinate(latitude2, longitude2);
             var heading = coordinate1.HeadingTo(coordinate2);
 
-            Assert.That(heading, Is.EqualTo(expectedHeading).Within(1));
+            Assert.That(heading.In(Unit.Degree), Is.EqualTo(expectedHeading).Within(1));
         }
     }
 }
