@@ -11,7 +11,9 @@ namespace Commons.Physics
     public class CompoundUnit : IEquatable<CompoundUnit>
     {
         public CompoundUnit()
-        { }
+        {
+            UnitExponents = new int[SIBaseUnits.Count];
+        }
         public CompoundUnit(IEnumerable<SIBaseUnit> nominatorUnits)
             : this(nominatorUnits, Enumerable.Empty<SIBaseUnit>())
         { }
@@ -33,6 +35,8 @@ namespace Commons.Physics
         public CompoundUnit(IEnumerable<int> unitExponents)
         {
             UnitExponents = unitExponents.ToArray();
+            if(UnitExponents.Length != SIBaseUnits.Count)
+                throw new ArgumentException($"Unit exponent array must have length {SIBaseUnits.Count} but was {UnitExponents.Length}");
         }
 
         public int[] UnitExponents { get; }

@@ -8,8 +8,12 @@ namespace Commons.Physics
 {
     public static class CompoundUnitParser
     {
-        public static CompoundUnit Parse(string unitString)
+        public static UnitConversionResult Parse(string unitString)
         {
+            if (string.IsNullOrEmpty(unitString))
+            {
+                return new UnitConversionResult(new CompoundUnit(), 1);
+            }
             var unitMatch = Regex.Match(unitString, "([^/]+)(/([^/]+))?");
             if (!unitMatch.Success)
                 throw new FormatException();
@@ -23,28 +27,50 @@ namespace Commons.Physics
             var splittedNominator = nominatorString.Split();
             var splittedDenominator = denominatorString.Split();
 
-            var nomniator = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
-                ? new SIBaseUnit[0]
-                : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).SelectMany(ParseSIBaseUnit);
-            var denomniator = splittedDenominator
+            var nomniatorUnitConversions = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
+                ? new List<UnitConversionResult>()
+                : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).Select(ParseUnitComponent).ToList();
+            var denomniatorUnitConversions = splittedDenominator
                 .Where(str => !string.IsNullOrEmpty(str))
-                .SelectMany(ParseSIBaseUnit);
-            var unit = new CompoundUnit(nomniator, denomniator);
-            return unit;
+                .Select(ParseUnitComponent).ToList();
+            return CombineUnitConversions(nomniatorUnitConversions, denomniatorUnitConversions);
         }
 
-        private static IEnumerable<SIBaseUnit> ParseSIBaseUnit(string unitString)
+        private static UnitConversionResult CombineUnitConversions(
+            List<UnitConversionResult> nomniatorUnitConversions, 
+            List<UnitConversionResult> denomniatorUnitConversions)
         {
-            var match = Regex.Match(unitString, "([a-zA-Z]+)(\\^([0-9]+))?");
+            var combinedMultiplier10Base = 0d;
+            var combinedUnit = new CompoundUnit();
+            foreach (var nomniatorUnitConversion in nomniatorUnitConversions)
+            {
+                combinedUnit *= nomniatorUnitConversion.Unit;
+                combinedMultiplier10Base += Math.Log10(nomniatorUnitConversion.Value);
+            }
+
+            foreach (var denomniatorUnitConversion in denomniatorUnitConversions)
+            {
+                combinedUnit /= denomniatorUnitConversion.Unit;
+                combinedMultiplier10Base -= Math.Log10(denomniatorUnitConversion.Value);
+            }
+            var combinedMultiplier = Math.Pow(10, combinedMultiplier10Base);
+            return new UnitConversionResult(combinedUnit, combinedMultiplier);
+        }
+
+        private static UnitConversionResult ParseUnitComponent(string str)
+        {
+            var match = Regex.Match(str, "([μa-zA-Z°]+)(\\^([0-9]+))?");
             if(!match.Success)
-                throw new FormatException($"Could not parse SI base unit '{unitString}'");
+                throw new FormatException($"Could not parse unit '{str}'");
             var unitName = match.Groups[1].Value;
-            if(!UnitValueExtensions.InverseSIBaseUnitStringRepresentation.ContainsKey(unitName))
-                throw new FormatException($"Unknown SI base unit '{unitName}'");
-            var siBaseUnit = UnitValueExtensions.InverseSIBaseUnitStringRepresentation[unitName];
+            UnitValueParser.ParseSimpleUnit(unitName, out var simpleUnit, out var siPrefix);
+            var baseConversion = 1d.ConvertToSI(simpleUnit);
+
             var hasExponent = match.Groups[2].Success;
             var exponent = hasExponent ? int.Parse(match.Groups[3].Value) : 1;
-            return Enumerable.Repeat(siBaseUnit, exponent);
+            var compoundUnit = hasExponent ? baseConversion.Unit.Pow(exponent) : baseConversion.Unit;
+            var value = (baseConversion.Value*siPrefix.GetMultiplier()).IntegerPower(exponent);
+            return new UnitConversionResult(compoundUnit, value);
         }
     }
 }

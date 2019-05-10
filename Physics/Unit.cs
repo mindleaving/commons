@@ -2,6 +2,8 @@
 {
     public enum Unit
     {
+        None = -1,
+
         Compound = 0,
 
         // Distances
@@ -23,6 +25,7 @@
 
         // Time
         Second = 301,
+        Minute = 302,
 
         // Temperature
         Kelvin = 401,
@@ -64,6 +67,9 @@
         Degree = 1202,
 
         // Unitless
-        Mole = 1301
+        Mole = 1301,
+
+        // Concentration
+        Molar = 1401,
     }
 }

@@ -21,6 +21,8 @@ namespace Commons.Physics
                 throw new Exception("Can only convert SI unit");
             switch (unit.ToSIUnit())
             {
+                case Unit.None:
+                    return new CompoundUnit();
                 case Unit.Meter:
                     return new CompoundUnit(
                         new[] { SIBaseUnit.Meter });
@@ -72,6 +74,8 @@ namespace Commons.Physics
                 case Unit.Mole:
                     return new CompoundUnit(
                         new []{SIBaseUnit.Mole });
+                case Unit.Molar:
+                    return new CompoundUnit(new []{SIBaseUnit.Mole}, new []{SIBaseUnit.Meter, SIBaseUnit.Meter, SIBaseUnit.Meter});
                 default:
                     throw new NotImplementedException();
             }
@@ -81,6 +85,7 @@ namespace Commons.Physics
         {
             // Units that are directly representable by compound unit without value conversion
             return unit.InSet(
+                Unit.None,
                 Unit.Meter,
                 Unit.MetersPerSecond,
                 Unit.MetersPerSecondSquared,
@@ -92,6 +97,7 @@ namespace Commons.Physics
                 Unit.Kilogram,
                 Unit.KilogramPerMole,
                 Unit.Mole,
+                Unit.Molar,
                 Unit.Coulombs,
                 Unit.Joule,
                 Unit.Newton,
@@ -110,6 +116,8 @@ namespace Commons.Physics
                 case Unit.NauticalMile:
                 case Unit.Inches:
                     return Unit.Meter;
+                case Unit.Minute:
+                    return Unit.Second;
                 case Unit.FeetPerMinute:
                 case Unit.Knots:
                 case Unit.Mach:
@@ -153,6 +161,8 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.Meter.ToCompoundUnit(), value * 0.0254);
                 case Unit.StatuteMile:
                     return new UnitConversionResult(Unit.Meter.ToCompoundUnit(), value * 1609.344);
+                case Unit.Minute:
+                    return new UnitConversionResult(Unit.Second.ToCompoundUnit(), value * 60);
                 case Unit.FeetPerMinute:
                     return new UnitConversionResult(Unit.MetersPerSecond.ToCompoundUnit(), value * 0.00508);
                 case Unit.Knots:
@@ -183,8 +193,11 @@ namespace Commons.Physics
                     return new UnitConversionResult(Unit.CubicMeters.ToCompoundUnit(), value * 0.001);
                 case Unit.Gram:
                     return new UnitConversionResult(Unit.Kilogram.ToCompoundUnit(), value * 0.001);
+                case Unit.Molar:
+                    return new UnitConversionResult(Unit.Molar.ToCompoundUnit(), value * 0.001);
 
                 // SI-units. Needs to match .IsSIUnit()-list
+                case Unit.None:
                 case Unit.Meter:
                 case Unit.MetersPerSecond:
                 case Unit.MetersPerSecondSquared:

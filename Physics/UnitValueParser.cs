@@ -14,7 +14,7 @@ namespace Commons.Physics
             var preprocessedString = unitValueString.Trim();
             var match = Regex.Match(preprocessedString, @"(-?[0-9]+(\.[0-9]+)?([eE][-+0-9]+)?|NaN|-?∞|-?Inf |-?Infinity |-?inf |-?infinity )\s*(([fpnμumkMGTZE]|1/)?.*)");
             if(!match.Success)
-                throw new FormatException();
+                throw new FormatException($"Invalid unit value '{unitValueString}'");
             var valueGroup = match.Groups[1];
             var unitGroup = match.Groups[4];
             double value;
@@ -32,27 +32,14 @@ namespace Commons.Physics
                 value = double.Parse(valueGroup.Value, NumberStyles.Any, CultureInfo.InvariantCulture);
             }
             var unitString = unitGroup.Value;
-            if (string.IsNullOrEmpty(unitString))
-            {
-                return new UnitValue(new CompoundUnit(new SIBaseUnit[0]), value);
-            }
-            try
-            {
-                ParseSimpleUnit(unitString, out var simpleUnit, out var siPrefix);
-                var unitConversionResult = value.ConvertToSI(simpleUnit);
-                return unitConversionResult.Value.To(siPrefix, unitConversionResult.Unit);
-            }
-            catch (FormatException)
-            {
-                var unit = CompoundUnitParser.Parse(unitString);
-                return new UnitValue(unit, value);
-            }
+            var unitConversionResult = CompoundUnitParser.Parse(unitString);
+            return (value * unitConversionResult.Value).To(unitConversionResult.Unit);
         }
 
-        private static void ParseSimpleUnit(string unitString, out Unit unit, out SIPrefix siPrefix)
+        internal static void ParseSimpleUnit(string unitString, out Unit unit, out SIPrefix siPrefix)
         {
             if(string.IsNullOrEmpty(unitString))
-                throw new FormatException();
+                throw new FormatException($"Invalid unit '{unitString}'");
             if (UnitValueExtensions.InverseUnitStringRepresentation.ContainsKey(unitString))
             {
                 siPrefix = SIPrefix.None;
@@ -62,8 +49,8 @@ namespace Commons.Physics
             // Try with SI multiplier prefix
             var prefixString = unitString.Substring(0, 1);
             var newUnitString = unitString.Substring(1);
-            if(!UnitValueExtensions.InverseUnitStringRepresentation.ContainsKey(newUnitString))
-                throw new FormatException();
+            if(string.IsNullOrWhiteSpace(newUnitString) || !UnitValueExtensions.InverseUnitStringRepresentation.ContainsKey(newUnitString))
+                throw new FormatException($"Invalid unit '{unitString}'");
             unit = UnitValueExtensions.InverseUnitStringRepresentation[newUnitString];
             if (UnitValueExtensions.InverseSIPrefixStringRepresentation.ContainsKey(prefixString))
             {
@@ -80,7 +67,7 @@ namespace Commons.Physics
                 siPrefix = SIPrefix.Micro;
                 return;
             }
-            throw new FormatException();
+            throw new FormatException($"Invalid unit '{unitString}'");
         }
     }
 }

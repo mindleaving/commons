@@ -167,6 +167,8 @@ namespace Commons.Physics
         public string ToString(string format, CultureInfo cultureInfo)
         {
             var simpleUnit = Unit.ToUnit();
+            if (simpleUnit == Physics.Unit.None)
+                return Value.ToString(format, cultureInfo);
             if (simpleUnit == Physics.Unit.Compound || Unit.UnitExponents.Any(exp => exp > 1 || exp < 0))
             {
                 return $"{Value.ToString(format, cultureInfo)} {Unit}";

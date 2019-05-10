@@ -45,6 +45,17 @@ namespace Commons.Extensions
             return x * x.IntegerPower(n - 1);
         }
 
+        public static int IntegerPower(this int x, int n)
+        {
+            if(n < 0)
+                throw new NotSupportedException("Negative exponents are not supported");
+            if (n == 0)
+                return 1;
+            if (n == 1)
+                return x;
+            return x * x.IntegerPower(n - 1);
+        }
+
         public static double Pow(this int x, double exponent)
         {
             return Math.Pow(x, exponent);

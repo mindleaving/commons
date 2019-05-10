@@ -35,6 +35,7 @@ namespace Commons.Extensions
                 case Unit.Compound:
                     throw new NotSupportedException("Conversion to compound unit is not supported. " +
                                                     "That enum value is intended to indicate non-named units");
+                case Unit.None:
                 case Unit.Meter:
                 case Unit.MetersPerSecond:
                 case Unit.MetersPerSecondSquared:
@@ -51,6 +52,8 @@ namespace Commons.Extensions
                 case Unit.Mole:
                 case Unit.Radians:
                     return unitValue.Value;
+                case Unit.Molar:
+                    return 1000 * unitValue.Value;
                 case Unit.Gram:
                     return 1000 * unitValue.Value;
                 case Unit.Feet:
@@ -89,6 +92,8 @@ namespace Commons.Extensions
                     return unitValue.Value*180/Math.PI;
                 case Unit.Liter:
                     return unitValue.Value * 1000;
+                case Unit.Minute:
+                    return unitValue.Value / 60;
                 default:
                     throw new InvalidOperationException($"Conversion from {unitValue.Unit} to {newUnit} is not implemented");
             }
@@ -143,6 +148,7 @@ namespace Commons.Extensions
 
         public static readonly Dictionary<Unit, string> UnitStringRepresentation = new Dictionary<Unit, string>
         {
+            {Unit.None, string.Empty},
             {Unit.Meter, "m"},
             {Unit.Feet, "ft"},
             {Unit.NauticalMile, "NM"},
@@ -169,6 +175,7 @@ namespace Commons.Extensions
             {Unit.Liter, "L"},
             {Unit.KilogramPerMole, "kg/mol"},
             {Unit.Mole, "mol"},
+            {Unit.Molar, "M"},
             {Unit.Coulombs, "C"},
             {Unit.ElementaryCharge, "e"},
             {Unit.Joule, "J"},
@@ -176,10 +183,13 @@ namespace Commons.Extensions
             {Unit.Newton, "N"},
             {Unit.Radians, "rad"},
             {Unit.Inches, "in"},
-            {Unit.Degree, "°"}
+            {Unit.Degree, "°"},
+            {Unit.Minute, "min"}
         };
         public static readonly Dictionary<string, Unit> InverseUnitStringRepresentation =
-            UnitStringRepresentation.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
+            UnitStringRepresentation
+                .Concat(new[] { new KeyValuePair<Unit, string>(Unit.Kelvin, "K")}) // Allows degree Kelvin to be abbreviated 'K', additional to '°K'
+                .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
         public static string StringRepresentation(this Unit unit)
         {
@@ -195,7 +205,7 @@ namespace Commons.Extensions
             {SIBaseUnit.Kilogram, "kg"},
             {SIBaseUnit.Second, "s"},
             {SIBaseUnit.Ampere, "A"},
-            {SIBaseUnit.Kelvin, "K"},
+            {SIBaseUnit.Kelvin, "°K"},
             {SIBaseUnit.Mole, "mol"},
             {SIBaseUnit.Candela, "cd"},
             {SIBaseUnit.Radians, "rad"}
@@ -213,7 +223,7 @@ namespace Commons.Extensions
 
         public static readonly Dictionary<SIPrefix, string> SIPrefixStringRepresentation = new Dictionary<SIPrefix, string>
         {
-            {SIPrefix.None, String.Empty},
+            {SIPrefix.None, string.Empty},
             {SIPrefix.Femto, "f"},
             {SIPrefix.Pico, "p"},
             {SIPrefix.Nano, "n"},

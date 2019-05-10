@@ -24,12 +24,12 @@ namespace CommonsTest.Physics
         [Test]
         [TestCase("m", Unit.Meter)]
         [TestCase("kg m/s^2", Unit.Newton)]
-        [TestCase("K", Unit.Kelvin)]
+        [TestCase("°K", Unit.Kelvin)]
         public void CompoundUnitIsCorrectlyParsed(string unitString, Unit expectedUnit)
         {
             var expected = expectedUnit.ToSIUnit().ToCompoundUnit();
             var actual = CompoundUnitParser.Parse(unitString);
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual.Unit, Is.EqualTo(expected));
         }
     }
 }

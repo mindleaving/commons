@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Commons.Physics;
 
@@ -17,6 +18,11 @@ namespace Commons.Extensions
                     return kvp.Value;
             }
             return Unit.Compound;
+        }
+
+        public static CompoundUnit Pow(this CompoundUnit unit, int pow)
+        {
+            return new CompoundUnit(unit.UnitExponents.Select(x => pow*x));
         }
     }
 }

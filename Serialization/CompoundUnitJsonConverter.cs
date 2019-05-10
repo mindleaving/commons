@@ -1,4 +1,5 @@
 ﻿using System;
+using Commons.Extensions;
 using Commons.Physics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,7 +29,10 @@ namespace Commons.Serialization
                 valueString = jObject["UnitString"].Value<string>();
             else
                 throw new JsonReaderException("Invalid format of CompoundUnit");
-            return CompoundUnitParser.Parse(valueString);
+            var unitConversionResult = CompoundUnitParser.Parse(valueString);
+            if((unitConversionResult.Value - 1).Abs() > 1e-12)
+                throw new JsonReaderException("Invalid format of CompoundUnit. Must be SI units");
+            return unitConversionResult.Unit;
         }
     }
 }
