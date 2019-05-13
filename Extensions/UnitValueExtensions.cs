@@ -188,7 +188,11 @@ namespace Commons.Extensions
         };
         public static readonly Dictionary<string, Unit> InverseUnitStringRepresentation =
             UnitStringRepresentation
-                .Concat(new[] { new KeyValuePair<Unit, string>(Unit.Kelvin, "K")}) // Allows degree Kelvin to be abbreviated 'K', additional to '°K'
+                .Concat(new[]
+                {
+                    new KeyValuePair<Unit, string>(Unit.Kelvin, "K"), // Allows degree Kelvin to be abbreviated 'K', additional to '°K'
+                    new KeyValuePair<Unit, string>(Unit.Liter, "l"), // Allow liter to be abbreviated 'l', additional to 'L'
+                }) 
                 .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
         public static string StringRepresentation(this Unit unit)

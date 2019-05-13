@@ -27,6 +27,8 @@ namespace CommonsTest.Physics
         [TestCase("-Infinity m", double.NegativeInfinity, Unit.Meter)]
         [TestCase("-infinity m", double.NegativeInfinity, Unit.Meter)]
         [TestCase("NaN m", double.NaN, Unit.Meter)]
+        [TestCase("12 l", 1.2e-2, Unit.CubicMeters)]
+        [TestCase("12 ml", 1.2e-5, Unit.CubicMeters)]
         public void CanParseUnitValue(string s, double expectedValue, Unit expectedUnit)
         {
             UnitValue unitValue = null;
