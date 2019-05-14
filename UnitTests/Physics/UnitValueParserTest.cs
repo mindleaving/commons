@@ -29,6 +29,8 @@ namespace CommonsTest.Physics
         [TestCase("NaN m", double.NaN, Unit.Meter)]
         [TestCase("12 l", 1.2e-2, Unit.CubicMeters)]
         [TestCase("12 ml", 1.2e-5, Unit.CubicMeters)]
+        [TestCase("1.2 µL", 1.2e-9, Unit.CubicMeters)] // \u00b5
+        [TestCase("1.2 μL", 1.2e-9, Unit.CubicMeters)] // \u03bc
         public void CanParseUnitValue(string s, double expectedValue, Unit expectedUnit)
         {
             UnitValue unitValue = null;

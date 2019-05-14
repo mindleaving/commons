@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Commons.Extensions;
 using Commons.Physics;
 using NUnit.Framework;
@@ -56,6 +58,24 @@ namespace CommonsTest.Physics
             var expected = 1e-3.To(Unit.Gram) * 1e-3.To(Unit.Molar) / (1.To(Unit.Liter) * 1e-6.To(Unit.Second)*1.To(Unit.Second));
             Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
             Assert.That(actual.Value, Is.EqualTo(expected.Value).Within(1e-3*expected.Value));
+        }
+
+        [Test]
+        public void UnitWithNumbersIsRejected()
+        {
+            var unitString = "µL/200mL";
+            Assert.That(() => CompoundUnitParser.Parse(unitString), Throws.TypeOf<FormatException>());
+        }
+
+        [Test]
+        [TestCase("uL", 1e-9)]
+        [TestCase("μL", 1e-9)]
+        [TestCase("nm", 1e-9)]
+        [TestCase("kN", 1e3)]
+        public void PrefixResultsInExpectedMultiplier(string str, double expectedMultiplier)
+        {
+            var actual = CompoundUnitParser.Parse(str);
+            Assert.That(actual.Value, Is.EqualTo(expectedMultiplier).Within(1e-3*expectedMultiplier));
         }
     }
 }

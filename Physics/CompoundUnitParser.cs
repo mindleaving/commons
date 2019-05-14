@@ -14,7 +14,7 @@ namespace Commons.Physics
             {
                 return new UnitConversionResult(new CompoundUnit(), 1);
             }
-            var unitMatch = Regex.Match(unitString, "([^/]+)(/([^/]+))?");
+            var unitMatch = Regex.Match(unitString, "^([^/]+)(/([^/]+))?$");
             if (!unitMatch.Success)
                 throw new FormatException();
             var nominatorString = unitMatch.Groups[1].Value;
@@ -59,7 +59,7 @@ namespace Commons.Physics
 
         private static UnitConversionResult ParseUnitComponent(string str)
         {
-            var match = Regex.Match(str, "([μa-zA-Z°]+)(\\^([0-9]+))?");
+            var match = Regex.Match(str, "^([\\u03bc\\u00B5a-zA-Z°]+)(\\^([0-9]+))?$");
             if(!match.Success)
                 throw new FormatException($"Could not parse unit '{str}'");
             var unitName = match.Groups[1].Value;

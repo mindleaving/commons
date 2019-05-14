@@ -62,7 +62,7 @@ namespace Commons.Physics
                 siPrefix = SIPrefix.Kilo;
                 return;
             }
-            if (prefixString == "u")
+            if (prefixString.InSet("u", "\u03bc", "\u00b5"))
             {
                 siPrefix = SIPrefix.Micro;
                 return;

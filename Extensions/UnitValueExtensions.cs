@@ -12,6 +12,7 @@ namespace Commons.Extensions
             InverseSIPrefixStringRepresentation = SIPrefixStringRepresentation
                 .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
             InverseSIPrefixStringRepresentation.Add("u", SIPrefix.Micro);
+            InverseSIPrefixStringRepresentation.Add("\u03bc", SIPrefix.Micro);
         }
 
         public static UnitValue Abs(this UnitValue unitValue)
@@ -231,7 +232,7 @@ namespace Commons.Extensions
             {SIPrefix.Femto, "f"},
             {SIPrefix.Pico, "p"},
             {SIPrefix.Nano, "n"},
-            {SIPrefix.Micro, "μ"},
+            {SIPrefix.Micro, "µ"},
             {SIPrefix.Milli, "m"},
             {SIPrefix.Centi, "c"},
             {SIPrefix.Deci, "d"},

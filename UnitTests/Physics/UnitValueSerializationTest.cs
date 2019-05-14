@@ -117,7 +117,8 @@ namespace CommonsTest.Physics
                 {
                     var value = 1.3 * Math.Pow(10, (int)exponent);
                     var unitValue = new UnitValue(unit, value);
-                    var roundTripUnitValue = UnitValue.Parse(unitValue.ToString());
+                    var unitValueString = unitValue.ToString();
+                    var roundTripUnitValue = UnitValue.Parse(unitValueString);
                     Assert.That(roundTripUnitValue.Unit, Is.EqualTo(unitValue.Unit));
                     Assert.That(roundTripUnitValue.Value, Is.EqualTo(unitValue.Value).Within(1e-3*unitValue.Value));
                 }
