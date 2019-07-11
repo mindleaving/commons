@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace Commons.Optimization
 {
@@ -8,7 +9,11 @@ namespace Commons.Optimization
     /// </summary>
     public static class ParameterCyclingOptimizer
     {
-        public static OptimizationResult Optimize(Func<double[], double> costFunc, ParameterSetting[] parameterSetting, int maxIterations = -1)
+        public static OptimizationResult Optimize(
+            Func<double[], double> costFunc,
+            ParameterSetting[] parameterSetting,
+            int maxIterations = -1,
+            CancellationToken? cancellationToken = null)
         {
             var iteration = 0;
             var parameterCount = parameterSetting.Length;
@@ -23,6 +28,7 @@ namespace Commons.Optimization
             var lowestCost = costFunc(optimalValues);
             while (iteration != maxIterations)
             {
+                cancellationToken?.ThrowIfCancellationRequested();
                 iteration++;
 
                 // Alter parameter if it stays within bounds

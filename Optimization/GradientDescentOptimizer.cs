@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace Commons.Optimization
 {
@@ -7,7 +8,7 @@ namespace Commons.Optimization
     {
         /// <summary>
         /// This is a modified version of the gradient descent optimization algorithm, where
-        /// the gradient, after being normalized the largest gradient-component to 1,
+        /// the gradient, after normalizing the largest gradient-component to 1,
         /// is multiplied by the parameter step sizes to obtain the updates.
         /// Also the algorithm will use a simulated annealing like approach for getting out of
         /// local minima by assigning random values to randomly selected parameters if a local optima
@@ -18,9 +19,15 @@ namespace Commons.Optimization
         /// <param name="acceptedCost">Return if cost is below this threshold</param>
         /// <param name="randomizingRounds">Maximum number of rounds where parameters are randomized when encountering a local optima</param>
         /// <param name="maxIterations">Maximum iterations. Negative values will disable limit</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Optimized parameters</returns>
-        public static OptimizationResult Optimize(Func<double[], double> costFunc, ParameterSetting[] parameterSetting,
-            double acceptedCost, int randomizingRounds = 5, int maxIterations = -1)
+        public static OptimizationResult Optimize(
+            Func<double[], double> costFunc,
+            ParameterSetting[] parameterSetting,
+            double acceptedCost,
+            int randomizingRounds = 5,
+            int maxIterations = -1,
+            CancellationToken? cancellationToken = null)
         {
             var rng = new Random(0);
 
@@ -36,34 +43,40 @@ namespace Commons.Optimization
             var overallBestCost = roundBestCost;
             while (iteration != maxIterations)
             {
+                cancellationToken?.ThrowIfCancellationRequested();
                 iteration++;
 
                 // Calculate local gradient
                 var gradient = GradientCalculator.Gradient(costFunc, currentValues, stepSizes);
                 var largestAbsoluteGradient = gradient.Max(x => Math.Abs(x));
 
-                // Normalize gradient, such that the largest absolute gradient value is +/-1
-                var normalizedGradient = gradient.Select(x => x/largestAbsoluteGradient).ToList();
+                var costImproved = false;
+                if (largestAbsoluteGradient > 0)
+                {
+                    // Normalize gradient, such that the largest absolute gradient value is +/-1
+                    var normalizedGradient = gradient.Select(x => x/largestAbsoluteGradient).ToList();
 
-                for (int parameterIdx = 0; parameterIdx < parameterCount; parameterIdx++)
-                {
-                    currentValues[parameterIdx] -= normalizedGradient[parameterIdx]*stepSizes[parameterIdx];
-                    if (currentValues[parameterIdx] < parameterSetting[parameterIdx].Lower)
-                        currentValues[parameterIdx] = parameterSetting[parameterIdx].Lower;
-                    if (currentValues[parameterIdx] > parameterSetting[parameterIdx].Upper)
-                        currentValues[parameterIdx] = parameterSetting[parameterIdx].Upper;
-                }
-                var cost = costFunc(currentValues);
-                if (cost < roundBestCost)
-                {
-                    roundBestCost = cost;
-                    if (cost < overallBestCost)
+                    for (int parameterIdx = 0; parameterIdx < parameterCount; parameterIdx++)
                     {
-                        overallBestCost = cost;
-                        currentValues.CopyTo(overallOptimalValues,0);
+                        currentValues[parameterIdx] -= normalizedGradient[parameterIdx]*stepSizes[parameterIdx];
+                        if (currentValues[parameterIdx] < parameterSetting[parameterIdx].Lower)
+                            currentValues[parameterIdx] = parameterSetting[parameterIdx].Lower;
+                        if (currentValues[parameterIdx] > parameterSetting[parameterIdx].Upper)
+                            currentValues[parameterIdx] = parameterSetting[parameterIdx].Upper;
+                    }
+                    var cost = costFunc(currentValues);
+                    if (cost < roundBestCost)
+                    {
+                        costImproved = true;
+                        roundBestCost = cost;
+                        if (cost < overallBestCost)
+                        {
+                            overallBestCost = cost;
+                            currentValues.CopyTo(overallOptimalValues,0);
+                        }
                     }
                 }
-                else
+                if(!costImproved)
                 {
                     overallOptimalValues.CopyTo(currentValues,0);
                     if(overallBestCost <= acceptedCost || randomizingRound >= randomizingRounds)
@@ -80,7 +93,7 @@ namespace Commons.Optimization
                                                              + (1 - randomRatio)*parameterSetting[randomizingParameterIdx].Upper;
                 }
             }
-            return new OptimizationResult(overallOptimalValues,overallBestCost,iteration);
+            return new OptimizationResult(overallOptimalValues, overallBestCost, iteration);
         }
     }
 }

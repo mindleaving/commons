@@ -42,5 +42,20 @@ namespace CommonsTest.Optimization
                 Assert.That(actual.Parameters[p], Is.EqualTo(expected[p]).Within(parameterSettings[p].StepSize));
             }
         }
+
+        [Test]
+        public void GradientDescentOptimizerHandlesConstantCostFunction()
+        {
+            var parameterSettings = new ParameterSetting[]
+            {
+                new ParameterSetting(0, 50, 1, 30)
+            };
+
+            Func<double[], double> costFunc = parameters => 0;
+            OptimizationResult actual = null;
+            Assert.That(() => actual = GradientDescentOptimizer.Optimize(costFunc, parameterSettings, parameterSettings[0].StepSize), Throws.Nothing);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Parameters[0], Is.Not.NaN);
+        }
     }
 }
