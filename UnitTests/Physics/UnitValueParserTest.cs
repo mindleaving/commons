@@ -105,7 +105,7 @@ namespace CommonsTest.Physics
                 AddUnit(HalfSecond);
             }
 
-            public static readonly IUnitDefinition HalfSecond = new UnitDefinition("xx", false, CompoundUnits.Second, x => x * 2, x => x / 2);
+            public static readonly IUnitDefinition HalfSecond = new UnitDefinition("xx", false, CompoundUnits.Second, x => x / 2, x => x * 2);
         }
     }
 }
