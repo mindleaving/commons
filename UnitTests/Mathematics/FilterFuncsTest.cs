@@ -61,7 +61,7 @@ namespace CommonsTest.Mathematics
                 new Point2D(1, 1.5),
                 new Point2D(2, 1.8),
                 new Point2D(3, 1.1),
-                new Point2D(4, 1.2),
+                new Point2D(4, 1.2)
             };
             var filteredSignal = data.MedianFilter(2.5).ToList();
             Assert.That(filteredSignal.Count, Is.EqualTo(data.Count));

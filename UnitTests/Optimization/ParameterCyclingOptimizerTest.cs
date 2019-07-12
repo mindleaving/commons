@@ -11,7 +11,7 @@ namespace CommonsTest.Optimization
         public void ParameterCyclingOptimizerReturnsValueCloseToOptimumOneParameter()
         {
             var expected = 42.0;
-            var parameterSettings = new ParameterSetting[]
+            var parameterSettings = new[]
             {
                 new ParameterSetting(0, 50, 1, 30)
             };

@@ -109,7 +109,7 @@ namespace CommonsTest.Mathematics
                 new Vertex<object>(1),
                 new Vertex<object>(2),
                 new Vertex<object>(3),
-                new Vertex<object>(4),
+                new Vertex<object>(4)
             };
             var edges = new List<Edge<object>>
             {
@@ -118,7 +118,7 @@ namespace CommonsTest.Mathematics
                 new Edge<object>(2, 1, 2), // Double edge
                 new Edge<object>(3, 2, 3),
                 new Edge<object>(4, 1, 4),
-                new Edge<object>(5, 2, 4),
+                new Edge<object>(5, 2, 4)
             };
             var graph = new Graph<object, object>(vertices, edges);
             Assert.That(() => GraphAlgorithms.ShortestPaths(graph, 0), Throws.Nothing);
@@ -239,7 +239,7 @@ namespace CommonsTest.Mathematics
                     new Edge<object>(0, 1, 2, isDirected: true), 
                     new Edge<object>(1, 2, 3, isDirected: true), 
                     new Edge<object>(2, 3, 4, isDirected: true), 
-                    new Edge<object>(3, 4, 1, isDirected: true), 
+                    new Edge<object>(3, 4, 1, isDirected: true) 
                 });
             Assert.That(GraphAlgorithms.HasCycles(graph), Is.True);
         }
@@ -254,7 +254,7 @@ namespace CommonsTest.Mathematics
                     new Edge<object>(0, 1, 2, isDirected: true), 
                     new Edge<object>(1, 1, 3, isDirected: true), 
                     new Edge<object>(2, 2, 4, isDirected: true), 
-                    new Edge<object>(3, 3, 4, isDirected: true), 
+                    new Edge<object>(3, 3, 4, isDirected: true) 
                 });
             Assert.That(GraphAlgorithms.HasCycles(graph), Is.False);
         }
@@ -269,7 +269,7 @@ namespace CommonsTest.Mathematics
                     new Edge<object>(0, 1, 2), 
                     new Edge<object>(1, 1, 3), 
                     new Edge<object>(2, 2, 4, isDirected: true), 
-                    new Edge<object>(3, 3, 4, isDirected: true), 
+                    new Edge<object>(3, 3, 4, isDirected: true) 
                 });
             Assert.That(() => GraphAlgorithms.HasCycles(graph), Throws.Exception);
         }

@@ -48,7 +48,7 @@ namespace CommonsTest.Mathematics
         {
             var sut = new Graph<object, object>(
                 new[] {new Vertex<object>(0), new Vertex<object>(1)},
-                new[] {new Edge<object>(0, 0, 1),});
+                new[] {new Edge<object>(0, 0, 1)});
             Assume.That(sut.GetVertexFromId(0).EdgeIds, Contains.Item(0));
             Assume.That(sut.GetVertexFromId(1).EdgeIds, Contains.Item(0));
             sut.RemoveVertex(0);
@@ -143,7 +143,7 @@ namespace CommonsTest.Mathematics
                 new []{ new Vertex<object>(0), new Vertex<object>(1)  },
                 new []
                 {
-                    new Edge<object>(0, 0, 1), 
+                    new Edge<object>(0, 0, 1) 
                 });
             string json = null;
             Assert.That(() => json = JsonConvert.SerializeObject(graph), Throws.Nothing);

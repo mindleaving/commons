@@ -1,12 +1,11 @@
-﻿using System;
-using Commons.Mathematics;
+﻿using Commons.Mathematics;
 using Commons.Physics;
 
 namespace Commons.Extensions
 {
     public static class UnitPoint3DExtensions
     {
-        public static UnitPoint3D To(this Point3D point, Unit unit)
+        public static UnitPoint3D To(this Point3D point, IUnitDefinition unit)
         {
             return point.To(SIPrefix.None, unit);
         }
@@ -14,12 +13,12 @@ namespace Commons.Extensions
         {
             return new UnitPoint3D(unit, point.X, point.Y, point.Z);
         }
-        public static UnitPoint3D To(this Point3D point, SIPrefix siPrefix, Unit unit)
+        public static UnitPoint3D To(this Point3D point, SIPrefix siPrefix, IUnitDefinition unit)
         {
             return new UnitPoint3D(siPrefix, unit, point.X, point.Y, point.Z);
         }
 
-        public static Point3D In(this UnitPoint3D unitPoint, Unit targetUnit)
+        public static Point3D In(this UnitPoint3D unitPoint, IUnitDefinition targetUnit)
         {
             return unitPoint.In(SIPrefix.None, targetUnit);
         }
@@ -31,7 +30,7 @@ namespace Commons.Extensions
                 multiplier*unitPoint.Y,
                 multiplier*unitPoint.Z);
         }
-        public static Point3D In(this UnitPoint3D unitPoint, SIPrefix targetSIPrefix, Unit targetUnit)
+        public static Point3D In(this UnitPoint3D unitPoint, SIPrefix targetSIPrefix, IUnitDefinition targetUnit)
         {
             var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetSIPrefix, targetUnit);
             return new Point3D(

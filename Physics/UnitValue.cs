@@ -17,11 +17,11 @@ namespace Commons.Physics
             Value = parsedValue.Value;
             Unit = parsedValue.Unit;
         }
-        public UnitValue(Unit unit, double value)
+        public UnitValue(IUnitDefinition unit, double value)
         {
-            var conversionResult = value.ConvertToSI(unit);
-            Unit = conversionResult.Unit;
-            Value = conversionResult.Value;
+            var unitValue = unit.ConvertToUnitValue(value);
+            Unit = unitValue.Unit;
+            Value = unitValue.Value;
         }
         public UnitValue(CompoundUnit unit, double value)
         {
@@ -166,14 +166,14 @@ namespace Commons.Physics
 
         public string ToString(string format, CultureInfo cultureInfo)
         {
-            var simpleUnit = Unit.ToUnit();
-            if (simpleUnit == Physics.Unit.None)
+            if(Unit.UnitExponents.All(x => x == 0))
                 return Value.ToString(format, cultureInfo);
-            if (simpleUnit == Physics.Unit.Compound || Unit.UnitExponents.Any(exp => exp > 1 || exp < 0))
+            var simpleUnit = Units.Effective.AllUnits.FirstOrDefault(x => x.CorrespondingCompoundUnit == Unit);
+            if (Unit.UnitExponents.Any(exp => exp > 1 || exp < 0) || simpleUnit == null)
             {
                 return $"{Value.ToString(format, cultureInfo)} {Unit}";
             }
-            if (simpleUnit == Physics.Unit.Kilogram)
+            if (simpleUnit == Units.Kilogram)
             {
                 var gramValue = Value * 1000;
                 var appropriateSIPrefix = gramValue.SelectSIPrefix();
@@ -181,7 +181,7 @@ namespace Commons.Physics
                 var valueString = (gramValue/multiplier).ToString(format, cultureInfo) 
                                   + " "
                                   + appropriateSIPrefix.StringRepresentation();
-                return valueString + Physics.Unit.Gram.StringRepresentation();
+                return valueString + Units.Gram.StringRepresentation;
             }
             else
             {
@@ -190,7 +190,7 @@ namespace Commons.Physics
                 var valueString = (Value/multiplier).ToString(format, cultureInfo) 
                                   + " "
                                   + appropriateSIPrefix.StringRepresentation();
-                return valueString + simpleUnit.StringRepresentation();
+                return valueString + simpleUnit.StringRepresentation;
             }
         }
 

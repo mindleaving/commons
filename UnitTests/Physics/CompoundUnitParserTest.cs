@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Commons.Extensions;
 using Commons.Physics;
 using NUnit.Framework;
@@ -13,7 +11,7 @@ namespace CommonsTest.Physics
         [Test]
         public void NullStringResultsInUnitlessValue()
         {
-            var actual = CompoundUnitParser.Parse(null);
+            var actual = CompoundUnitParser.Parse(1d, null);
             Assert.That(actual.Unit, Is.EqualTo(new CompoundUnit()));
             Assert.That(actual.Value, Is.EqualTo(1));
         }
@@ -21,7 +19,7 @@ namespace CommonsTest.Physics
         [Test]
         public void EmptyStringResultsInUnitlessValue()
         {
-            var actual = CompoundUnitParser.Parse(string.Empty);
+            var actual = CompoundUnitParser.Parse(1d, string.Empty);
             Assert.That(actual.Unit, Is.EqualTo(new CompoundUnit()));
             Assert.That(actual.Value, Is.EqualTo(1));
         }
@@ -29,14 +27,12 @@ namespace CommonsTest.Physics
         [Test]
         public void CanParseSimpleUnits()
         {
-            var units = EnumExtensions.GetValues<Unit>().Except(new[] {Unit.Compound});
+            var units = Units.Effective.AllUnits;
             foreach (var unit in units)
             {
-                var unitString = UnitValueExtensions.UnitStringRepresentation[unit];
-                var actual = CompoundUnitParser.Parse(unitString);
-                var conversionResult = 1d.ConvertToSI(unit);
-                Assert.That(actual.Unit, Is.EqualTo(conversionResult.Unit));
-                Assert.That(actual.Value, Is.EqualTo(conversionResult.Value).Within(1e-3*conversionResult.Value));
+                var unitString = unit.StringRepresentation;
+                var actual = CompoundUnitParser.Parse(1d, unitString);
+                Assert.That(actual.Unit, Is.EqualTo(unit.CorrespondingCompoundUnit));
             }
         }
 
@@ -44,8 +40,8 @@ namespace CommonsTest.Physics
         public void CanParseComplexUnit1()
         {
             var unitString = "mm^3/us";
-            var actual = CompoundUnitParser.Parse(unitString);
-            var expected = 1e-9.To(Unit.CubicMeters) / 1e-6.To(Unit.Second);
+            var actual = CompoundUnitParser.Parse(1d, unitString);
+            var expected = 1e-9.To(Units.CubicMeters) / 1e-6.To(Units.Second);
             Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
             Assert.That(actual.Value, Is.EqualTo(expected.Value).Within(1e-3*expected.Value));
         }
@@ -54,8 +50,8 @@ namespace CommonsTest.Physics
         public void CanParseComplexUnit2()
         {
             var unitString = "mg mM/(L ms^2)";
-            var actual = CompoundUnitParser.Parse(unitString);
-            var expected = 1e-3.To(Unit.Gram) * 1e-3.To(Unit.Molar) / (1.To(Unit.Liter) * 1e-6.To(Unit.Second)*1.To(Unit.Second));
+            var actual = CompoundUnitParser.Parse(1d, unitString);
+            var expected = 1e-3.To(Units.Gram) * 1e-3.To(Units.Molar) / (1.To(Units.Liter) * 1e-6.To(Units.Second)*1.To(Units.Second));
             Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
             Assert.That(actual.Value, Is.EqualTo(expected.Value).Within(1e-3*expected.Value));
         }
@@ -64,7 +60,7 @@ namespace CommonsTest.Physics
         public void UnitWithNumbersIsRejected()
         {
             var unitString = "µL/200mL";
-            Assert.That(() => CompoundUnitParser.Parse(unitString), Throws.TypeOf<FormatException>());
+            Assert.That(() => CompoundUnitParser.Parse(1d, unitString), Throws.TypeOf<FormatException>());
         }
 
         [Test]
@@ -74,7 +70,7 @@ namespace CommonsTest.Physics
         [TestCase("kN", 1e3)]
         public void PrefixResultsInExpectedMultiplier(string str, double expectedMultiplier)
         {
-            var actual = CompoundUnitParser.Parse(str);
+            var actual = CompoundUnitParser.Parse(1d, str);
             Assert.That(actual.Value, Is.EqualTo(expectedMultiplier).Within(1e-3*expectedMultiplier));
         }
     }

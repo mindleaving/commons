@@ -34,7 +34,7 @@ namespace CommonsTest.Extensions
         {
             string input = null;
             var searchValue = "fox";
-            Assert.That(() => StringSearchExtensions.AllIndicesOf(input, searchValue), Throws.ArgumentNullException);
+            Assert.That(() => input.AllIndicesOf(searchValue), Throws.ArgumentNullException);
         }
 
         [Test]

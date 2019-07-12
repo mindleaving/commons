@@ -29,7 +29,7 @@ namespace Commons.Serialization
                 valueString = jObject["UnitString"].Value<string>();
             else
                 throw new JsonReaderException("Invalid format of CompoundUnit");
-            var unitConversionResult = CompoundUnitParser.Parse(valueString);
+            var unitConversionResult = CompoundUnitParser.Parse(1d, valueString);
             if((unitConversionResult.Value - 1).Abs() > 1e-12)
                 throw new JsonReaderException("Invalid format of CompoundUnit. Must be SI units");
             return unitConversionResult.Unit;

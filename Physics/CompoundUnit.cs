@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Commons.Physics
 {
     [JsonConverter(typeof(CompoundUnitJsonConverter))]
-    public class CompoundUnit : IEquatable<CompoundUnit>
+    public class CompoundUnit : IEquatable<CompoundUnit>, IEquatable<IUnitDefinition>
     {
         public CompoundUnit()
         {
@@ -60,13 +60,27 @@ namespace Commons.Physics
             return !(unit1 == unit2);
         }
 
+        public bool Equals(IUnitDefinition other)
+        {
+            if (other == null)
+                return false;
+            return Equals(other.CorrespondingCompoundUnit);
+        }
+
+        public bool Equals(CompoundUnit other)
+        {
+            if ((object)other == null)
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            return UnitExponents.SequenceEqual(other.UnitExponents);
+        }
+
         public override bool Equals(object other)
         {
-            if (other is Unit unit)
+            if (other is IUnitDefinition unit)
             {
-                if (!unit.IsSIUnit())
-                    return false;
-                return Equals(unit.ToSIUnit().ToCompoundUnit());
+                return Equals(unit.CorrespondingCompoundUnit);
             }
             return Equals(other as CompoundUnit);
         }
@@ -77,15 +91,6 @@ namespace Commons.Physics
         public override int GetHashCode()
         {
             return UnitExponents?.GetHashCode() ?? 0;
-        }
-
-        public bool Equals(CompoundUnit other)
-        {
-            if ((object)other == null)
-                return false;
-            if (ReferenceEquals(this, other))
-                return true;
-            return UnitExponents.SequenceEqual(other.UnitExponents);
         }
 
         public override string ToString()

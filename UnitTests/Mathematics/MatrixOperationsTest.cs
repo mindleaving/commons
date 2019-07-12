@@ -1,5 +1,4 @@
-﻿using System;
-using Commons.IO;
+﻿using Commons.IO;
 using Commons.Mathematics;
 using NUnit.Framework;
 

@@ -31,7 +31,7 @@ namespace CommonsTest.Mathematics
             {
                 new Point2D(double.NegativeInfinity, 1),
                 new Point2D(0, 0),
-                new Point2D(1, 0),
+                new Point2D(1, 0)
             });
             Assert.That(sut.ValueAtX(-1), Is.EqualTo(1));
         }
@@ -55,7 +55,7 @@ namespace CommonsTest.Mathematics
             {
                 new Point2D(3, 4),
                 new Point2D(1, 1),
-                new Point2D(2, 2),
+                new Point2D(2, 2)
             });
             Assert.That(sut.ValueAtX(1), Is.EqualTo(1).Within(Tolerance));
             Assert.That(sut.ValueAtX(1.5), Is.EqualTo(1.5).Within(Tolerance));

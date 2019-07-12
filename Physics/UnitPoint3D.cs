@@ -12,13 +12,13 @@ namespace Commons.Physics
         {
             Unit = x.Unit;
         }
-        public UnitPoint3D(SIPrefix prefix, Unit unit, double x, double y, double z)
+        public UnitPoint3D(SIPrefix prefix, IUnitDefinition unit, double x, double y, double z)
             : base(
-                prefix.GetMultiplier() * x.ConvertToSI(unit).Value, 
-                prefix.GetMultiplier() * y.ConvertToSI(unit).Value, 
-                prefix.GetMultiplier() * z.ConvertToSI(unit).Value)
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(x).Value, 
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(y).Value, 
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(z).Value)
         {
-            Unit = unit.ToSIUnit().ToCompoundUnit();
+            Unit = unit.CorrespondingCompoundUnit;
         }
 
         public UnitPoint3D(CompoundUnit unit, double x, double y, double z)
@@ -26,7 +26,7 @@ namespace Commons.Physics
         {
             Unit = unit;
         }
-        public UnitPoint3D(Unit unit, double x, double y, double z)
+        public UnitPoint3D(IUnitDefinition unit, double x, double y, double z)
             : this(SIPrefix.None, unit, x, y, z)
         {
         }

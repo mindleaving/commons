@@ -1,5 +1,4 @@
-﻿using System;
-using Commons.Extensions;
+﻿using Commons.Extensions;
 using Commons.Mathematics;
 using Newtonsoft.Json;
 
@@ -14,12 +13,12 @@ namespace Commons.Physics
         {
             Unit = x.Unit;
         }
-        public UnitPoint2D(SIPrefix prefix, Unit unit, double x, double y)
+        public UnitPoint2D(SIPrefix prefix, IUnitDefinition unit, double x, double y)
             : base(
-                prefix.GetMultiplier() * x.ConvertToSI(unit).Value, 
-                prefix.GetMultiplier() * y.ConvertToSI(unit).Value)
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(x).Value, 
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(y).Value)
         {
-            Unit = unit.ToSIUnit().ToCompoundUnit();
+            Unit = unit.CorrespondingCompoundUnit;
         }
 
         [JsonConstructor]
@@ -28,7 +27,7 @@ namespace Commons.Physics
         {
             Unit = unit;
         }
-        public UnitPoint2D(Unit unit, double x, double y)
+        public UnitPoint2D(IUnitDefinition unit, double x, double y)
             : this(SIPrefix.None, unit, x, y)
         {
         }

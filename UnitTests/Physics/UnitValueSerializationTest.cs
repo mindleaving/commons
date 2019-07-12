@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Commons.Extensions;
@@ -24,12 +23,17 @@ namespace CommonsTest.Physics
             Assert.That(unitValue, Is.Null);
         }
 
+
+        private static object[] SerializationRoundtripSimpleUnitTestCases =
+        {
+            new object[] {1.3, Units.Second},
+            new object[] {0.013, Units.Second},
+            new object[] {1030, Units.Second},
+            new object[] {1030, Units.Kelvin}
+        };
         [Test]
-        [TestCase(1.3, Unit.Second)]
-        [TestCase(0.013, Unit.Second)]
-        [TestCase(1030, Unit.Second)]
-        [TestCase(1030, Unit.Kelvin)]
-        public void SerializationRoundtripSimpleUnit(double value, Unit unit)
+        [TestCaseSource(nameof(SerializationRoundtripSimpleUnitTestCases))]
+        public void SerializationRoundtripSimpleUnit(double value, IUnitDefinition unit)
         {
             var unitValue = new UnitValue(unit, value);
             var serializer = new Serializer<UnitValue>();
@@ -44,11 +48,15 @@ namespace CommonsTest.Physics
             Assert.That(deserializedUnitValue, Is.EqualTo(unitValue));
         }
 
+        private static object[] SerializationRoundtripDoubleSpecialValuesTestCases =
+        {
+            new object[] {double.PositiveInfinity, Units.Second},
+            new object[] {double.NegativeInfinity, Units.Second},
+            new object[] {double.NaN, Units.Second}
+        };
         [Test]
-        [TestCase(double.PositiveInfinity, Unit.Second)]
-        [TestCase(double.NegativeInfinity, Unit.Second)]
-        [TestCase(double.NaN, Unit.Second)]
-        public void SerializationRoundtripDoubleSpecialValues(double value, Unit unit)
+        [TestCaseSource(nameof(SerializationRoundtripDoubleSpecialValuesTestCases))]
+        public void SerializationRoundtripDoubleSpecialValues(double value, IUnitDefinition unit)
         {
             var unitValue = new UnitValue(unit, value);
             var serializer = new Serializer<UnitValue>();
@@ -108,8 +116,7 @@ namespace CommonsTest.Physics
         [Test]
         public void SerializationRoundtripBatchTest()
         {
-            var allValidUnits = EnumExtensions.GetValues<Unit>()
-                .Except(new[] {Unit.Compound});
+            var allValidUnits = Units.Effective.AllUnits;
             var exponentsToTest = SequenceGeneration.FixedStep(-12, 12, 3).ToList();
             foreach (var unit in allValidUnits)
             {
@@ -131,7 +138,7 @@ namespace CommonsTest.Physics
         public void DeserializationIsBackwardCompatible(string version, string json)
         {
             // Generate
-            //var json = JsonConvert.SerializeObject(new ClassWithUnitValue("Test", 11.3.To(SIPrefix.Milli, Unit.Meter)));
+            //var json = JsonConvert.SerializeObject(new ClassWithUnitValue("Test", 11.3.To(SIPrefix.Milli, Units.Meter)));
             //File.WriteAllText($@"C:\Temp\{nameof(ClassWithUnitValue)}.json", json);
 
             ClassWithUnitValue reconstructed = null;
@@ -140,7 +147,7 @@ namespace CommonsTest.Physics
                 Throws.Nothing,
                 $"Failing version: {version}");
             Assert.That(reconstructed.Name, Is.EqualTo("Test"));
-            Assert.That(reconstructed.Value.In(SIPrefix.Milli, Unit.Meter), Is.EqualTo(11.3).Within(1e-6));
+            Assert.That(reconstructed.Value.In(SIPrefix.Milli, Units.Meter), Is.EqualTo(11.3).Within(1e-6));
         }
 
         [Test]

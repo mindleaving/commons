@@ -10,7 +10,7 @@ namespace CommonsTest.Physics
         [Test]
         public void SerializationRoundTrip()
         {
-            var sut = Unit.Pascal.ToCompoundUnit();
+            var sut = Units.Pascal.CorrespondingCompoundUnit;
             var json = JsonConvert.SerializeObject(sut);
             CompoundUnit reconstructuedUnit = null;
             Assert.That(() =>reconstructuedUnit = JsonConvert.DeserializeObject<CompoundUnit>(json), Throws.Nothing);
@@ -21,14 +21,18 @@ namespace CommonsTest.Physics
             }
         }
 
+        private static object[] CompoundUnitIsCorrectlyParsedTestCases = {
+            new object[] { "m", Units.Meter},
+            new object[] { "kg m/s^2", Units.Newton},
+            new object[] { "°K", Units.Kelvin}
+        };
+
         [Test]
-        [TestCase("m", Unit.Meter)]
-        [TestCase("kg m/s^2", Unit.Newton)]
-        [TestCase("°K", Unit.Kelvin)]
-        public void CompoundUnitIsCorrectlyParsed(string unitString, Unit expectedUnit)
+        [TestCaseSource(nameof(CompoundUnitIsCorrectlyParsedTestCases))]
+        public void CompoundUnitIsCorrectlyParsed(string unitString, IUnitDefinition expectedUnit)
         {
-            var expected = expectedUnit.ToSIUnit().ToCompoundUnit();
-            var actual = CompoundUnitParser.Parse(unitString);
+            var expected = expectedUnit.CorrespondingCompoundUnit;
+            var actual = CompoundUnitParser.Parse(1d, unitString);
             Assert.That(actual.Unit, Is.EqualTo(expected));
         }
     }

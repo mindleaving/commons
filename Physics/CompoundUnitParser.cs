@@ -8,11 +8,11 @@ namespace Commons.Physics
 {
     public static class CompoundUnitParser
     {
-        public static UnitConversionResult Parse(string unitString)
+        public static UnitValue Parse(double value, string unitString)
         {
             if (string.IsNullOrEmpty(unitString))
             {
-                return new UnitConversionResult(new CompoundUnit(), 1);
+                return new UnitValue(new CompoundUnit(), value);
             }
             var unitMatch = Regex.Match(unitString, "^([^/]+)(/([^/]+))?$");
             if (!unitMatch.Success)
@@ -28,17 +28,17 @@ namespace Commons.Physics
             var splittedDenominator = denominatorString.Split();
 
             var nomniatorUnitConversions = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
-                ? new List<UnitConversionResult>()
+                ? new List<UnitValue>()
                 : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).Select(ParseUnitComponent).ToList();
             var denomniatorUnitConversions = splittedDenominator
                 .Where(str => !string.IsNullOrEmpty(str))
                 .Select(ParseUnitComponent).ToList();
-            return CombineUnitConversions(nomniatorUnitConversions, denomniatorUnitConversions);
+            return value * CombineUnitConversions(nomniatorUnitConversions, denomniatorUnitConversions);
         }
 
-        private static UnitConversionResult CombineUnitConversions(
-            List<UnitConversionResult> nomniatorUnitConversions, 
-            List<UnitConversionResult> denomniatorUnitConversions)
+        private static UnitValue CombineUnitConversions(
+            List<UnitValue> nomniatorUnitConversions, 
+            List<UnitValue> denomniatorUnitConversions)
         {
             var combinedMultiplier10Base = 0d;
             var combinedUnit = new CompoundUnit();
@@ -54,23 +54,52 @@ namespace Commons.Physics
                 combinedMultiplier10Base -= Math.Log10(denomniatorUnitConversion.Value);
             }
             var combinedMultiplier = Math.Pow(10, combinedMultiplier10Base);
-            return new UnitConversionResult(combinedUnit, combinedMultiplier);
+            return new UnitValue(combinedUnit, combinedMultiplier);
         }
 
-        private static UnitConversionResult ParseUnitComponent(string str)
+        private static UnitValue ParseUnitComponent(string str)
         {
             var match = Regex.Match(str, "^([\\u03bc\\u00B5a-zA-Z°]+)(\\^([0-9]+))?$");
             if(!match.Success)
                 throw new FormatException($"Could not parse unit '{str}'");
             var unitName = match.Groups[1].Value;
-            UnitValueParser.ParseSimpleUnit(unitName, out var simpleUnit, out var siPrefix);
-            var baseConversion = 1d.ConvertToSI(simpleUnit);
+            ParseSimpleUnit(unitName, out var simpleUnit, out var siPrefix);
+            var baseConversion = simpleUnit.ConvertToUnitValue(1d);
 
             var hasExponent = match.Groups[2].Success;
             var exponent = hasExponent ? int.Parse(match.Groups[3].Value) : 1;
             var compoundUnit = hasExponent ? baseConversion.Unit.Pow(exponent) : baseConversion.Unit;
             var value = (baseConversion.Value*siPrefix.GetMultiplier()).IntegerPower(exponent);
-            return new UnitConversionResult(compoundUnit, value);
+            return new UnitValue(compoundUnit, value);
+        }
+
+        private static void ParseSimpleUnit(string unitString, out IUnitDefinition unit, out SIPrefix siPrefix)
+        {
+            if(string.IsNullOrEmpty(unitString))
+                throw new FormatException($"Invalid unit '{unitString}'");
+
+            var normalizedUnitString = unitString.Trim();
+            if (Units.Effective.InverseStringRepresentationLookup.ContainsKey(unitString))
+            {
+                siPrefix = SIPrefix.None;
+                unit = Units.Effective.InverseStringRepresentationLookup[unitString];
+                return;
+            }
+            if(normalizedUnitString.Length == 1)
+                throw new FormatException($"Invalid unit '{unitString}'");
+
+            // Try with SI multiplier prefix
+            var prefixString = unitString.Substring(0, 1);
+            var newUnitString = unitString.Substring(1);
+            if(!Units.Effective.InverseStringRepresentationLookup.ContainsKey(newUnitString))
+                throw new FormatException($"Invalid unit '{unitString}'");
+            unit = Units.Effective.InverseStringRepresentationLookup[newUnitString];
+            if (UnitValueExtensions.InverseSIPrefixStringRepresentation.ContainsKey(prefixString))
+            {
+                siPrefix = UnitValueExtensions.InverseSIPrefixStringRepresentation[prefixString];
+                return;
+            }
+            throw new FormatException($"Invalid unit '{unitString}'");
         }
     }
 }

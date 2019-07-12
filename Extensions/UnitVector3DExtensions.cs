@@ -5,7 +5,7 @@ namespace Commons.Extensions
 {
     public static class UnitVector3DExtensions
     {
-        public static UnitVector3D To(this Vector3D point, Unit unit)
+        public static UnitVector3D To(this Vector3D point, IUnitDefinition unit)
         {
             return point.To(SIPrefix.None, unit);
         }
@@ -13,12 +13,12 @@ namespace Commons.Extensions
         {
             return new UnitVector3D(unit, point.X, point.Y, point.Z);
         }
-        public static UnitVector3D To(this Vector3D point, SIPrefix siPrefix, Unit unit)
+        public static UnitVector3D To(this Vector3D point, SIPrefix siPrefix, IUnitDefinition unit)
         {
             return new UnitVector3D(siPrefix, unit, point.X, point.Y, point.Z);
         }
 
-        public static Vector3D In(this UnitVector3D unitPoint, Unit targetUnit)
+        public static Vector3D In(this UnitVector3D unitPoint, IUnitDefinition targetUnit)
         {
             return unitPoint.In(SIPrefix.None, targetUnit);
         }
@@ -30,7 +30,7 @@ namespace Commons.Extensions
                 multiplier*unitPoint.Y,
                 multiplier*unitPoint.Z);
         }
-        public static Vector3D In(this UnitVector3D unitPoint, SIPrefix targetSIPrefix, Unit targetUnit)
+        public static Vector3D In(this UnitVector3D unitPoint, SIPrefix targetSIPrefix, IUnitDefinition targetUnit)
         {
             var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetSIPrefix, targetUnit);
             return new Vector3D(

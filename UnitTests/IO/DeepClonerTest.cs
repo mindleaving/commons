@@ -15,14 +15,14 @@ namespace CommonsTest.IO
             var testObject = new DeepClonerTestObject
             {
                 Name = "Joe",
-                Weight = 79.To(Unit.Kilogram),
+                Weight = 79.To(Units.Kilogram),
                 BMI = 24.8,
                 Position = new Vector(4, -3.5, 58.4)
             };
             DeepClonerTestObject clone = null;
             Assert.That(() => clone = DeepCloner<DeepClonerTestObject>.Clone(testObject), Throws.Nothing);
             Assert.That(clone.Name, Is.EqualTo(testObject.Name));
-            Assert.That(clone.Weight.In(Unit.Kilogram), Is.EqualTo(testObject.Weight.In(Unit.Kilogram)).Within(1e-5));
+            Assert.That(clone.Weight.In(Units.Kilogram), Is.EqualTo(testObject.Weight.In(Units.Kilogram)).Within(1e-5));
             Assert.That(clone.BMI, Is.EqualTo(testObject.BMI).Within(1e-5));
         }
 

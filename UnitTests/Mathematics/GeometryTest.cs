@@ -17,8 +17,8 @@ namespace CommonsTest.Mathematics
             // Check that our implementation return the same results
 
             var laxCoordinate = new GeoCoordinate(33 + 57.0 / 60, -(118 + 24.0 / 60));
-            var heading = 66.To(Unit.Degree);
-            var distance = new UnitValue(Unit.NauticalMile, 100);
+            var heading = 66.To(Units.Degree);
+            var distance = new UnitValue(Units.NauticalMile, 100);
 
             var actual = laxCoordinate.MoveAlongRadial(heading, distance);
 
@@ -36,8 +36,8 @@ namespace CommonsTest.Mathematics
             var headingNorthPole = northPole.HeadingTo(D);
             var headingSouthPole = southhPole.HeadingTo(D);
 
-            Assert.That(headingNorthPole.In(Unit.Degree), Is.EqualTo(180).Within(0.01));
-            Assert.That(headingSouthPole.In(Unit.Degree), Is.EqualTo(0).Within(0.01));
+            Assert.That(headingNorthPole.In(Units.Degree), Is.EqualTo(180).Within(0.01));
+            Assert.That(headingSouthPole.In(Units.Degree), Is.EqualTo(0).Within(0.01));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace CommonsTest.Mathematics
             var D = new GeoCoordinate(34.5, -116.5);
             var heading = laxCoordinate.HeadingTo(D);
 
-            Assert.That(heading.In(Unit.Degree), Is.EqualTo(70.17).Within(0.01));
+            Assert.That(heading.In(Units.Degree), Is.EqualTo(70.17).Within(0.01));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace CommonsTest.Mathematics
             var coordinate2 = new GeoCoordinate(latitude2, longitude2);
             var heading = coordinate1.HeadingTo(coordinate2);
 
-            Assert.That(heading.In(Unit.Degree), Is.EqualTo(expectedHeading).Within(1));
+            Assert.That(heading.In(Units.Degree), Is.EqualTo(expectedHeading).Within(1));
         }
     }
 }

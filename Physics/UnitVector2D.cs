@@ -12,12 +12,12 @@ namespace Commons.Physics
         {
             Unit = x.Unit;
         }
-        public UnitVector2D(SIPrefix prefix, Unit unit, double x, double y)
+        public UnitVector2D(SIPrefix prefix, IUnitDefinition unit, double x, double y)
             : base(
-                prefix.GetMultiplier() * x.ConvertToSI(unit).Value, 
-                prefix.GetMultiplier() * y.ConvertToSI(unit).Value)
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(x).Value, 
+                prefix.GetMultiplier() * unit.ConvertToUnitValue(y).Value)
         {
-            Unit = unit.ToSIUnit().ToCompoundUnit();
+            Unit = unit.CorrespondingCompoundUnit;
         }
 
         public UnitVector2D(CompoundUnit unit, double x, double y)
@@ -26,7 +26,7 @@ namespace Commons.Physics
             Unit = unit;
         }
 
-        public UnitVector2D(Unit unit, double x, double y)
+        public UnitVector2D(IUnitDefinition unit, double x, double y)
             : this(SIPrefix.None, unit, x, y)
         {
         }

@@ -5,7 +5,7 @@ namespace Commons.Extensions
 {
     public static class UnitVector2DExtensions
     {
-        public static UnitVector2D To(this Vector2D point, Unit unit)
+        public static UnitVector2D To(this Vector2D point, IUnitDefinition unit)
         {
             return point.To(SIPrefix.None, unit);
         }
@@ -13,12 +13,12 @@ namespace Commons.Extensions
         {
             return new UnitVector2D(unit, point.X, point.Y);
         }
-        public static UnitVector2D To(this Vector2D point, SIPrefix siPrefix, Unit unit)
+        public static UnitVector2D To(this Vector2D point, SIPrefix siPrefix, IUnitDefinition unit)
         {
             return new UnitVector2D(siPrefix, unit, point.X, point.Y);
         }
 
-        public static Vector2D In(this UnitVector2D unitPoint, Unit targetUnit)
+        public static Vector2D In(this UnitVector2D unitPoint, IUnitDefinition targetUnit)
         {
             return unitPoint.In(SIPrefix.None, targetUnit);
         }
@@ -29,7 +29,7 @@ namespace Commons.Extensions
                 multiplier*unitPoint.X,
                 multiplier*unitPoint.Y);
         }
-        public static Vector2D In(this UnitVector2D unitPoint, SIPrefix targetSIPrefix, Unit targetUnit)
+        public static Vector2D In(this UnitVector2D unitPoint, SIPrefix targetSIPrefix, IUnitDefinition targetUnit)
         {
             var multiplier = new UnitValue(unitPoint.Unit, 1).In(targetSIPrefix, targetUnit);
             return new Vector2D(

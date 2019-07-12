@@ -89,9 +89,9 @@ namespace Commons.Mathematics
 
         public static GeoCoordinate MoveAlongRadial(this GeoCoordinate point, UnitValue heading, UnitValue distance)
         {
-            var distanceInNM = distance.In(Unit.NauticalMile);
+            var distanceInNM = distance.In(Units.NauticalMile);
             var distanceInRadians = distanceInNM * Math.PI / (180 * 60);
-            var headingInRadians = heading.In(Unit.Radians);
+            var headingInRadians = heading.In(Units.Radians);
             var latitudeInRadians = point.Latitude * Math.PI / 180;
             var longitudeInRadians = -point.Longitude * Math.PI / 180;
             var newLatitudeInRadians = Math.Asin(Math.Sin(latitudeInRadians) * Math.Cos(distanceInRadians)
@@ -118,21 +118,21 @@ namespace Commons.Mathematics
             // Handle poles
             if(Math.Cos(latitude1InRadians) < 1e-6)
             {
-                return latitude1InRadians > 0 ? 180.To(Unit.Degree) : 0.To(Unit.Degree);
+                return latitude1InRadians > 0 ? 180.To(Units.Degree) : 0.To(Units.Degree);
             }
 
             var headingInRadians = Math.Atan2(
                     Math.Sin(longitude2InRadians - longitude1InRadians) * Math.Cos(latitude2InRadians),
                     Math.Cos(latitude1InRadians)*Math.Sin(latitude2InRadians) - Math.Sin(latitude1InRadians)*Math.Cos(latitude2InRadians)*Math.Cos(longitude2InRadians-longitude1InRadians) )
                 .Modulus(2 * Math.PI);
-            return headingInRadians.To(Unit.Radians);
+            return headingInRadians.To(Units.Radians);
         }
 
         public static GeoCoordinate ExtendCenterLineBy(GeoCoordinate startCoordinate, GeoCoordinate endCoordinate, UnitValue extendDistance)
         {
             var runwayHeading = startCoordinate.HeadingTo(endCoordinate);
             return extendDistance.Value < 0
-                ? startCoordinate.MoveAlongRadial((runwayHeading.In(Unit.Degree) + 180).Modulus(360).To(Unit.Degree), -extendDistance)
+                ? startCoordinate.MoveAlongRadial((runwayHeading.In(Units.Degree) + 180).Modulus(360).To(Units.Degree), -extendDistance)
                 : endCoordinate.MoveAlongRadial(runwayHeading, extendDistance);
         }
     }

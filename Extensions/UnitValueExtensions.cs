@@ -26,96 +26,27 @@ namespace Commons.Extensions
             return unitValue.Value;
         }
 
-        public static double In(this UnitValue unitValue, Unit newUnit)
+        public static double In(this UnitValue unitValue, IUnitDefinition newUnit)
         {
-            if (!newUnit.ToSIUnit().ToCompoundUnit().Equals(unitValue.Unit))
-                throw new InvalidOperationException($"Cannot convert {unitValue.Unit} to {newUnit}");
-
-            switch (newUnit)
-            {
-                case Unit.Compound:
-                    throw new NotSupportedException("Conversion to compound unit is not supported. " +
-                                                    "That enum value is intended to indicate non-named units");
-                case Unit.None:
-                case Unit.Meter:
-                case Unit.MetersPerSecond:
-                case Unit.MetersPerSecondSquared:
-                case Unit.Second:
-                case Unit.Kelvin:
-                case Unit.Pascal:
-                case Unit.SquareMeter:
-                case Unit.CubicMeters:
-                case Unit.Kilogram:
-                case Unit.Coulombs:
-                case Unit.Joule:
-                case Unit.Newton:
-                case Unit.KilogramPerMole:
-                case Unit.Mole:
-                case Unit.Radians:
-                    return unitValue.Value;
-                case Unit.Molar:
-                    return 1000 * unitValue.Value;
-                case Unit.Gram:
-                    return 1000 * unitValue.Value;
-                case Unit.Feet:
-                    return 3.2808399*unitValue.Value;
-                case Unit.StatuteMile:
-                    return 0.000621371192 * unitValue.Value;
-                case Unit.NauticalMile:
-                    return 0.000539956803*unitValue.Value;
-                case Unit.Inches:
-                    return 39.3700787*unitValue.Value;
-                case Unit.FeetPerMinute:
-                    return 60*3.2808399*unitValue.Value;
-                case Unit.Knots:
-                    return 1.94384449244*unitValue.Value;
-                case Unit.Mach:
-                    return 0.002938669957977*unitValue.Value;
-                case Unit.KnotsPerSeond:
-                    return 1.94384449244 * unitValue.Value;
-                case Unit.Celsius:
-                    return unitValue.Value - 273.15;
-                case Unit.Fahrenheit:
-                    return unitValue.Value*(9.0/5.0) - 459.67;
-                case Unit.Bar:
-                    return 1e-5*unitValue.Value;
-                case Unit.InchesOfMercury:
-                    return 2.952998749e-4*unitValue.Value;
-                case Unit.MillimeterOfMercury:
-                    return 7.5006158e-3 * unitValue.Value;
-                case Unit.Torr:
-                    return (760.0 / 101325.0) * unitValue.Value;
-                case Unit.ElementaryCharge:
-                    return unitValue.Value/(1.60217662*1e-19);
-                case Unit.ElectronVolts:
-                    return unitValue.Value / (1.60217662 * 1e-19);
-                case Unit.Degree:
-                    return unitValue.Value*180/Math.PI;
-                case Unit.Liter:
-                    return unitValue.Value * 1000;
-                case Unit.Minute:
-                    return unitValue.Value / 60;
-                default:
-                    throw new InvalidOperationException($"Conversion from {unitValue.Unit} to {newUnit} is not implemented");
-            }
+            return newUnit.ConvertBack(unitValue);
         }
-        public static double In(this UnitValue unitValue, SIPrefix prefix, Unit unit)
+        public static double In(this UnitValue unitValue, SIPrefix prefix, IUnitDefinition unit)
         {
             var multiplier = GetMultiplier(prefix);
             return unitValue.In(unit) / multiplier;
         }
 
-        public static UnitValue To(this double value, Unit unit)
+        public static UnitValue To(this double value, IUnitDefinition unit)
         {
-            return new UnitValue(unit, value);
+            return unit.ConvertToUnitValue(value);
         }
 
-        public static UnitValue To(this float value, Unit unit)
+        public static UnitValue To(this float value, IUnitDefinition unit)
         {
             return To((double)value, unit);
         }
 
-        public static UnitValue To(this int value, Unit unit)
+        public static UnitValue To(this int value, IUnitDefinition unit)
         {
             return To((double)value, unit);
         }
@@ -125,10 +56,10 @@ namespace Commons.Extensions
             return new UnitValue(unit, value);
         }
 
-        public static UnitValue To(this double value, SIPrefix prefix, Unit unit)
+        public static UnitValue To(this double value, SIPrefix prefix, IUnitDefinition unit)
         {
             var multiplier = GetMultiplier(prefix);
-            return new UnitValue(unit, multiplier * value);
+            return unit.ConvertToUnitValue(multiplier * value);
         }
 
         public static UnitValue To(this double value, SIPrefix prefix, CompoundUnit unit)
@@ -137,72 +68,15 @@ namespace Commons.Extensions
             return new UnitValue(unit, multiplier * value);
         }
 
-        public static UnitValue To(this float value, SIPrefix prefix, Unit unit)
+        public static UnitValue To(this float value, SIPrefix prefix, IUnitDefinition unit)
         {
             return To((double)value, prefix, unit);
         }
 
-        public static UnitValue To(this int value, SIPrefix prefix, Unit unit)
+        public static UnitValue To(this int value, SIPrefix prefix, IUnitDefinition unit)
         {
             return To((double)value, prefix, unit);
         }
-
-        public static readonly Dictionary<Unit, string> UnitStringRepresentation = new Dictionary<Unit, string>
-        {
-            {Unit.None, string.Empty},
-            {Unit.Meter, "m"},
-            {Unit.Feet, "ft"},
-            {Unit.NauticalMile, "NM"},
-            {Unit.StatuteMile, "mi"},
-            {Unit.MetersPerSecond, "m/s"},
-            {Unit.FeetPerMinute, "ft/min"},
-            {Unit.Knots, "kn"},
-            {Unit.Mach, "mach"},
-            {Unit.MetersPerSecondSquared, "m/s^2"},
-            {Unit.KnotsPerSeond, "kn/s"},
-            {Unit.Second, "s"},
-            {Unit.Kelvin, "°K"},
-            {Unit.Celsius, "°C"},
-            {Unit.Fahrenheit, "°F"},
-            {Unit.Pascal, "Pa"},
-            {Unit.Bar, "bar"},
-            {Unit.InchesOfMercury, "inHg"},
-            {Unit.MillimeterOfMercury, "mmHg"},
-            {Unit.Torr, "Torr"},
-            {Unit.SquareMeter, "m^2"},
-            {Unit.CubicMeters, "m^3"},
-            {Unit.Kilogram, "kg"},
-            {Unit.Gram, "g"},
-            {Unit.Liter, "L"},
-            {Unit.KilogramPerMole, "kg/mol"},
-            {Unit.Mole, "mol"},
-            {Unit.Molar, "M"},
-            {Unit.Coulombs, "C"},
-            {Unit.ElementaryCharge, "e"},
-            {Unit.Joule, "J"},
-            {Unit.ElectronVolts, "eV"},
-            {Unit.Newton, "N"},
-            {Unit.Radians, "rad"},
-            {Unit.Inches, "in"},
-            {Unit.Degree, "°"},
-            {Unit.Minute, "min"}
-        };
-        public static readonly Dictionary<string, Unit> InverseUnitStringRepresentation =
-            UnitStringRepresentation
-                .Concat(new[]
-                {
-                    new KeyValuePair<Unit, string>(Unit.Kelvin, "K"), // Allows degree Kelvin to be abbreviated 'K', additional to '°K'
-                    new KeyValuePair<Unit, string>(Unit.Liter, "l"), // Allow liter to be abbreviated 'l', additional to 'L'
-                }) 
-                .ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
-
-        public static string StringRepresentation(this Unit unit)
-        {
-            if(!UnitStringRepresentation.ContainsKey(unit))
-                throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
-            return UnitStringRepresentation[unit];
-        }
-
 
         public static readonly Dictionary<SIBaseUnit, string> SIBaseUnitStringRepresentation = new Dictionary<SIBaseUnit, string>
         {
@@ -322,25 +196,25 @@ namespace Commons.Extensions
             return Math.Ceiling(value.In(resolution.Unit) / resolution.Value) * resolution.Value.To(resolution.Unit);
         }
 
-        public static UnitValue Sum<T>(this IEnumerable<T> items, Func<T, UnitValue> valueSelector, Unit unit)
+        public static UnitValue Sum<T>(this IEnumerable<T> items, Func<T, UnitValue> valueSelector, IUnitDefinition unit)
         {
             return items.Select(valueSelector).Sum(unit);
         }
-        public static UnitValue Sum(this IEnumerable<UnitValue> items, Unit unit)
+        public static UnitValue Sum(this IEnumerable<UnitValue> items, IUnitDefinition unit)
         {
             return items.Select(item => item.In(unit)).Sum().To(unit);
         }
 
         public static UnitValue Average<T>(this IEnumerable<T> items, Func<T, UnitValue> valueSelector,
-            SIPrefix siPrefix, Unit unit)
+            SIPrefix siPrefix, IUnitDefinition unit)
         {
             return items.Select(valueSelector).Average(siPrefix, unit);
         }
-        public static UnitValue Average(this IEnumerable<UnitValue> items, Unit unit)
+        public static UnitValue Average(this IEnumerable<UnitValue> items, IUnitDefinition unit)
         {
             return items.Average(SIPrefix.None, unit);
         }
-        public static UnitValue Average(this IEnumerable<UnitValue> items, SIPrefix siPrefix, Unit unit)
+        public static UnitValue Average(this IEnumerable<UnitValue> items, SIPrefix siPrefix, IUnitDefinition unit)
         {
             return items.Select(uv => uv.In(siPrefix, unit)).Average().To(siPrefix, unit);
         }
