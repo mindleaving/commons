@@ -26,10 +26,10 @@ namespace CommonsTest.Physics
 
         private static object[] SerializationRoundtripSimpleUnitTestCases =
         {
-            new object[] {1.3, Units.Second},
-            new object[] {0.013, Units.Second},
-            new object[] {1030, Units.Second},
-            new object[] {1030, Units.Kelvin}
+            new object[] {1.3, Unit.Second},
+            new object[] {0.013, Unit.Second},
+            new object[] {1030, Unit.Second},
+            new object[] {1030, Unit.Kelvin}
         };
         [Test]
         [TestCaseSource(nameof(SerializationRoundtripSimpleUnitTestCases))]
@@ -50,9 +50,9 @@ namespace CommonsTest.Physics
 
         private static object[] SerializationRoundtripDoubleSpecialValuesTestCases =
         {
-            new object[] {double.PositiveInfinity, Units.Second},
-            new object[] {double.NegativeInfinity, Units.Second},
-            new object[] {double.NaN, Units.Second}
+            new object[] {double.PositiveInfinity, Unit.Second},
+            new object[] {double.NegativeInfinity, Unit.Second},
+            new object[] {double.NaN, Unit.Second}
         };
         [Test]
         [TestCaseSource(nameof(SerializationRoundtripDoubleSpecialValuesTestCases))]
@@ -116,7 +116,7 @@ namespace CommonsTest.Physics
         [Test]
         public void SerializationRoundtripBatchTest()
         {
-            var allValidUnits = Units.Effective.AllUnits;
+            var allValidUnits = Unit.Effective.AllUnits;
             var exponentsToTest = SequenceGeneration.FixedStep(-12, 12, 3).ToList();
             foreach (var unit in allValidUnits)
             {
@@ -147,7 +147,7 @@ namespace CommonsTest.Physics
                 Throws.Nothing,
                 $"Failing version: {version}");
             Assert.That(reconstructed.Name, Is.EqualTo("Test"));
-            Assert.That(reconstructed.Value.In(SIPrefix.Milli, Units.Meter), Is.EqualTo(11.3).Within(1e-6));
+            Assert.That(reconstructed.Value.In(SIPrefix.Milli, Unit.Meter), Is.EqualTo(11.3).Within(1e-6));
         }
 
         [Test]

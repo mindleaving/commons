@@ -168,12 +168,12 @@ namespace Commons.Physics
         {
             if(Unit.UnitExponents.All(x => x == 0))
                 return Value.ToString(format, cultureInfo);
-            var simpleUnit = Units.Effective.AllUnits.FirstOrDefault(x => x.CorrespondingCompoundUnit == Unit);
+            var simpleUnit = Physics.Unit.Effective.AllUnits.FirstOrDefault(x => x.CorrespondingCompoundUnit == Unit);
             if (Unit.UnitExponents.Any(exp => exp > 1 || exp < 0) || simpleUnit == null)
             {
                 return $"{Value.ToString(format, cultureInfo)} {Unit}";
             }
-            if (simpleUnit == Units.Kilogram)
+            if (simpleUnit == Physics.Unit.Kilogram)
             {
                 var gramValue = Value * 1000;
                 var appropriateSIPrefix = gramValue.SelectSIPrefix();
@@ -181,7 +181,7 @@ namespace Commons.Physics
                 var valueString = (gramValue/multiplier).ToString(format, cultureInfo) 
                                   + " "
                                   + appropriateSIPrefix.StringRepresentation();
-                return valueString + Units.Gram.StringRepresentation;
+                return valueString + Physics.Unit.Gram.StringRepresentation;
             }
             else
             {

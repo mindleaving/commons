@@ -56,8 +56,8 @@ namespace Commons.Extensions
             var dotProduct = normalizedV1.DotProduct(normalizedV2);
             if (dotProduct > 1)
                 dotProduct = 1;
-            var angle = Math.Acos(dotProduct).To(Units.Radians);
-            return angle.Value >= 0 ? angle : angle + (Math.PI/2).To(Units.Radians);
+            var angle = Math.Acos(dotProduct).To(Unit.Radians);
+            return angle.Value >= 0 ? angle : angle + (Math.PI/2).To(Unit.Radians);
         }
     }
 }

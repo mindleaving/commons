@@ -27,7 +27,7 @@ namespace CommonsTest.Physics
         [Test]
         public void CanParseSimpleUnits()
         {
-            var units = Units.Effective.AllUnits;
+            var units = Unit.Effective.AllUnits;
             foreach (var unit in units)
             {
                 var unitString = unit.StringRepresentation;
@@ -41,7 +41,7 @@ namespace CommonsTest.Physics
         {
             var unitString = "mm^3/us";
             var actual = CompoundUnitParser.Parse(1d, unitString);
-            var expected = 1e-9.To(Units.CubicMeters) / 1e-6.To(Units.Second);
+            var expected = 1e-9.To(Unit.CubicMeters) / 1e-6.To(Unit.Second);
             Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
             Assert.That(actual.Value, Is.EqualTo(expected.Value).Within(1e-3*expected.Value));
         }
@@ -51,7 +51,7 @@ namespace CommonsTest.Physics
         {
             var unitString = "mg mM/(L ms^2)";
             var actual = CompoundUnitParser.Parse(1d, unitString);
-            var expected = 1e-3.To(Units.Gram) * 1e-3.To(Units.Molar) / (1.To(Units.Liter) * 1e-6.To(Units.Second)*1.To(Units.Second));
+            var expected = 1e-3.To(Unit.Gram) * 1e-3.To(Unit.Molar) / (1.To(Unit.Liter) * 1e-6.To(Unit.Second)*1.To(Unit.Second));
             Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
             Assert.That(actual.Value, Is.EqualTo(expected.Value).Within(1e-3*expected.Value));
         }

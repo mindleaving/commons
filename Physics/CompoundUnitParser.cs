@@ -79,10 +79,10 @@ namespace Commons.Physics
                 throw new FormatException($"Invalid unit '{unitString}'");
 
             var normalizedUnitString = unitString.Trim();
-            if (Units.Effective.InverseStringRepresentationLookup.ContainsKey(unitString))
+            if (Unit.Effective.InverseStringRepresentationLookup.ContainsKey(unitString))
             {
                 siPrefix = SIPrefix.None;
-                unit = Units.Effective.InverseStringRepresentationLookup[unitString];
+                unit = Unit.Effective.InverseStringRepresentationLookup[unitString];
                 return;
             }
             if(normalizedUnitString.Length == 1)
@@ -91,9 +91,9 @@ namespace Commons.Physics
             // Try with SI multiplier prefix
             var prefixString = unitString.Substring(0, 1);
             var newUnitString = unitString.Substring(1);
-            if(!Units.Effective.InverseStringRepresentationLookup.ContainsKey(newUnitString))
+            if(!Unit.Effective.InverseStringRepresentationLookup.ContainsKey(newUnitString))
                 throw new FormatException($"Invalid unit '{unitString}'");
-            unit = Units.Effective.InverseStringRepresentationLookup[newUnitString];
+            unit = Unit.Effective.InverseStringRepresentationLookup[newUnitString];
             if (UnitValueExtensions.InverseSIPrefixStringRepresentation.ContainsKey(prefixString))
             {
                 siPrefix = UnitValueExtensions.InverseSIPrefixStringRepresentation[prefixString];

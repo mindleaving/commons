@@ -10,7 +10,7 @@ namespace CommonsTest.Physics
         [Test]
         public void SerializationRoundTrip()
         {
-            var sut = Units.Pascal.CorrespondingCompoundUnit;
+            var sut = Unit.Pascal.CorrespondingCompoundUnit;
             var json = JsonConvert.SerializeObject(sut);
             CompoundUnit reconstructuedUnit = null;
             Assert.That(() =>reconstructuedUnit = JsonConvert.DeserializeObject<CompoundUnit>(json), Throws.Nothing);
@@ -22,9 +22,9 @@ namespace CommonsTest.Physics
         }
 
         private static object[] CompoundUnitIsCorrectlyParsedTestCases = {
-            new object[] { "m", Units.Meter},
-            new object[] { "kg m/s^2", Units.Newton},
-            new object[] { "°K", Units.Kelvin}
+            new object[] { "m", Unit.Meter},
+            new object[] { "kg m/s^2", Unit.Newton},
+            new object[] { "°K", Unit.Kelvin}
         };
 
         [Test]

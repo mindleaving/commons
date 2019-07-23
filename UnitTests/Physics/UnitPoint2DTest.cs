@@ -12,7 +12,7 @@ namespace CommonsTest.Physics
         [Test]
         public void SerializationRoundTrip()
         {
-            var unitPoint = new UnitPoint2D(SIPrefix.Milli, Units.Meter, 1.5, 6.3);
+            var unitPoint = new UnitPoint2D(SIPrefix.Milli, Unit.Meter, 1.5, 6.3);
             var json = JsonConvert.SerializeObject(unitPoint);
             UnitPoint2D reconstructedUnitPoint = null;
             Assert.That(() => reconstructedUnitPoint = JsonConvert.DeserializeObject<UnitPoint2D>(json), Throws.Nothing);
@@ -30,15 +30,15 @@ namespace CommonsTest.Physics
             UnitPoint2D unitPoint = null;
             Assert.That(() => unitPoint = JsonConvert.DeserializeObject<UnitPoint2D>(json), Throws.Nothing);
             Assert.That(unitPoint, Is.Not.Null);
-            Assert.That(unitPoint.In(SIPrefix.Milli, Units.Meter).X, Is.EqualTo(1.5).Within(1e-6));
-            Assert.That(unitPoint.In(SIPrefix.Milli, Units.Meter).Y, Is.EqualTo(6.3).Within(1e-6));
+            Assert.That(unitPoint.In(SIPrefix.Milli, Unit.Meter).X, Is.EqualTo(1.5).Within(1e-6));
+            Assert.That(unitPoint.In(SIPrefix.Milli, Unit.Meter).Y, Is.EqualTo(6.3).Within(1e-6));
         }
 
         [Test]
         public void CanCreateAllPrefixUnitCombinations()
         {
             var prefixes = EnumExtensions.GetValues<SIPrefix>();
-            var units = Units.Effective.AllUnits.ToList();
+            var units = Unit.Effective.AllUnits.ToList();
             foreach (var prefix in prefixes)
             {
                 foreach (var unit in units)
@@ -46,7 +46,7 @@ namespace CommonsTest.Physics
                     UnitPoint2D unitPoint = null;
                     Assert.That(() => unitPoint = new UnitPoint2D(prefix, unit, 4.2, -1.1), Throws.Nothing);
                     Assert.That(unitPoint, Is.Not.Null);
-                    if(unit.InSet(Units.Celsius, Units.Fahrenheit)) // Because celsius/fahrenheit has a fixed offset,
+                    if(unit.InSet(Unit.Celsius, Unit.Fahrenheit)) // Because celsius/fahrenheit has a fixed offset,
                         // very small values are lost because of insignificance compared to offset
                         continue;
 

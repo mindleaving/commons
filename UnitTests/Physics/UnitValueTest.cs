@@ -11,9 +11,9 @@ namespace CommonsTest.Physics
     {
         private static object[] UnitConversionRoundtripReturnsInputTestCases =
         {
-            Units.Meter, Units.Feet, Units.FeetPerMinute, Units.Celsius, 
-            Units.Kilogram, Units.InchesOfMercury, Units.Fahrenheit, Units.Mach, 
-            Units.Liter
+            Unit.Meter, Unit.Feet, Unit.FeetPerMinute, Unit.Celsius, 
+            Unit.Kilogram, Unit.InchesOfMercury, Unit.Fahrenheit, Unit.Mach, 
+            Unit.Liter
         };
 
         [Test]
@@ -46,7 +46,7 @@ namespace CommonsTest.Physics
         public void PrefixedUnitConversionRoundtripReturnsInput()
         {
             var prefix = SIPrefix.Micro;
-            var unit = Units.Meter;
+            var unit = Unit.Meter;
             var number = StaticRandom.Rng.NextDouble();
 
             var unitValue = number.To(prefix, unit);
@@ -58,21 +58,21 @@ namespace CommonsTest.Physics
         [Test]
         public void ProductReturnsCorrectValueAndUnit()
         {
-            var mass = 1.5.To(Units.Kilogram);
-            var acceleration = 3.To(Units.MetersPerSecondSquared);
+            var mass = 1.5.To(Unit.Kilogram);
+            var acceleration = 3.To(Unit.MetersPerSecondSquared);
 
             var product = mass*acceleration;
 
-            Assert.That(product.Unit.Equals(Units.Newton));
-            var expectedValue = mass.In(SIPrefix.Kilo, Units.Gram)*acceleration.In(Units.MetersPerSecondSquared);
+            Assert.That(product.Unit.Equals(Unit.Newton));
+            var expectedValue = mass.In(SIPrefix.Kilo, Unit.Gram)*acceleration.In(Unit.MetersPerSecondSquared);
             Assert.That(product.Value, Is.EqualTo(expectedValue).Within(1e-5));
         }
 
         [Test]
         public void GramPerMilliliterTest()
         {
-            var weight = 4.To(SIPrefix.Kilo, Units.Gram);
-            var volume = 8.To(Units.Liter);
+            var weight = 4.To(SIPrefix.Kilo, Unit.Gram);
+            var volume = 8.To(Unit.Liter);
             var density = weight / volume;
             Assert.That(density.Value, Is.EqualTo(500).Within(1e-5));
         }
@@ -80,14 +80,14 @@ namespace CommonsTest.Physics
 
         private static object[] CanConvertToTrueForCompatibleUnitsTestCases =
         {
-            new object[] {Units.CubicMeters, Units.Liter},
-            new object[] {Units.Kilogram, Units.Gram},
-            new object[] {Units.ElectronVolts, Units.Joule},
-            new object[] {Units.Fahrenheit, Units.Celsius},
-            new object[] {Units.Fahrenheit, Units.Kelvin},
-            new object[] {Units.Meter, Units.Feet},
-            new object[] {Units.Meter, Units.Inches},
-            new object[] {Units.MetersPerSecond, Units.Knots}
+            new object[] {Unit.CubicMeters, Unit.Liter},
+            new object[] {Unit.Kilogram, Unit.Gram},
+            new object[] {Unit.ElectronVolts, Unit.Joule},
+            new object[] {Unit.Fahrenheit, Unit.Celsius},
+            new object[] {Unit.Fahrenheit, Unit.Kelvin},
+            new object[] {Unit.Meter, Unit.Feet},
+            new object[] {Unit.Meter, Unit.Inches},
+            new object[] {Unit.MetersPerSecond, Unit.Knots}
         };
         [Test]
         [TestCaseSource(nameof(CanConvertToTrueForCompatibleUnitsTestCases))]
@@ -99,9 +99,9 @@ namespace CommonsTest.Physics
 
         private static object[] CanConvertToFalseForIncompatibleUnitsTestCases =
         {
-            new object[] {Units.CubicMeters, Units.Kilogram},
-            new object[] {Units.Bar, Units.Celsius},
-            new object[] {Units.Knots, Units.Feet}
+            new object[] {Unit.CubicMeters, Unit.Kilogram},
+            new object[] {Unit.Bar, Unit.Celsius},
+            new object[] {Unit.Knots, Unit.Feet}
         };
         [Test]
         [TestCaseSource(nameof(CanConvertToFalseForIncompatibleUnitsTestCases))]
@@ -113,11 +113,11 @@ namespace CommonsTest.Physics
 
         private static object[] UnitConversionAsExpectedTestCases =
         {
-            new object[] {Units.Meter, Units.Inches, 39.3700787},
-            new object[] {Units.Inches, Units.Meter, 0.0254},
-            new object[] {Units.Meter, Units.NauticalMile, 0.000539956803},
-            new object[] {Units.NauticalMile, Units.Meter, 1852},
-            new object[] {Units.Feet, Units.Inches, 12}
+            new object[] {Unit.Meter, Unit.Inches, 39.3700787},
+            new object[] {Unit.Inches, Unit.Meter, 0.0254},
+            new object[] {Unit.Meter, Unit.NauticalMile, 0.000539956803},
+            new object[] {Unit.NauticalMile, Unit.Meter, 1852},
+            new object[] {Unit.Feet, Unit.Inches, 12}
         };
         [Test]
         [TestCaseSource(nameof(UnitConversionAsExpectedTestCases))]
@@ -147,7 +147,7 @@ namespace CommonsTest.Physics
         public void CanCreateAllPrefixUnitCombinations()
         {
             var prefixes = EnumExtensions.GetValues<SIPrefix>();
-            var units = Units.Effective.AllUnits.ToList();
+            var units = Unit.Effective.AllUnits.ToList();
             foreach (var prefix in prefixes)
             {
                 foreach (var unit in units)
@@ -155,7 +155,7 @@ namespace CommonsTest.Physics
                     UnitValue unitValue = null;
                     Assert.That(() => unitValue = 4.2.To(prefix, unit), Throws.Nothing);
                     Assert.That(unitValue, Is.Not.Null);
-                    if(unit.InSet(Units.Celsius, Units.Fahrenheit)) // Because celsius/fahrenheit has a fixed offset,
+                    if(unit.InSet(Unit.Celsius, Unit.Fahrenheit)) // Because celsius/fahrenheit has a fixed offset,
                                      // very small values are lost because of insignificance compared to offset
                         continue;
 

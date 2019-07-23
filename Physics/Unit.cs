@@ -12,9 +12,9 @@ namespace Commons.Physics
     /// This will allow you to write code like 13.To(MyUnits.XXXXX).
     /// See sample usage in UnitValueParserTest.CanParseCustomUnit()
     /// </summary>
-    public class Units
+    public class Unit
     {
-        public Units()
+        public Unit()
         {
             inverseStringRepresentationLookup = new Dictionary<string, IUnitDefinition>();
             foreach (var unit in AllUnits)
@@ -167,6 +167,6 @@ namespace Commons.Physics
 
         // This must be located at the bottom of the class
         // to ensure all the above fields are initialized when calling new Units()
-        public static Units Effective { get; set; } = new Units();
+        public static Unit Effective { get; set; } = new Unit();
     }
 }
