@@ -17,28 +17,45 @@ namespace Commons.Physics
             var unitMatch = Regex.Match(unitString, "^([^/]+)(/([^/]+))?$");
             if (!unitMatch.Success)
                 throw new FormatException();
-            var nominatorString = unitMatch.Groups[1].Value;
             var hasDenominator = unitMatch.Groups[2].Success;
-            var denominatorString = hasDenominator ? unitMatch.Groups[3].Value : "";
 
+            var nominatorString = unitMatch.Groups[1].Value;
             nominatorString = Regex.Replace(nominatorString, "\\s+", " ").Trim();
-            denominatorString = Regex.Replace(denominatorString, "\\s+", " ").Trim();
-            denominatorString = denominatorString.Replace("(", "").Replace(")", "");
             var splittedNominator = nominatorString.Split();
-            var splittedDenominator = denominatorString.Split();
-
-            var nomniatorUnitConversions = splittedNominator.Length == 1 && splittedNominator[0] == "1" // For 1/UNITS
-                ? new List<UnitValue>()
-                : splittedNominator.Where(str => !string.IsNullOrEmpty(str)).Select(ParseUnitComponent).ToList();
-            var denomniatorUnitConversions = splittedDenominator
-                .Where(str => !string.IsNullOrEmpty(str))
-                .Select(ParseUnitComponent).ToList();
+            IEnumerable<UnitValue> nomniatorUnitConversions;
+            if(splittedNominator.Length == 1 && splittedNominator[0] == "1") // For 1/UNITS
+                nomniatorUnitConversions = Enumerable.Empty<UnitValue>();
+            else if(splittedNominator.Length == 1 && !hasDenominator)
+            {
+                ParseSimpleUnit(splittedNominator[0], out var unit, out var prefix);
+                return new UnitValue(unit, prefix.GetMultiplier() * value);
+            }
+            else
+            {
+                nomniatorUnitConversions = splittedNominator
+                    .Where(str => !string.IsNullOrEmpty(str))
+                    .Select(ParseUnitComponent);
+            }
+            var denomniatorUnitConversions = BuildDenomniatorUnitConversions(hasDenominator, unitMatch);
             return value * CombineUnitConversions(nomniatorUnitConversions, denomniatorUnitConversions);
         }
 
+        private static IEnumerable<UnitValue> BuildDenomniatorUnitConversions(bool hasDenominator, Match unitMatch)
+        {
+            if (!hasDenominator)
+                return Enumerable.Empty<UnitValue>();
+            var denominatorString = unitMatch.Groups[3].Value;
+            denominatorString = Regex.Replace(denominatorString, "\\s+", " ").Trim();
+            denominatorString = denominatorString.Replace("(", "").Replace(")", "");
+            var splittedDenominator = denominatorString.Split();
+            return splittedDenominator
+                .Where(str => !string.IsNullOrEmpty(str))
+                .Select(ParseUnitComponent);
+        }
+
         private static UnitValue CombineUnitConversions(
-            List<UnitValue> nomniatorUnitConversions, 
-            List<UnitValue> denomniatorUnitConversions)
+            IEnumerable<UnitValue> nomniatorUnitConversions, 
+            IEnumerable<UnitValue> denomniatorUnitConversions)
         {
             var combinedMultiplier10Base = 0d;
             var combinedUnit = new CompoundUnit();
@@ -64,7 +81,7 @@ namespace Commons.Physics
                 throw new FormatException($"Could not parse unit '{str}'");
             var unitName = match.Groups[1].Value;
             ParseSimpleUnit(unitName, out var simpleUnit, out var siPrefix);
-            var baseConversion = simpleUnit.ConvertToUnitValue(1d);
+            var baseConversion = simpleUnit.ConvertToUnitValue(1) - simpleUnit.ConvertToUnitValue(0);
 
             var hasExponent = match.Groups[2].Success;
             var exponent = hasExponent ? int.Parse(match.Groups[3].Value) : 1;
