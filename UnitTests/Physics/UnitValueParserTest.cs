@@ -46,36 +46,20 @@ namespace CommonsTest.Physics
             Assert.That(unitValue.Unit, Is.EqualTo(expectedUnit));
         }
 
-        [Test]
-        public void CanParseComplexUnit1()
-        {
-            var s = "1.3 mg/L";
-            var expected = 1.3.To(SIPrefix.Milli, Unit.Gram) / 1.To(Unit.Liter);
-            UnitValue actual = null;
-            Assert.That(() => actual = UnitValue.Parse(s), Throws.Nothing);
-            Assert.That(actual.Value, Is.EqualTo(expected.Value));
-            Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
-        }
+        private static object[] CanParseComplexUnitTestCases = {
+            new object[]{ "1.3 mg/L",  1.3.To(SIPrefix.Milli, Unit.Gram) / 1.To(Unit.Liter) },
+            new object[]{ "1.3 mm^3/uL", 1.3*1e-9.To(Unit.CubicMeters) / 1.To(SIPrefix.Micro, Unit.Liter) }, 
+            new object[]{ "1.3 kn/°C", 1.3.To(Unit.Knots) / (1.To(Unit.Celsius)-0.To(Unit.Celsius)) }, 
+            new object[]{ "1.3 °F/s", (1.3.To(Unit.Fahrenheit)-0.To(Unit.Fahrenheit)) / 1.To(Unit.Second) }
+        };
 
         [Test]
-        public void CanParseComplexUnit2()
+        [TestCaseSource(nameof(CanParseComplexUnitTestCases))]
+        public void CanParseComplexUnit(string s, UnitValue expected)
         {
-            var s = "1.3 mm^3/uL";
-            var expected = 1.3*1e-9.To(Unit.CubicMeters) / 1.To(SIPrefix.Micro, Unit.Liter);
             UnitValue actual = null;
             Assert.That(() => actual = UnitValue.Parse(s), Throws.Nothing);
-            Assert.That(actual.Value, Is.EqualTo(expected.Value));
-            Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
-        }
-
-        [Test]
-        public void CanParseComplexUnit3()
-        {
-            var s = "1.3 kn/°C";
-            var expected = 1.3.To(Unit.Knots) / (1.To(Unit.Celsius)-0.To(Unit.Celsius));
-            UnitValue actual = null;
-            Assert.That(() => actual = UnitValue.Parse(s), Throws.Nothing);
-            Assert.That(actual.Value, Is.EqualTo(expected.Value));
+            Assert.That(actual.Value, Is.EqualTo(expected.Value).Within(1e-6*expected.Value.Abs()));
             Assert.That(actual.Unit, Is.EqualTo(expected.Unit));
         }
 
