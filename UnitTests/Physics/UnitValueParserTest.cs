@@ -13,6 +13,7 @@ namespace CommonsTest.Physics
             new object[] {"100 m", 100, Unit.Meter},
             new object[] {"100m", 100, Unit.Meter},
             new object[] {"11.3 g", 0.0113, Unit.Kilogram},
+            new object[] {"11.3 Mg", 11300, Unit.Kilogram},
             new object[] {"3.4 s", 3.4, Unit.Second},
             new object[] {"5.1 ft", 1.55448, Unit.Meter},
             new object[] {"-3.4 s", -3.4, Unit.Second},

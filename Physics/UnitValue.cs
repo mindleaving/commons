@@ -175,13 +175,13 @@ namespace Commons.Physics
             }
             if (simpleUnit == Physics.Unit.Kilogram)
             {
+                if (Value >= 1)
+                    return $"{Value.ToString(format, cultureInfo)} kg";
                 var gramValue = Value * 1000;
                 var appropriateSIPrefix = gramValue.SelectSIPrefix();
                 var multiplier = appropriateSIPrefix.GetMultiplier();
-                var valueString = (gramValue/multiplier).ToString(format, cultureInfo) 
-                                  + " "
-                                  + appropriateSIPrefix.StringRepresentation();
-                return valueString + Physics.Unit.Gram.StringRepresentation;
+                var valueString = (gramValue/multiplier).ToString(format, cultureInfo);
+                return $"{valueString} {appropriateSIPrefix.StringRepresentation()}{Physics.Unit.Gram.StringRepresentation}";
             }
             else
             {
