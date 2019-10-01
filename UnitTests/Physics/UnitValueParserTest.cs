@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using Commons.Extensions;
 using Commons.Physics;
 using NUnit.Framework;
@@ -84,6 +86,16 @@ namespace CommonsTest.Physics
             Assert.That(() => actual = UnitValue.Parse(unitString), Throws.Nothing);
             Assert.That(actual.Unit, Is.EqualTo(MyUnits.HalfSecond.CorrespondingCompoundUnit));
             Assert.That(actual.In(MyUnits.HalfSecond), Is.EqualTo(1.4).Within(1e-3));
+        }
+
+        [Test]
+        public void ParsingIsIndependentOfCulture()
+        {
+            var unitString = "1,3 L";
+            UnitValue unitValue = null;
+            Assert.That(() => unitValue = UnitValue.Parse(unitString), Throws.Nothing);
+            Assert.That(unitValue, Is.Not.Null);
+            Assert.That(unitValue.In(Unit.Liter), Is.EqualTo(1.3).Within(1e-6));
         }
 
         private class MyUnits : Unit
