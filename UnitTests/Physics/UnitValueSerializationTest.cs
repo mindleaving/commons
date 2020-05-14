@@ -164,6 +164,16 @@ namespace CommonsTest.Physics
             Assert.That(reconstructed.Value, Is.Null);
         }
 
+        [Test]
+        public void CanDeserializeMathjsUnit()
+        {
+            const string MathjsUnitJson = "{ fixPrefix: false, mathjs: \"Unit\", unit: \"kg / m^3\", value: 34 }";
+            UnitValue unitValue = null;
+            Assert.That(() => unitValue = JsonConvert.DeserializeObject<UnitValue>(MathjsUnitJson), Throws.Nothing);
+            Assert.That(unitValue.Value, Is.EqualTo(34));
+            Assert.That(unitValue.Unit, Is.EqualTo(CompoundUnits.Kilogram / CompoundUnits.CubicMeters));
+        }
+
         private class ClassWithUnitValue
         {
             [JsonConstructor]

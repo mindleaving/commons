@@ -21,18 +21,27 @@ namespace Commons.Serialization
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jToken = JToken.ReadFrom(reader);
-            string valueString;
             if (jToken.Type == JTokenType.Null)
                 return null;
+            string valueString = null;
             if (jToken.Type == JTokenType.String)
                 valueString = jToken.Value<string>();
-            else if (jToken is JObject jObject && jObject.ContainsKey("StringValue"))
+            else if (jToken is JObject jObject)
             {
-                if (jObject["StringValue"].Type == JTokenType.Null)
-                    return null;
-                valueString = jObject["StringValue"].Value<string>();
+                if (jObject.ContainsKey("StringValue"))
+                {
+                    if (jObject["StringValue"].Type == JTokenType.Null)
+                        return null;
+                    valueString = jObject["StringValue"].Value<string>();
+                }
+                else if (jObject.ContainsKey("unit") && jObject.ContainsKey("value"))
+                {
+                    var value = jToken.Value<string>("value");
+                    var unit = jToken.Value<string>("unit");
+                    valueString = $"{value} {unit}";
+                }
             }
-            else
+            if(valueString == null)
                 throw new JsonReaderException("Invalid format of UnitValue");
             return UnitValueParser.Parse(valueString);
         }
