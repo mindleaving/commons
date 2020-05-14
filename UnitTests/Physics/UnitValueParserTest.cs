@@ -53,7 +53,9 @@ namespace CommonsTest.Physics
             new object[]{ "1.3 mg/L",  1.3.To(SIPrefix.Milli, Unit.Gram) / 1.To(Unit.Liter) },
             new object[]{ "1.3 mm^3/uL", 1.3*1e-9.To(Unit.CubicMeters) / 1.To(SIPrefix.Micro, Unit.Liter) }, 
             new object[]{ "1.3 kn/°C", 1.3.To(Unit.Knots) / (1.To(Unit.Celsius)-0.To(Unit.Celsius)) }, 
-            new object[]{ "1.3 °F/s", (1.3.To(Unit.Fahrenheit)-0.To(Unit.Fahrenheit)) / 1.To(Unit.Second) }
+            new object[]{ "1.3 °F/s", (1.3.To(Unit.Fahrenheit)-0.To(Unit.Fahrenheit)) / 1.To(Unit.Second) },
+            new object[] {"114 (L kg) / m^3", 0.114.To(Unit.Kilogram)},
+            new object[] {"26.3 (kg (m)) / (s^2)", 26.3.To(Unit.Newton)},
         };
 
         [Test]

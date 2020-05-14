@@ -19,8 +19,7 @@ namespace Commons.Physics
                 throw new FormatException();
             var hasDenominator = unitMatch.Groups[2].Success;
 
-            var nominatorString = unitMatch.Groups[1].Value;
-            nominatorString = Regex.Replace(nominatorString, "\\s+", " ").Trim();
+            var nominatorString = CleanUnitString(unitMatch.Groups[1].Value);
             var splittedNominator = nominatorString.Split();
             IEnumerable<UnitValue> nomniatorUnitConversions;
             if(splittedNominator.Length == 1 && splittedNominator[0] == "1") // For 1/UNITS
@@ -44,13 +43,18 @@ namespace Commons.Physics
         {
             if (!hasDenominator)
                 return Enumerable.Empty<UnitValue>();
-            var denominatorString = unitMatch.Groups[3].Value;
-            denominatorString = Regex.Replace(denominatorString, "\\s+", " ").Trim();
-            denominatorString = denominatorString.Replace("(", "").Replace(")", "");
+            var denominatorString = CleanUnitString(unitMatch.Groups[3].Value);
             var splittedDenominator = denominatorString.Split();
             return splittedDenominator
                 .Where(str => !string.IsNullOrEmpty(str))
                 .Select(ParseUnitComponent);
+        }
+
+        private static string CleanUnitString(string str)
+        {
+            str = Regex.Replace(str, "\\s+", " ").Trim();
+            str = str.Replace("(", "").Replace(")", "");
+            return str;
         }
 
         private static UnitValue CombineUnitConversions(
