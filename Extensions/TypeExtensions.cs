@@ -4,6 +4,16 @@ namespace Commons.Extensions
 {
     public static class TypeExtensions
     {
+        public static T As<T>(this object o) where T: class
+        {
+            return o as T;
+        }
+
+        public static T Cast<T>(this object o) where T: class
+        {
+            return (T) o;
+        }
+
         public static bool IsNumber(this object o)
         {
             if (ReferenceEquals(o, null))
