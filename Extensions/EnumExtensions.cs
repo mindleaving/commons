@@ -17,5 +17,10 @@ namespace Commons.Extensions
                 throw new ArgumentException("T must be an enum");
             return (T[]) Enum.GetValues(typeof(T));
         }
+
+        public static TEnum ToEnum<TEnum>(this string str) where TEnum: Enum
+        {
+            return (TEnum) Enum.Parse(typeof(TEnum), str);
+        }
     }
 }
