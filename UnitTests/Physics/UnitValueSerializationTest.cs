@@ -174,6 +174,20 @@ namespace CommonsTest.Physics
             Assert.That(unitValue.Unit, Is.EqualTo(CompoundUnits.Kilogram / CompoundUnits.CubicMeters));
         }
 
+        [Test]
+        public void CanSerializeMicroValuesWithU()
+        {
+            var input = 3.4.To(SIPrefix.Micro, Unit.Gram);
+            UnitValueExtensions.SIPrefixStringRepresentation[SIPrefix.Micro] = "u";
+
+            Assert.That(input.ToString(), Is.EqualTo("3.4 ug"));
+
+            // Test for side effects
+            Assert.That(UnitValue.Parse("54 ug").In(SIPrefix.Micro, Unit.Gram), Is.EqualTo(54).Within(1e-3));
+            Assert.That(UnitValue.Parse("54 µg").In(SIPrefix.Micro, Unit.Gram), Is.EqualTo(54).Within(1e-3));
+            Assert.That(UnitValue.Parse("54 \u03bcg").In(SIPrefix.Micro, Unit.Gram), Is.EqualTo(54).Within(1e-3));
+        }
+
         private class ClassWithUnitValue
         {
             [JsonConstructor]
