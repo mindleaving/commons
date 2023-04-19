@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.8</Version>
+    <Version>2.1.9</Version>
     <Authors>Jan Scholtyssek</Authors>
     <PackageId>mindleaving.Commons</PackageId>
     <Company />
     <Description>General code for various projects</Description>
-    <Copyright>Copyright (c) 2019 Jan Scholtyssek</Copyright>
+    <Copyright>Copyright (c) 2023 Jan Scholtyssek</Copyright>
     <PackageTags>commons mindleaving janscholtyssek</PackageTags>
     <PackageProjectUrl>https://github.com/mindleaving/commons</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mindleaving/commons</RepositoryUrl>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>
