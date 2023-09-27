@@ -9,8 +9,15 @@ namespace Commons.Extensions
         {
             var words = input.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
             return words
-                .Select(x => x.Substring(0, 1).ToUpperInvariant() + x.Substring(1).ToLowerInvariant())
+                .Select(str => char.ToUpperInvariant(str[0]) + str[1..].ToLowerInvariant())
                 .Aggregate((a, b) => a + " " + b);
+        }
+
+        public static string FirstLetterToLowerInvariant(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+            return char.ToLowerInvariant(str[0]) + str[1..];
         }
     }
 }

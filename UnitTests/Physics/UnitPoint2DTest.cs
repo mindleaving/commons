@@ -35,6 +35,18 @@ namespace CommonsTest.Physics
         }
 
         [Test]
+        public void CanDeserializePrefixedUnitPoint()
+        {
+            var json = @"{ unit: 'mm', x: 15, y: 30 }"; // Using millimeter (i.e. has milli-prefix)
+
+            var actual = JsonConvert.DeserializeObject<UnitPoint2D>(json);
+
+            Assert.That(actual.Unit, Is.EqualTo(Unit.Meter));
+            Assert.That(actual.X, Is.EqualTo(15*1e-3).Within(1e-6));
+            Assert.That(actual.Y, Is.EqualTo(30*1e-3).Within(1e-6));
+        }
+
+        [Test]
         public void CanCreateAllPrefixUnitCombinations()
         {
             var prefixes = EnumExtensions.GetValues<SIPrefix>();

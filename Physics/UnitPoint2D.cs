@@ -1,9 +1,11 @@
 ﻿using Commons.Extensions;
 using Commons.Mathematics;
+using Commons.Serialization;
 using Newtonsoft.Json;
 
 namespace Commons.Physics
 {
+    [JsonConverter(typeof(UnitPointJsonConverter))]
     public class UnitPoint2D : Point2D
     {
         public CompoundUnit Unit { get; }
