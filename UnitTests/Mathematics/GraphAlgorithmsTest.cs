@@ -218,7 +218,7 @@ namespace CommonsTest.Mathematics
             {
                 var referenceVertex = graph.GetVertexFromId(vertexIds[0]);
                 var matchingActual = actual.Single(c => c.Contains(referenceVertex));
-                CollectionAssert.AreEquivalent(vertexIds, matchingActual.Select(c => c.Id));
+                Assert.That(vertexIds, Is.EquivalentTo(matchingActual.Select(c => c.Id)));
             }
         }
 

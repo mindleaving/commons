@@ -16,7 +16,7 @@ namespace CommonsTest.Mathematics
         {
             var sut = new Range<double>(from, to);
             var actual = sut.Contains(probe);
-            Assert.AreEqual(expected, actual);
+            Assert.That(expected, Is.EqualTo(actual));
         }
 
         [Test]

@@ -19,9 +19,13 @@ namespace Commons.Extensions
                 tasks.Add(task);
             }
 
-            while (tasks.Count > 0)
+            foreach (var task in tasks) // Wait for tasks in the order they were created
             {
-                var completedTask = await Task.WhenAny(tasks);
+                var completedTask = await Task.WhenAny(task);
+                if (completedTask.IsFaulted)
+                {
+                    throw completedTask.Exception.InnerException;
+                }
                 yield return completedTask.Result;
                 tasks.Remove(completedTask);
             }
@@ -40,16 +44,15 @@ namespace Commons.Extensions
                 tasks.Add(task);
             }
 
-            while (tasks.Count > 0)
+            foreach (var task in tasks) // Wait for tasks in the order they were created
             {
-                var completedTask = await Task.WhenAny(tasks);
+                var completedTask = await Task.WhenAny(task);
                 if (completedTask.IsFaulted)
                 {
                     cancellationTokenSource.Cancel();
                     throw completedTask.Exception.InnerException;
                 }
                 yield return completedTask.Result;
-                tasks.Remove(completedTask);
             }
         }
 
@@ -95,14 +98,12 @@ namespace Commons.Extensions
                 tasks.Add(task);
             }
 
-            var completedTaskCount = 0;
-            while (completedTaskCount < tasks.Count)
+            for (var taskIndex = 0; taskIndex < tasks.Count; taskIndex++)
             {
-                var completedTask = await Task.WhenAny(tasks);
-                var taskIndex = tasks.IndexOf(completedTask);
-                if(completedTask.Result)
+                var task = tasks[taskIndex];
+                var completedTask = await Task.WhenAny(task);
+                if (completedTask.Result)
                     yield return itemsList[taskIndex];
-                completedTaskCount++;
             }
         }
 

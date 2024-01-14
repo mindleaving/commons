@@ -87,8 +87,8 @@ namespace CommonsTest.Mathematics
 
             sut.RemoveVertex(vertices[0]);
 
-            CollectionAssert.AreEquivalent(vertices.Skip(1), sut.Vertices);
-            CollectionAssert.AreEquivalent(new[] { edges[1] }, sut.Edges);
+            Assert.That(vertices.Skip(1), Is.EquivalentTo(sut.Vertices));
+            Assert.That(new[] { edges[1] }, Is.EquivalentTo(sut.Edges));
         }
 
         [Test]
