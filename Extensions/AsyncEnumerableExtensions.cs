@@ -24,10 +24,9 @@ namespace Commons.Extensions
                 var completedTask = await Task.WhenAny(task);
                 if (completedTask.IsFaulted)
                 {
-                    throw completedTask.Exception.InnerException;
+                    throw completedTask.Exception!.InnerException!;
                 }
                 yield return completedTask.Result;
-                tasks.Remove(completedTask);
             }
         }
 
@@ -50,7 +49,7 @@ namespace Commons.Extensions
                 if (completedTask.IsFaulted)
                 {
                     cancellationTokenSource.Cancel();
-                    throw completedTask.Exception.InnerException;
+                    throw completedTask.Exception!.InnerException!;
                 }
                 yield return completedTask.Result;
             }
@@ -182,7 +181,58 @@ namespace Commons.Extensions
             }
             return list;
         }
-        public static async Task<T> FirstOrDefaultAsync<T>(
+
+        public static async Task<HashSet<T>> ToHashsetAsync<T>(
+            this IAsyncEnumerable<T> items)
+        {
+            var hashSet = new HashSet<T>();
+            await foreach (var item in items)
+            {
+                hashSet.Add(item);
+            }
+            return hashSet;
+        }
+
+        public static async Task<Queue<T>> ToQueueAsync<T>(
+            this IAsyncEnumerable<T> items)
+        {
+            var queue = new Queue<T>();
+            await foreach (var item in items)
+            {
+                queue.Enqueue(item);
+            }
+            return queue;
+        }
+
+        public static async Task<Dictionary<TKey, T>> ToDictionaryAsync<TKey, T>(
+            this IAsyncEnumerable<T> items,
+            Func<T, TKey> keySelector)
+        {
+            var dictionary = new Dictionary<TKey, T>();
+            await foreach (var item in items)
+            {
+                var key = keySelector(item);
+                dictionary.Add(key, item);
+            }
+            return dictionary;
+        }
+
+        public static async Task<Dictionary<TKey, List<T>>> GroupByAsync<TKey, T>(
+            this IAsyncEnumerable<T> items,
+            Func<T, TKey> keySelector)
+        {
+            var dictionary = new Dictionary<TKey, List<T>>();
+            await foreach (var item in items)
+            {
+                var key = keySelector(item);
+                if(!dictionary.ContainsKey(key))
+                    dictionary.Add(key, []);
+                dictionary[key].Add(item);
+            }
+            return dictionary;
+        }
+
+        public static async Task<T?> FirstOrDefaultAsync<T>(
             this IAsyncEnumerable<T> items)
         {
             await foreach (var item in items)
