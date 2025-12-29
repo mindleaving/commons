@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Commons.Extensions;
 
-namespace Commons.Extensions
+namespace Commons.DatabaseTools
 {
     public static class SearchExpressionBuilder
     {

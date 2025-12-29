@@ -69,20 +69,6 @@ namespace Commons.Extensions
             await foreach (var item in items)
                 yield return await asyncAction(item);
         }
-        public static async IAsyncEnumerable<TResult> Select<T, TResult>(
-            this IAsyncEnumerable<T> items,
-            Func<T, TResult> action)
-        {
-            await foreach (var item in items)
-                yield return action(item);
-        }
-
-        public static async IAsyncEnumerable<TCast> Cast<TCast>(
-            this IAsyncEnumerable<object> items)
-        {
-            await foreach(var item in items)
-                yield return (TCast)item;
-        }
 
         public static async IAsyncEnumerable<T> WhereParallelAsync<T>(
             this IEnumerable<T> items,
@@ -131,68 +117,6 @@ namespace Commons.Extensions
             }
         }
 
-        public static async IAsyncEnumerable<T> Where<T>(
-            this IAsyncEnumerable<T> items,
-            Func<T, bool> filter)
-        {
-            await foreach (var item in items)
-            {
-                var isMatch = filter(item);
-                if (isMatch)
-                    yield return item;
-            }
-        }
-
-        public static async Task<bool> AnyAsync<T>(
-            this IEnumerable<T> items,
-            Func<T, Task<bool>> asyncAction)
-        {
-            foreach (var item in items)
-            {
-                var isMatch = await asyncAction(item);
-                if (isMatch)
-                    return true;
-            }
-
-            return false;
-        }
-
-        public static async Task<bool> AnyAsync<T>(
-            this IAsyncEnumerable<T> items,
-            Func<T, Task<bool>> asyncAction)
-        {
-            await foreach (var item in items)
-            {
-                var isMatch = await asyncAction(item);
-                if (isMatch)
-                    return true;
-            }
-
-            return false;
-        }
-
-        public static async Task<List<T>> ToListAsync<T>(
-            this IAsyncEnumerable<T> items)
-        {
-            var list = new List<T>();
-            await foreach (var item in items)
-            {
-                list.Add(item);
-            }
-            return list;
-        }
-
-        public static async Task<HashSet<T>> ToHashsetAsync<T>(
-            this IAsyncEnumerable<T> items)
-        {
-            var hashSet = new HashSet<T>();
-            await foreach (var item in items)
-            {
-                hashSet.Add(item);
-            }
-            return hashSet;
-        }
-
         public static async Task<Queue<T>> ToQueueAsync<T>(
             this IAsyncEnumerable<T> items)
         {
@@ -204,20 +128,7 @@ namespace Commons.Extensions
             return queue;
         }
 
-        public static async Task<Dictionary<TKey, T>> ToDictionaryAsync<TKey, T>(
-            this IAsyncEnumerable<T> items,
-            Func<T, TKey> keySelector)
-        {
-            var dictionary = new Dictionary<TKey, T>();
-            await foreach (var item in items)
-            {
-                var key = keySelector(item);
-                dictionary.Add(key, item);
-            }
-            return dictionary;
-        }
-
-        public static async Task<Dictionary<TKey, List<T>>> GroupByAsync<TKey, T>(
+        public static async Task<Dictionary<TKey, List<T>>> GroupIntoDictionaryAsync<TKey, T>(
             this IAsyncEnumerable<T> items,
             Func<T, TKey> keySelector)
         {
@@ -230,16 +141,6 @@ namespace Commons.Extensions
                 dictionary[key].Add(item);
             }
             return dictionary;
-        }
-
-        public static async Task<T?> FirstOrDefaultAsync<T>(
-            this IAsyncEnumerable<T> items)
-        {
-            await foreach (var item in items)
-            {
-                return item;
-            }
-            return default;
         }
 
         public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(

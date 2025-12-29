@@ -7,7 +7,7 @@ namespace Commons.Extensions
     {
         public static int InvertEndian(this int x)
         {
-            return BitConverter.ToInt32(BitConverter.GetBytes(x).Reverse().ToArray(), 0);
+            return BitConverter.ToInt32(BitConverter.GetBytes(x).AsEnumerable().Reverse().ToArray(), 0);
         }
     }
 }
