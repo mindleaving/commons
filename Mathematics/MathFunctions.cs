@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Commons.Mathematics
+namespace Commons.Mathematics;
+
+public static class MathFunctions
 {
-    public static class MathFunctions
+    public static double Sigmoid(double x)
     {
-        public static double Sigmoid(double x)
-        {
-            return 1.0/(1 + Math.Exp(-x));
-        }
+        return 1.0/(1 + Math.Exp(-x));
     }
 }

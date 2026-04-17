@@ -1,23 +1,22 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Commons.Collections
+namespace Commons.Collections;
+
+public class ConcurrentCappedQueue<T> : ConcurrentQueue<T>
 {
-    public class ConcurrentCappedQueue<T> : ConcurrentQueue<T>
+    public int Cap { get; }
+
+    public ConcurrentCappedQueue(int cap)
     {
-        public int Cap { get; }
+        Cap = cap;
+    }
 
-        public ConcurrentCappedQueue(int cap)
+    public new void Enqueue(T item)
+    {
+        base.Enqueue(item);
+        while (Count > Cap)
         {
-            Cap = cap;
-        }
-
-        public new void Enqueue(T item)
-        {
-            base.Enqueue(item);
-            while (Count > Cap)
-            {
-                TryDequeue(out _);
-            }
+            TryDequeue(out _);
         }
     }
 }

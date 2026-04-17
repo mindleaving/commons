@@ -36,3 +36,4 @@ packages*/
 #Nuget packages folder
 packages/
 *.nupkg
+.idea/

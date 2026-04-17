@@ -1,44 +1,43 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 
-namespace Commons.IO
+namespace Commons.IO;
+
+public class Serializer<T>
 {
-    public class Serializer<T>
+    private readonly JsonSerializer serializer;
+
+    public Serializer()
     {
-        private readonly JsonSerializer serializer;
+        serializer = new JsonSerializer();
+    }
 
-        public Serializer()
+    public T Load(string path)
+    {
+        using (var stream = File.OpenRead(path))
         {
-            serializer = new JsonSerializer();
+            return Load(stream);
         }
+    }
 
-        public T Load(string path)
-        {
-            using (var stream = File.OpenRead(path))
-            {
-                return Load(stream);
-            }
-        }
+    public T Load(Stream stream)
+    {
+        var streamReader = new StreamReader(stream);
+        return serializer.Deserialize<T>(new JsonTextReader(streamReader));
+    }
 
-        public T Load(Stream stream)
+    public void Store(T obj, string path)
+    {
+        using (var stream = File.Create(path))
         {
-            var streamReader = new StreamReader(stream);
-            return serializer.Deserialize<T>(new JsonTextReader(streamReader));
+            Store(obj, stream);
         }
+    }
 
-        public void Store(T obj, string path)
-        {
-            using (var stream = File.Create(path))
-            {
-                Store(obj, stream);
-            }
-        }
-
-        public void Store(T obj, Stream stream)
-        {
-            var streamWriter = new StreamWriter(stream);
-            serializer.Serialize(streamWriter, obj);
-            streamWriter.Flush();
-        }
+    public void Store(T obj, Stream stream)
+    {
+        var streamWriter = new StreamWriter(stream);
+        serializer.Serialize(streamWriter, obj);
+        streamWriter.Flush();
     }
 }

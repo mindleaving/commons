@@ -1,8 +1,7 @@
-﻿namespace Commons.CoordinateTransform
+﻿namespace Commons.CoordinateTransform;
+
+public class DistortionParameters
 {
-    public class DistortionParameters
-    {
-        public double Radial2 { get; set; }
-        public double Radial4 { get; set; }
-    }
+    public double Radial2 { get; set; }
+    public double Radial4 { get; set; }
 }

@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Commons.Extensions
+namespace Commons.Extensions;
+
+public static class EnumExtensions
 {
-    public static class EnumExtensions
+    public static bool InSet<T>(this T value, params T[] set)
     {
-        public static bool InSet<T>(this T value, params T[] set)
-        {
-            return set.Contains(value);
-        }
+        return set.Contains(value);
+    }
 
-        public static IEnumerable<T> GetValues<T>()
-        {
-            if(!typeof(T).IsEnum)
-                throw new ArgumentException("T must be an enum");
-            return (T[]) Enum.GetValues(typeof(T));
-        }
+    public static IEnumerable<T> GetValues<T>()
+    {
+        if(!typeof(T).IsEnum)
+            throw new ArgumentException("T must be an enum");
+        return (T[]) Enum.GetValues(typeof(T));
+    }
 
-        public static TEnum ToEnum<TEnum>(this string str) where TEnum: Enum
-        {
-            return (TEnum) Enum.Parse(typeof(TEnum), str);
-        }
+    public static TEnum ToEnum<TEnum>(this string str) where TEnum: Enum
+    {
+        return (TEnum) Enum.Parse(typeof(TEnum), str);
     }
 }

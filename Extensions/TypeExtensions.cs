@@ -1,40 +1,39 @@
 ﻿using System;
 
-namespace Commons.Extensions
+namespace Commons.Extensions;
+
+public static class TypeExtensions
 {
-    public static class TypeExtensions
+    public static T As<T>(this object o) where T: class
     {
-        public static T As<T>(this object o) where T: class
-        {
-            return o as T;
-        }
+        return o as T;
+    }
 
-        public static T Cast<T>(this object o) where T: class
-        {
-            return (T) o;
-        }
+    public static T Cast<T>(this object o) where T: class
+    {
+        return (T) o;
+    }
 
-        public static bool IsNumber(this object o)
+    public static bool IsNumber(this object o)
+    {
+        if (ReferenceEquals(o, null))
+            return false;
+        switch (Type.GetTypeCode(o.GetType()))
         {
-            if (ReferenceEquals(o, null))
+            case TypeCode.Byte:
+            case TypeCode.SByte:
+            case TypeCode.UInt16:
+            case TypeCode.UInt32:
+            case TypeCode.UInt64:
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+            case TypeCode.Decimal:
+            case TypeCode.Double:
+            case TypeCode.Single:
+                return true;
+            default:
                 return false;
-            switch (Type.GetTypeCode(o.GetType()))
-            {
-                case TypeCode.Byte:
-                case TypeCode.SByte:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Single:
-                    return true;
-                default:
-                    return false;
-            }
         }
     }
 }

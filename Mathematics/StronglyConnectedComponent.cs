@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace Commons.Mathematics
+namespace Commons.Mathematics;
+
+public class StronglyConnectedComponent : List<IVertex>
 {
-    public class StronglyConnectedComponent : List<IVertex>
-    {
-    }
 }

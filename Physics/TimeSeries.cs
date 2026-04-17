@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Commons.Physics
+namespace Commons.Physics;
+
+public class TimeSeries<T> : List<TimePoint<T>>
 {
-    public class TimeSeries<T> : List<TimePoint<T>>
+    public void Add(DateTime time, T value)
     {
-        public void Add(DateTime time, T value)
-        {
-            Add(new TimePoint<T>(time, value));
-        }
+        Add(new TimePoint<T>(time, value));
     }
 }

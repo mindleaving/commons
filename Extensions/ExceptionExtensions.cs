@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Commons.Extensions
+namespace Commons.Extensions;
+
+public static class ExceptionExtensions
 {
-    public static class ExceptionExtensions
+    public static Exception InnermostException(this Exception e)
     {
-        public static Exception InnermostException(this Exception e)
+        var innerException = e;
+        while (innerException.InnerException != null)
         {
-            var innerException = e;
-            while (innerException.InnerException != null)
-            {
-                innerException = innerException.InnerException;
-            }
-            return innerException;
+            innerException = innerException.InnerException;
         }
+        return innerException;
     }
 }
