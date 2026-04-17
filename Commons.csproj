@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.2.2</Version>
+    <Version>3.2.3</Version>
     <Authors>Jan Scholtyssek</Authors>
     <PackageId>mindleaving.Commons</PackageId>
     <Company />
@@ -26,10 +26,6 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DatabaseTools\" />
   </ItemGroup>
 
 </Project>

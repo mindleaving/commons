@@ -1,14 +1,13 @@
-﻿namespace Commons.Mathematics
-{
-    public class PolarPoint
-    {
-        public PolarPoint(double angle, double distanceFromCenter)
-        {
-            Angle = angle;
-            DistanceFromCenter = distanceFromCenter;
-        }
+﻿namespace Commons.Mathematics;
 
-        public double Angle { get; }
-        public double DistanceFromCenter { get; }
+public class PolarPoint
+{
+    public PolarPoint(double angle, double distanceFromCenter)
+    {
+        Angle = angle;
+        DistanceFromCenter = distanceFromCenter;
     }
+
+    public double Angle { get; }
+    public double DistanceFromCenter { get; }
 }

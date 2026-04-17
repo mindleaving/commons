@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Commons.DataProcessing
+namespace Commons.DataProcessing;
+
+public interface IDataSource<out T> : IDisposable
 {
-    public interface IDataSource<out T> : IDisposable
-    {
-        void Reset();
-        IEnumerable<T> GetNext();
-    }
+    void Reset();
+    IEnumerable<T> GetNext();
 }

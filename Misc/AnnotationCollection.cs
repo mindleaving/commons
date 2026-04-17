@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Commons.Misc
+namespace Commons.Misc;
+
+public class AnnotationCollection
 {
-    public class AnnotationCollection
-    {
-        public List<Annotation> Annotations { get; set; } = new List<Annotation>();
-    }
+    public List<Annotation> Annotations { get; set; } = new List<Annotation>();
 }

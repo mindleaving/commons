@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Commons
+namespace Commons;
+
+public static class Log
 {
-    public static class Log
+    public static void LogError(string message)
     {
-        public static void LogError(string message)
-        {
-            Console.WriteLine(@"Error: " + message);
-        }
+        Console.WriteLine(@"Error: " + message);
     }
 }

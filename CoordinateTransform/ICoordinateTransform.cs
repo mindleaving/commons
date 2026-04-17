@@ -1,8 +1,7 @@
-﻿namespace Commons.CoordinateTransform
+﻿namespace Commons.CoordinateTransform;
+
+public interface ICoordinateTransform<TIn, TOut>
 {
-    public interface ICoordinateTransform<TIn, TOut>
-    {
-        TOut Transform(TIn point);
-        TIn InverseTransform(TOut point);
-    }
+    TOut Transform(TIn point);
+    TIn InverseTransform(TOut point);
 }

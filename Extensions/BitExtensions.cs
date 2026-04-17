@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 
-namespace Commons.Extensions
+namespace Commons.Extensions;
+
+public static class BitExtensions
 {
-    public static class BitExtensions
+    public static int InvertEndian(this int x)
     {
-        public static int InvertEndian(this int x)
-        {
-            return BitConverter.ToInt32(BitConverter.GetBytes(x).AsEnumerable().Reverse().ToArray(), 0);
-        }
+        return BitConverter.ToInt32(BitConverter.GetBytes(x).AsEnumerable().Reverse().ToArray(), 0);
     }
 }

@@ -1,24 +1,23 @@
-﻿namespace Commons.Physics
+﻿namespace Commons.Physics;
+
+public enum SIPrefix
 {
-    public enum SIPrefix
-    {
-        None,
+    None,
 
-        Femto,
-        Pico,
-        Nano,
-        Micro,
-        Milli,
-        Centi,
-        Deci,
+    Femto,
+    Pico,
+    Nano,
+    Micro,
+    Milli,
+    Centi,
+    Deci,
 
-        Deca,
-        Hecto,
-        Kilo,
-        Mega,
-        Giga,
-        Tera,
-        Peta,
-        Exa
-    }
+    Deca,
+    Hecto,
+    Kilo,
+    Mega,
+    Giga,
+    Tera,
+    Peta,
+    Exa
 }

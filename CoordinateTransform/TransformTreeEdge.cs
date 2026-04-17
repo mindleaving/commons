@@ -1,7 +1,6 @@
-﻿namespace Commons.CoordinateTransform
+﻿namespace Commons.CoordinateTransform;
+
+public class TransformTreeEdge<TIn, TOut>
 {
-    public class TransformTreeEdge<TIn, TOut>
-    {
-        public ICoordinateTransform<TIn, TOut> Transform { get; set; }
-    }
+    public ICoordinateTransform<TIn, TOut> Transform { get; set; }
 }
